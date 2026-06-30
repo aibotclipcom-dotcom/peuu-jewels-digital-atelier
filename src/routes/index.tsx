@@ -260,8 +260,8 @@ function ClosingChapter() {
     <motion.section
       initial={{ clipPath: "inset(100% 0 0 0)" }}
       whileInView={{ clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster"
     >
       <FloralMark className="pointer-events-none absolute -left-10 top-10 h-72 w-72 text-alabaster/5" />
