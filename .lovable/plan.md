@@ -1,35 +1,19 @@
-## Goals
+## Plan
 
-1. Fix the admin **New Piece** / **Edit Piece** screens so they save reliably.
-2. Allow editing existing images (replace, reorder, paste URL).
-3. Display all prices in **Indian Rupees (₹, INR)** across the site and admin.
+1. **Fix the route structure**
+   - Convert the admin products list route into a proper parent layout that renders an `<Outlet />` for child routes.
+   - Move the inventory table UI into an index child route so `/admin/products` still shows the product list.
 
-## Changes
+2. **Make Add New Piece open reliably**
+   - Replace the current `/admin/products/new` redirect workaround with a real editor route for creating products.
+   - Update the “New Piece” button to navigate directly to the real create route.
 
-### 1. `src/lib/format.ts` — INR formatting
-Switch `formatPrice` from `USD` to `INR` with `en-IN` locale, e.g. `₹1,25,000`. This single change updates Boutique, product page, cart, account orders, admin list, admin dashboard revenue, etc.
+3. **Make Edit open reliably**
+   - Keep edit URLs as `/admin/products/$id` and ensure the product editor receives the correct product id.
+   - Verify edit buttons use TanStack `<Link>` with `params`, not plain URLs.
 
-### 2. `src/routes/_authenticated/admin.products.$id.tsx` — Editor fixes
-Bugs found:
-- The "Or paste image URL" Input is hard-wired to `value=""`; typing one character immediately appends it to `images` (each keystroke = new image). Replace with a proper local-state text field + "Add URL" button.
-- Save uses `.select().single()` after insert; if RLS denies the read-back, the whole save fails even though the row was created. Switch to `.select().maybeSingle()` and handle null gracefully.
-- Saving with no images is allowed but boutique cards then crash; require at least 1 image OR allow 0 cleanly (use placeholder). We'll just guard and toast.
-- Price label changes from "Price (USD)" to "Price (INR ₹)".
-- Add image management:
-  - **Replace** button on each thumbnail (opens file picker, uploads, swaps URL in place).
-  - **Reorder** with left/right arrow buttons (first image = primary/cover).
-- Keep existing upload-multiple and delete behavior.
+4. **Preserve existing editor features**
+   - Keep image upload, image replacement, image reordering, cover image behavior, draft/published toggle, and INR pricing.
 
-### 3. `src/routes/_authenticated/admin.products.tsx`
-No code change needed beyond what `formatPrice` already gives (prices auto-render as ₹).
-
-### 4. No DB / RLS changes
-`products.price` stays `numeric`; we just treat the stored number as INR going forward. Existing seed values will display as ₹ amounts — user can edit them in admin.
-
-## Files touched
-- `src/lib/format.ts`
-- `src/routes/_authenticated/admin.products.$id.tsx`
-
-## Out of scope
-- Currency conversion of existing seed prices (user will re-enter in INR via admin).
-- Multi-currency support / locale switcher.
+5. **Validate the flow**
+   - Check that `/admin/products` renders the list, `/admin/products/new` opens the blank editor, and `/admin/products/:id` opens the edit editor without blank pages.
