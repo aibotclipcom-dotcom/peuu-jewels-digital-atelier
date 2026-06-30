@@ -1,16 +1,22 @@
 import { Link } from "@tanstack/react-router";
+import logoAsset from "@/assets/peuu-logo.png.asset.json";
 
-export function Logo({ tagline = false }: { tagline?: boolean }) {
+export function Logo({
+  tagline = false,
+  className = "",
+}: {
+  tagline?: boolean;
+  className?: string;
+}) {
   return (
-    <Link to="/" className="group inline-flex flex-col items-start leading-none">
-      <span className="font-serif text-[1.35rem] tracking-[0.22em] text-navy sm:text-2xl">
-        PEUU&nbsp;JEWELS
-      </span>
-      {tagline && (
-        <span className="mt-1 text-[0.6rem] tracking-[0.42em] text-rose">
-          YOUR HAPPINESS · OUR PRIORITY
-        </span>
-      )}
+    <Link to="/" className={`group inline-block leading-none ${className}`}>
+      <img
+        src={logoAsset.url}
+        alt="PEUU JEWELS — Your happiness, our priority"
+        className={`h-auto w-full object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+          tagline ? "max-h-28" : "max-h-12 sm:max-h-14"
+        }`}
+      />
     </Link>
   );
 }

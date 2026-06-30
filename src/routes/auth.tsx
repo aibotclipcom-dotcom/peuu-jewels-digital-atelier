@@ -3,7 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { FloralMark } from "@/components/brand/Logo";
+import { Logo, FloralMark } from "@/components/brand/Logo";
 import { z } from "zod";
 
 const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
@@ -113,7 +113,7 @@ function AuthPage() {
         <FloralMark className="absolute -left-10 top-20 h-96 w-96 text-coral/15" />
         <FloralMark className="absolute bottom-10 right-0 h-80 w-80 rotate-180 text-coral/10" />
         <div className="relative z-10 flex h-full flex-col justify-between p-16">
-          <div className="font-serif text-2xl tracking-[0.2em] text-navy">PEUU JEWELS</div>
+          <Logo className="max-w-[180px]" />
           <div>
             <h2 className="font-serif text-5xl leading-tight text-navy">
               The Maison <em className="italic text-coral/90">remembers</em> you.
