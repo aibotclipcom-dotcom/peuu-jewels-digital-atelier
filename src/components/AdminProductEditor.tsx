@@ -37,7 +37,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     queryKey: ["admin-product", productId],
     enabled: !isNew,
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("*").eq("id", productId).maybeSingle();
+      const { data, error } = await supabase.from("products").select("*").eq("id", productId!).maybeSingle();
       if (error) throw error;
       return data;
     },
