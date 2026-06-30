@@ -24,7 +24,7 @@ function AdminOrders() {
     },
   });
 
-  async function updateStatus(id: string, status: string) {
+  async function updateStatus(id: string, status: (typeof STATUSES)[number]) {
     const { error } = await supabase.from("orders").update({ status }).eq("id", id);
     if (error) {
       toast.error(error.message);
@@ -58,7 +58,7 @@ function AdminOrders() {
                   <div className="font-serif text-2xl text-navy">{formatPrice(Number(o.total))}</div>
                   <select
                     value={o.status}
-                    onChange={(e) => updateStatus(o.id, e.target.value)}
+                    onChange={(e) => updateStatus(o.id, e.target.value as (typeof STATUSES)[number])}
                     className="mt-2 border border-border bg-card px-2 py-1 text-[0.6rem] tracking-luxury uppercase text-navy"
                   >
                     {STATUSES.map((s) => (
