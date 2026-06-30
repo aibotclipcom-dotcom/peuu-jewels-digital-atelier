@@ -180,14 +180,21 @@ function EditorialSection({ section, index }: { section: Section; index: number 
   const reverse = index % 2 === 1;
 
   return (
-    <motion.section
+    <section
       ref={ref}
-      initial={reduce ? undefined : { clipPath: "inset(100% 0 0 0)" }}
-      whileInView={reduce ? undefined : { clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative grid min-h-[100svh] w-full overflow-hidden md:grid-cols-2"
     >
+      {!reduce && (
+        <motion.div
+          aria-hidden
+          initial={{ y: "0%" }}
+          whileInView={{ y: "-100%" }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="pointer-events-none absolute inset-0 z-30 bg-alabaster"
+        />
+      )}
+
       {/* Editorial photo side */}
       <div className={`relative order-1 min-h-[60svh] overflow-hidden md:min-h-0 ${reverse ? "md:order-2" : ""}`}>
         <motion.img
@@ -251,19 +258,21 @@ function EditorialSection({ section, index }: { section: Section; index: number 
           )}
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function ClosingChapter() {
   return (
-    <motion.section
-      initial={{ clipPath: "inset(100% 0 0 0)" }}
-      whileInView={{ clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-      className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster"
-    >
+    <section className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster">
+      <motion.div
+        aria-hidden
+        initial={{ y: "0%" }}
+        whileInView={{ y: "-100%" }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-none absolute inset-0 z-30 bg-alabaster"
+      />
       <FloralMark className="pointer-events-none absolute -left-10 top-10 h-72 w-72 text-alabaster/5" />
       <FloralMark className="pointer-events-none absolute -right-10 bottom-10 h-80 w-80 rotate-180 text-alabaster/5" />
 
@@ -302,6 +311,6 @@ function ClosingChapter() {
         Begin a Bespoke
         <span className="inline-block h-px w-6 bg-current" />
       </Link>
-    </motion.section>
+    </section>
   );
 }
