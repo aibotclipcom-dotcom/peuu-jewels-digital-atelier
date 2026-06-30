@@ -184,8 +184,8 @@ function EditorialSection({ section, index }: { section: Section; index: number 
       ref={ref}
       initial={reduce ? undefined : { clipPath: "inset(100% 0 0 0)" }}
       whileInView={reduce ? undefined : { clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: false, amount: 0.25 }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative grid min-h-[100svh] w-full overflow-hidden md:grid-cols-2"
     >
       {/* Editorial photo side */}
@@ -193,6 +193,9 @@ function EditorialSection({ section, index }: { section: Section; index: number 
         <motion.img
           src={section.image}
           alt={section.word}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={index === 0 ? "high" : "low"}
           style={{ y: imgY }}
           className="absolute inset-0 h-[112%] w-full object-cover"
         />
@@ -218,14 +221,16 @@ function EditorialSection({ section, index }: { section: Section; index: number 
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.4 }}
-          transition={{ duration: 1.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="flex w-full max-w-md flex-col items-center text-center"
         >
           <div className="arch-frame h-[60vh] max-h-[480px] w-full max-w-[360px] shadow-2xl shadow-navy/20">
             <img
               src={section.image}
               alt={section.title}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           </div>
@@ -255,8 +260,8 @@ function ClosingChapter() {
     <motion.section
       initial={{ clipPath: "inset(100% 0 0 0)" }}
       whileInView={{ clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster"
     >
       <FloralMark className="pointer-events-none absolute -left-10 top-10 h-72 w-72 text-alabaster/5" />
