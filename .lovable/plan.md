@@ -1,19 +1,18 @@
-## Plan
+Replace the current text-only PEUU JEWELS wordmark with the uploaded floral logo mark across the site.
 
-1. **Fix the route structure**
-   - Convert the admin products list route into a proper parent layout that renders an `<Outlet />` for child routes.
-   - Move the inventory table UI into an index child route so `/admin/products` still shows the product list.
+1. **Asset upload**
+   - Upload the attached `logo.png` to Lovable Assets as `src/assets/peuu-logo.png` (overwriting the existing outdated asset pointer), so it is served from the CDN and versioned correctly.
 
-2. **Make Add New Piece open reliably**
-   - Replace the current `/admin/products/new` redirect workaround with a real editor route for creating products.
-   - Update the “New Piece” button to navigate directly to the real create route.
+2. **Logo component update**
+   - Rewrite `src/components/brand/Logo.tsx` to render the new image as the home-link logo, sized responsively for the navigation bar and footer.
+   - Keep the existing `tagline` prop API for compatibility, but because the uploaded image already includes the tagline, the prop will primarily control logo size / layout rather than rendering separate text.
 
-3. **Make Edit open reliably**
-   - Keep edit URLs as `/admin/products/$id` and ensure the product editor receives the correct product id.
-   - Verify edit buttons use TanStack `<Link>` with `params`, not plain URLs.
+3. **Replace hardcoded text marks**
+   - Update `src/routes/auth.tsx` left panel: replace the hardcoded `PEUU JEWELS` text with the new `Logo` component.
+   - Confirm `SiteNav`, `SiteFooter`, and `AdminLayout` automatically render the new image since they already use the `Logo` component.
 
-4. **Preserve existing editor features**
-   - Keep image upload, image replacement, image reordering, cover image behavior, draft/published toggle, and INR pricing.
+4. **Favicon / head**
+   - Add a `link rel="icon"` entry to the root route head (`src/routes/__root.tsx`) pointing to the same logo asset, so the browser tab matches the brand mark.
 
-5. **Validate the flow**
-   - Check that `/admin/products` renders the list, `/admin/products/new` opens the blank editor, and `/admin/products/:id` opens the edit editor without blank pages.
+5. **Verification**
+   - Run the build and open the preview to confirm the logo displays clearly in the header, footer, auth panel, and admin console on both desktop and mobile.
