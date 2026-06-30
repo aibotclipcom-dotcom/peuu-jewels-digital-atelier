@@ -15,6 +15,7 @@ import { CartProvider } from "@/hooks/use-cart";
 import { SiteNav } from "@/components/layout/SiteNav";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { Toaster } from "@/components/ui/sonner";
+import logoAsset from "@/assets/peuu-logo.png.asset.json";
 
 function NotFoundComponent() {
   return (
