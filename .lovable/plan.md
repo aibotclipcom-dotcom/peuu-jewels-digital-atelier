@@ -1,30 +1,35 @@
-## Issues observed
+## Goals
 
-From auth logs and network requests:
-1. **Sign-in failing** — users get `invalid_credentials` because new signups require email confirmation (Supabase sent a confirmation email; the account isn't usable until confirmed). The UI immediately navigates to `/account` after signup, which then bounces them away because no session exists.
-2. **No Google OAuth** — currently only email/password.
-3. **Minor UX** — no password length hint (caused `weak_password` failure), no "check your email" state, no resend, no error surfacing besides toast.
+1. Fix the admin **New Piece** / **Edit Piece** screens so they save reliably.
+2. Allow editing existing images (replace, reorder, paste URL).
+3. Display all prices in **Indian Rupees (₹, INR)** across the site and admin.
 
-## Plan
+## Changes
 
-### 1. Fix email/password sign-in flow (`src/routes/auth.tsx`)
-- On **signup**: detect when Supabase returns a user but no session (email confirmation required). Show an inline "Check your inbox to confirm your email" confirmation screen instead of navigating to `/account`.
-- On **signup**: enforce min 6-character password client-side with helper text under the field, so users don't hit `weak_password`.
-- On **signin**: surface clearer error copy ("Invalid email or password — or your email isn't confirmed yet").
-- Only navigate to `/account` when a real `session` exists in the response.
+### 1. `src/lib/format.ts` — INR formatting
+Switch `formatPrice` from `USD` to `INR` with `en-IN` locale, e.g. `₹1,25,000`. This single change updates Boutique, product page, cart, account orders, admin list, admin dashboard revenue, etc.
 
-### 2. Add Google sign-in (`src/routes/auth.tsx`)
-- Add a "Continue with Google" button above the email field with a subtle divider ("or continue with email").
-- Use `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: \`${window.location.origin}/account\` } })`.
-- Style to match the luxury aesthetic (thin navy outline button, small Google "G" mark, same `tracking-luxury uppercase` typography).
+### 2. `src/routes/_authenticated/admin.products.$id.tsx` — Editor fixes
+Bugs found:
+- The "Or paste image URL" Input is hard-wired to `value=""`; typing one character immediately appends it to `images` (each keystroke = new image). Replace with a proper local-state text field + "Add URL" button.
+- Save uses `.select().single()` after insert; if RLS denies the read-back, the whole save fails even though the row was created. Switch to `.select().maybeSingle()` and handle null gracefully.
+- Saving with no images is allowed but boutique cards then crash; require at least 1 image OR allow 0 cleanly (use placeholder). We'll just guard and toast.
+- Price label changes from "Price (USD)" to "Price (INR ₹)".
+- Add image management:
+  - **Replace** button on each thumbnail (opens file picker, uploads, swaps URL in place).
+  - **Reorder** with left/right arrow buttons (first image = primary/cover).
+- Keep existing upload-multiple and delete behavior.
 
-### 3. Google provider configuration (user action required)
-Google OAuth must be enabled in the Supabase dashboard — this cannot be done from code. After implementing, I'll point the user to:
-- **Authentication → Providers → Google** in the Supabase dashboard to paste their Google OAuth Client ID / Secret.
-- Add the Supabase callback URL (`https://kwzvinkxvctdldxkuxds.supabase.co/auth/v1/callback`) to Google Cloud Console → OAuth credentials → Authorized redirect URIs.
-- Add the site URL + preview URL under **Authentication → URL Configuration**.
+### 3. `src/routes/_authenticated/admin.products.tsx`
+No code change needed beyond what `formatPrice` already gives (prices auto-render as ₹).
 
-### Files touched
-- `src/routes/auth.tsx` — only file changed.
+### 4. No DB / RLS changes
+`products.price` stays `numeric`; we just treat the stored number as INR going forward. Existing seed values will display as ₹ amounts — user can edit them in admin.
 
-No database, RLS, or server-function changes needed.
+## Files touched
+- `src/lib/format.ts`
+- `src/routes/_authenticated/admin.products.$id.tsx`
+
+## Out of scope
+- Currency conversion of existing seed prices (user will re-enter in INR via admin).
+- Multi-currency support / locale switcher.
