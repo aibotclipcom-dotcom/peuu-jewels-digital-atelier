@@ -3,7 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { FloralMark } from "@/components/brand/Logo";
+import { Logo, FloralMark } from "@/components/brand/Logo";
 import { z } from "zod";
 
 const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
