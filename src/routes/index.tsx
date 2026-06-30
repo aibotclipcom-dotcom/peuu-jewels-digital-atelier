@@ -184,8 +184,8 @@ function EditorialSection({ section, index }: { section: Section; index: number 
       ref={ref}
       initial={reduce ? undefined : { clipPath: "inset(100% 0 0 0)" }}
       whileInView={reduce ? undefined : { clipPath: "inset(0 0 0 0)" }}
-      viewport={{ once: false, amount: 0.25 }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative grid min-h-[100svh] w-full overflow-hidden md:grid-cols-2"
     >
       {/* Editorial photo side */}
