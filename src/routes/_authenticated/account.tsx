@@ -191,6 +191,32 @@ function AccountPage() {
             )}
           </div>
         </div>
+
+        <div className="mt-20 border-t border-border/60 pt-12">
+          <h2 className="font-serif text-2xl text-navy">Address & contact</h2>
+          <p className="mt-2 max-w-xl text-sm text-navy/60">
+            Kept on file so you can check out in seconds. Update anytime.
+          </p>
+          <div className="mt-8 max-w-2xl">
+            <ShippingDetailsForm
+              submitLabel="Save details"
+              submitting={savingProfile}
+              showNotes={false}
+              defaultValues={{
+                full_name:
+                  profile?.full_name ??
+                  (user?.user_metadata?.full_name as string | undefined) ??
+                  "",
+                phone: profile?.phone ?? "",
+                street_address: profile?.street_address ?? "",
+                city: profile?.city ?? "",
+                state: profile?.state ?? "",
+                postal_code: profile?.postal_code ?? "",
+              }}
+              onSubmit={saveAddress}
+            />
+          </div>
+        </div>
       </section>
       <SiteFooter />
     </main>
