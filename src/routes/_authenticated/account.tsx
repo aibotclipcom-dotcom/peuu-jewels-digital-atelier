@@ -1,10 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import {
+  ShippingDetailsForm,
+  type ShippingValues,
+} from "@/components/checkout/ShippingDetailsForm";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({ meta: [{ title: "Your Account — PEUU Jewels" }] }),
