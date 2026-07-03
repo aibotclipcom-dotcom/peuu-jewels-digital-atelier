@@ -140,7 +140,7 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         payment_method: "razorpay",
         razorpay_order_id: data.razorpay_order_id,
         razorpay_payment_id: data.razorpay_payment_id,
-        shipping_address: data.shipping,
+        shipping_address: { ...data.shipping } as Record<string, string>,
         notes: data.notes || null,
       })
       .select()
