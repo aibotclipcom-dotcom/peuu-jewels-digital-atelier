@@ -9,6 +9,34 @@ interface CartLine {
   quantity: number;
 }
 
+interface ShippingPayload {
+  full_name: string;
+  phone: string;
+  street_address: string;
+  city: string;
+  state: string;
+  postal_code: string;
+}
+
+function validateShipping(s: unknown): ShippingPayload {
+  const o = (s ?? {}) as Record<string, unknown>;
+  const req = (k: keyof ShippingPayload) => {
+    const v = o[k];
+    if (typeof v !== "string" || v.trim().length < 2) {
+      throw new Error(`Missing shipping field: ${k}`);
+    }
+    return v.trim();
+  };
+  return {
+    full_name: req("full_name"),
+    phone: req("phone"),
+    street_address: req("street_address"),
+    city: req("city"),
+    state: req("state"),
+    postal_code: req("postal_code"),
+  };
+}
+
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { items: CartLine[] }) => {
@@ -68,6 +96,8 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       razorpay_payment_id: string;
       razorpay_signature: string;
       items: CartLine[];
+      shipping: ShippingPayload;
+      notes?: string;
     }) => {
       if (
         !data?.razorpay_order_id ||
@@ -77,7 +107,9 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       ) {
         throw new Error("Missing payment payload");
       }
-      return data;
+      const shipping = validateShipping(data.shipping);
+      const notes = typeof data.notes === "string" ? data.notes.slice(0, 1000) : "";
+      return { ...data, shipping, notes };
     },
   )
   .handler(async ({ data, context }) => {
@@ -108,6 +140,8 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         payment_method: "razorpay",
         razorpay_order_id: data.razorpay_order_id,
         razorpay_payment_id: data.razorpay_payment_id,
+        shipping_address: { ...data.shipping } as Record<string, string>,
+        notes: data.notes || null,
       })
       .select()
       .single();

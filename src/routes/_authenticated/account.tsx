@@ -1,10 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import {
+  ShippingDetailsForm,
+  type ShippingValues,
+} from "@/components/checkout/ShippingDetailsForm";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({ meta: [{ title: "Your Account — PEUU Jewels" }] }),
@@ -40,6 +45,47 @@ function AccountPage() {
       return data ?? [];
     },
   });
+
+  const qc = useQueryClient();
+  const [savingProfile, setSavingProfile] = useState(false);
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, phone, street_address, city, state, postal_code")
+        .eq("id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function saveAddress(values: ShippingValues) {
+    if (!user) return;
+    setSavingProfile(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: values.full_name,
+          phone: values.phone,
+          street_address: values.street_address,
+          city: values.city,
+          state: values.state,
+          postal_code: values.postal_code,
+        })
+        .eq("id", user.id);
+      if (error) throw error;
+      toast.success("Address & contact details saved.");
+      qc.invalidateQueries({ queryKey: ["profile", user.id] });
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSavingProfile(false);
+    }
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -143,6 +189,32 @@ function AccountPage() {
                 ))}
               </ul>
             )}
+          </div>
+        </div>
+
+        <div className="mt-20 border-t border-border/60 pt-12">
+          <h2 className="font-serif text-2xl text-navy">Address & contact</h2>
+          <p className="mt-2 max-w-xl text-sm text-navy/60">
+            Kept on file so you can check out in seconds. Update anytime.
+          </p>
+          <div className="mt-8 max-w-2xl">
+            <ShippingDetailsForm
+              submitLabel="Save details"
+              submitting={savingProfile}
+              showNotes={false}
+              defaultValues={{
+                full_name:
+                  profile?.full_name ??
+                  (user?.user_metadata?.full_name as string | undefined) ??
+                  "",
+                phone: profile?.phone ?? "",
+                street_address: profile?.street_address ?? "",
+                city: profile?.city ?? "",
+                state: profile?.state ?? "",
+                postal_code: profile?.postal_code ?? "",
+              }}
+              onSubmit={saveAddress}
+            />
           </div>
         </div>
       </section>

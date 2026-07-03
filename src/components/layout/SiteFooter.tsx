@@ -4,7 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-cashmere/40">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 py-20 sm:px-10 md:grid-cols-4">
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 py-20 sm:px-10 md:grid-cols-5">
         <div className="md:col-span-2">
           <Logo tagline />
           <p className="mt-6 max-w-md text-sm leading-relaxed text-navy/70">
@@ -26,6 +26,13 @@ export function SiteFooter() {
             <li>Lifetime Polishing</li>
             <li>Bespoke Commissions</li>
             <li>Private Appointments</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Legal</h4>
+          <ul className="mt-5 space-y-3 text-sm text-navy/80">
+            <li><Link to="/privacy-policy" className="line-draw">Privacy Policy</Link></li>
+            <li><Link to="/terms-of-service" className="line-draw">Terms of Service</Link></li>
           </ul>
         </div>
       </div>

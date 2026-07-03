@@ -33,13 +33,22 @@ function AuthPage() {
   async function handleGoogle() {
     setGoogleBusy(true);
     try {
+      try {
+        sessionStorage.setItem("peuu_post_auth_redirect", "/account");
+      } catch {}
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/account` },
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: { prompt: "select_account" },
+        },
       });
       if (error) throw error;
     } catch (err) {
-      toast.error((err as Error).message);
+      const msg = (err as Error).message;
+      toast.error("Google Sign-In failed. Please try again.", {
+        description: msg,
+      });
       setGoogleBusy(false);
     }
   }
