@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MaisonRouteImport } from './routes/maison'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as BoutiqueRouteImport } from './routes/boutique'
@@ -16,6 +18,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoutiqueSlugRouteImport } from './routes/boutique.$slug'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -25,6 +28,16 @@ import { Route as AuthenticatedAdminProductsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin.products.new'
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin.products.$id'
 
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MaisonRoute = MaisonRouteImport.update({
   id: '/maison',
   path: '/maison',
@@ -58,6 +71,11 @@ const BoutiqueSlugRoute = BoutiqueSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BoutiqueRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
@@ -107,12 +125,15 @@ const AuthenticatedAdminProductsIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/boutique': typeof BoutiqueRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
   '/boutique/$slug': typeof BoutiqueSlugRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
@@ -123,11 +144,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/boutique': typeof BoutiqueRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/boutique/$slug': typeof BoutiqueSlugRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -139,12 +163,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/boutique': typeof BoutiqueRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
   '/boutique/$slug': typeof BoutiqueSlugRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
@@ -161,8 +188,11 @@ export interface FileRouteTypes {
     | '/boutique'
     | '/concierge'
     | '/maison'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/account'
     | '/admin'
+    | '/auth/callback'
     | '/boutique/$slug'
     | '/admin/orders'
     | '/admin/products'
@@ -177,7 +207,10 @@ export interface FileRouteTypes {
     | '/boutique'
     | '/concierge'
     | '/maison'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/account'
+    | '/auth/callback'
     | '/boutique/$slug'
     | '/admin/orders'
     | '/admin'
@@ -192,8 +225,11 @@ export interface FileRouteTypes {
     | '/boutique'
     | '/concierge'
     | '/maison'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/_authenticated/account'
     | '/_authenticated/admin'
+    | '/auth/callback'
     | '/boutique/$slug'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/products'
@@ -206,14 +242,30 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   BoutiqueRoute: typeof BoutiqueRouteWithChildren
   ConciergeRoute: typeof ConciergeRoute
   MaisonRoute: typeof MaisonRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/maison': {
       id: '/maison'
       path: '/maison'
@@ -262,6 +314,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/boutique/$slug'
       preLoaderRoute: typeof BoutiqueSlugRouteImport
       parentRoute: typeof BoutiqueRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -368,6 +427,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface BoutiqueRouteChildren {
   BoutiqueSlugRoute: typeof BoutiqueSlugRoute
 }
@@ -383,10 +452,12 @@ const BoutiqueRouteWithChildren = BoutiqueRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   BoutiqueRoute: BoutiqueRouteWithChildren,
   ConciergeRoute: ConciergeRoute,
   MaisonRoute: MaisonRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  TermsOfServiceRoute: TermsOfServiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
