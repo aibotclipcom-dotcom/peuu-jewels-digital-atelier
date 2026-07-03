@@ -96,6 +96,8 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       razorpay_payment_id: string;
       razorpay_signature: string;
       items: CartLine[];
+      shipping: ShippingPayload;
+      notes?: string;
     }) => {
       if (
         !data?.razorpay_order_id ||
@@ -105,7 +107,9 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       ) {
         throw new Error("Missing payment payload");
       }
-      return data;
+      const shipping = validateShipping(data.shipping);
+      const notes = typeof data.notes === "string" ? data.notes.slice(0, 1000) : "";
+      return { ...data, shipping, notes };
     },
   )
   .handler(async ({ data, context }) => {
@@ -136,6 +140,8 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         payment_method: "razorpay",
         razorpay_order_id: data.razorpay_order_id,
         razorpay_payment_id: data.razorpay_payment_id,
+        shipping_address: data.shipping,
+        notes: data.notes || null,
       })
       .select()
       .single();
