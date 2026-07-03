@@ -9,6 +9,34 @@ interface CartLine {
   quantity: number;
 }
 
+interface ShippingPayload {
+  full_name: string;
+  phone: string;
+  street_address: string;
+  city: string;
+  state: string;
+  postal_code: string;
+}
+
+function validateShipping(s: unknown): ShippingPayload {
+  const o = (s ?? {}) as Record<string, unknown>;
+  const req = (k: keyof ShippingPayload) => {
+    const v = o[k];
+    if (typeof v !== "string" || v.trim().length < 2) {
+      throw new Error(`Missing shipping field: ${k}`);
+    }
+    return v.trim();
+  };
+  return {
+    full_name: req("full_name"),
+    phone: req("phone"),
+    street_address: req("street_address"),
+    city: req("city"),
+    state: req("state"),
+    postal_code: req("postal_code"),
+  };
+}
+
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { items: CartLine[] }) => {
