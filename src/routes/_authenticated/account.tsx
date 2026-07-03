@@ -46,6 +46,47 @@ function AccountPage() {
     },
   });
 
+  const qc = useQueryClient();
+  const [savingProfile, setSavingProfile] = useState(false);
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, phone, street_address, city, state, postal_code")
+        .eq("id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function saveAddress(values: ShippingValues) {
+    if (!user) return;
+    setSavingProfile(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: values.full_name,
+          phone: values.phone,
+          street_address: values.street_address,
+          city: values.city,
+          state: values.state,
+          postal_code: values.postal_code,
+        })
+        .eq("id", user.id);
+      if (error) throw error;
+      toast.success("Address & contact details saved.");
+      qc.invalidateQueries({ queryKey: ["profile", user.id] });
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSavingProfile(false);
+    }
+  }
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     toast("Signed out.");
