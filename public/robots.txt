@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /auth
+Disallow: /auth/callback
+Disallow: /account
+Disallow: /checkout
+Disallow: /admin
+
+Sitemap: https://id-preview--772a6f43-9316-4b49-b128-8750fcbf094b.lovable.app/sitemap.xml
