@@ -58,13 +58,7 @@ function normalizeItems(items: CartLine[]) {
 }
 
 async function loadProductPrices(
-  supabase: {
-    from: (t: string) => {
-      select: (c: string) => {
-        in: (col: string, vals: string[]) => Promise<{ data: Array<{ id: string; name: string; price: number }> | null; error: { message: string } | null }>;
-      };
-    };
-  },
+  supabase: { from: (t: string) => any },
   ids: string[],
 ) {
   const { data, error } = await supabase
@@ -73,11 +67,12 @@ async function loadProductPrices(
     .in("id", ids);
   if (error) throw new Error(error.message);
   const map = new Map<string, { name: string; price: number }>();
-  for (const p of data ?? []) {
+  for (const p of (data ?? []) as Array<{ id: string; name: string; price: number }>) {
     map.set(p.id, { name: p.name, price: Number(p.price) });
   }
   return map;
 }
+
 
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
