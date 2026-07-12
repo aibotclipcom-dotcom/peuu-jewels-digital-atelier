@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MaisonRouteImport } from './routes/maison'
 import { Route as ConciergeRouteImport } from './routes/concierge'
@@ -33,11 +32,6 @@ import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_auth
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   id: '/terms-of-service',
   path: '/terms-of-service',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
@@ -142,7 +136,6 @@ export interface FileRoutesByFullPath {
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -163,7 +156,6 @@ export interface FileRoutesByTo {
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
@@ -184,7 +176,6 @@ export interface FileRoutesById {
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -207,7 +198,6 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
-    | '/sitemap.xml'
     | '/terms-of-service'
     | '/account'
     | '/admin'
@@ -228,7 +218,6 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
-    | '/sitemap.xml'
     | '/terms-of-service'
     | '/account'
     | '/checkout'
@@ -248,7 +237,6 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
-    | '/sitemap.xml'
     | '/terms-of-service'
     | '/_authenticated/account'
     | '/_authenticated/admin'
@@ -271,7 +259,6 @@ export interface RootRouteChildren {
   ConciergeRoute: typeof ConciergeRoute
   MaisonRoute: typeof MaisonRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
 
@@ -282,13 +269,6 @@ declare module '@tanstack/react-router' {
       path: '/terms-of-service'
       fullPath: '/terms-of-service'
       preLoaderRoute: typeof TermsOfServiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy': {
@@ -498,7 +478,6 @@ const rootRouteChildren: RootRouteChildren = {
   ConciergeRoute: ConciergeRoute,
   MaisonRoute: MaisonRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
 }
 export const routeTree = rootRouteImport
