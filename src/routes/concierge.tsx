@@ -65,7 +65,7 @@ function ConciergePage() {
             </div>
             <div>
               <div className="text-[0.6rem] tracking-luxury uppercase text-navy/50">Concierge</div>
-              <div className="mt-1 text-navy">concierge@peuujewels.com</div>
+              <div className="mt-1 text-navy">support@peuujewels.in</div>
             </div>
             <div>
               <div className="text-[0.6rem] tracking-luxury uppercase text-navy/50">Hours</div>
