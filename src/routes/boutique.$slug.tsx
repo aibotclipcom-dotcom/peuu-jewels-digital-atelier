@@ -81,7 +81,18 @@ export const Route = createFileRoute("/boutique/$slug")({
 });
 
 function ProductDetail() {
-  const product = Route.useLoaderData();
+  const product = Route.useLoaderData() as {
+    id: string;
+    slug: string;
+    name: string;
+    description: string;
+    price: number | string;
+    category: string;
+    materials: string[];
+    image_urls: string[];
+    status: string;
+  };
+
   const { add } = useCart();
   const { user } = useAuth();
   const [activeImage, setActiveImage] = useState(0);
