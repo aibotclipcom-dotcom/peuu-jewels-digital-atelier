@@ -85,12 +85,16 @@ export type Database = {
       }
       orders: {
         Row: {
+          cancellation_reason: string | null
+          cancelled_at: string | null
           created_at: string
           id: string
           notes: string | null
           payment_method: string | null
           razorpay_order_id: string | null
           razorpay_payment_id: string | null
+          refund_id: string | null
+          refund_status: string | null
           shipping_address: Json | null
           status: Database["public"]["Enums"]["order_status"]
           total: number
@@ -98,12 +102,16 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           payment_method?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
+          refund_id?: string | null
+          refund_status?: string | null
           shipping_address?: Json | null
           status?: Database["public"]["Enums"]["order_status"]
           total?: number
@@ -111,12 +119,16 @@ export type Database = {
           user_id: string
         }
         Update: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           payment_method?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
+          refund_id?: string | null
+          refund_status?: string | null
           shipping_address?: Json | null
           status?: Database["public"]["Enums"]["order_status"]
           total?: number
