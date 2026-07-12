@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import logoAsset from "@/assets/peuu-logo.png.asset.json";
 
 export function Logo({
   tagline = false,
@@ -11,7 +10,7 @@ export function Logo({
   return (
     <Link to="/" className={`group inline-block leading-none ${className}`}>
       <img
-        src={logoAsset.url}
+        src="/peuu-logo.png"
         alt="PEUU JEWELS — Your happiness, our priority"
         className={`h-auto w-full object-contain transition-opacity duration-300 group-hover:opacity-80 ${
           tagline ? "max-h-28" : "max-h-12 sm:max-h-14"

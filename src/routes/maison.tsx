@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import necklaceAsset from "@/assets/necklace.jpeg.asset.json";
-import ringAsset from "@/assets/ring.jpeg.asset.json";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FloralMark } from "@/components/brand/Logo";
 
@@ -12,7 +10,7 @@ export const Route = createFileRoute("/maison")({
       { name: "description", content: "Inside the PEUU Jewels atelier — our heritage, craftsmanship, and the hands that shape every piece." },
       { property: "og:title", content: "Maison — PEUU Jewels" },
       { property: "og:description", content: "The story, the heritage, and the craftsmanship behind PEUU Jewels." },
-      { property: "og:image", content: ringAsset.url },
+      { property: "og:image", content: "/ring.jpeg" },
     ],
   }),
   component: MaisonPage,
@@ -60,7 +58,7 @@ function MaisonPage() {
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="aspect-[16/8] w-full overflow-hidden bg-cashmere">
-          <img src={necklaceAsset.url} alt="Inside the PEUU atelier" className="h-full w-full object-cover" />
+          <img src="/necklace.jpeg" alt="Inside the PEUU atelier" className="h-full w-full object-cover" />
         </div>
       </section>
 

@@ -1,10 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import necklaceAsset from "@/assets/necklace.jpeg.asset.json";
-import ringAsset from "@/assets/ring.jpeg.asset.json";
-import braceletAsset from "@/assets/bracelet.jpeg.asset.json";
-import earringsAsset from "@/assets/earrings.jpeg.asset.json";
 import { FloralMark } from "@/components/brand/Logo";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
@@ -22,7 +18,7 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "A cinematic boutique experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
       },
-      { property: "og:image", content: necklaceAsset.url },
+      { property: "og:image", content: "/necklace.jpeg" },
     ],
   }),
   component: Landing,
@@ -44,7 +40,7 @@ const SECTIONS: Section[] = [
     eyebrow: "Chapter One",
     title: "Layered, weightless, eternal.",
     copy: "Hand-finished chains in 18k gold — engineered to drape, sculpted to last.",
-    image: necklaceAsset.url,
+    image: "/necklace.jpeg",
     tone: "rose",
     cta: { label: "Shop Necklaces", to: "/boutique" },
   },
@@ -53,7 +49,7 @@ const SECTIONS: Section[] = [
     eyebrow: "Chapter Two",
     title: "Architectural, brilliant, yours.",
     copy: "Cluster solitaires and knife-edge bands, set by hand in our Maison.",
-    image: ringAsset.url,
+    image: "/ring.jpeg",
     tone: "champagne",
     cta: { label: "Shop Rings", to: "/boutique" },
   },
@@ -62,7 +58,7 @@ const SECTIONS: Section[] = [
     eyebrow: "Chapter Three",
     title: "Substantial. Sculpted. Personal.",
     copy: "Charm bracelets and polished cuffs that mark a moment.",
-    image: braceletAsset.url,
+    image: "/bracelet.jpeg",
     tone: "cashmere",
     cta: { label: "Shop Bracelets", to: "/boutique" },
   },
@@ -71,7 +67,7 @@ const SECTIONS: Section[] = [
     eyebrow: "Chapter Four",
     title: "A study in light.",
     copy: "Pavé hoops and stud trios designed to be worn together.",
-    image: earringsAsset.url,
+    image: "/earrings.jpeg",
     tone: "ivory",
     cta: { label: "Shop Earrings", to: "/boutique" },
   },
