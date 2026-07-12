@@ -1,0 +1,17 @@
+# PEUU Jewels
+
+> An independent atelier of fine jewelry — heirloom-quality necklaces, rings, bracelets, and earrings, handcrafted in recycled 18k and 14k gold with ethically sourced stones.
+
+PEUU Jewels is a small maison producing hand-finished fine jewelry. Every piece is sketched, cast, set, and polished by our jewelers, and carries a lifetime promise of polishing, refinishing, and resizing.
+
+## Pages
+
+- [Home](/): Cinematic introduction to the maison and its four chapters — necklaces, rings, bracelets, earrings.
+- [Boutique](/boutique): Browse published pieces by category with pricing in INR.
+- [Maison](/maison): The story, heritage, and craftsmanship behind PEUU Jewels.
+- [Concierge](/concierge): Bespoke commission and private appointment enquiries.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy): How we handle personal data.
+- [Terms of Service](/terms-of-service): Purchase, delivery, and return terms.
