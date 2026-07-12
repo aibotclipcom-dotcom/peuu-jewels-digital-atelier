@@ -13,16 +13,20 @@ export const Route = createFileRoute("/")({
         content:
           "Discover PEUU Jewels — heirloom-quality necklaces, rings, bracelets, and earrings, handcrafted in our independent atelier.",
       },
-      { property: "og:title", content: "PEUU Jewels — Fine Jewelry Atelier" },
+      { property: "og:title", content: "PEUU Jewels — A Cinematic Fine Jewelry Atelier" },
       {
         property: "og:description",
         content: "A cinematic boutique experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
       },
-      { property: "og:image", content: "/necklace.jpeg" },
+      { property: "og:image", content: "https://chic-velvet-dreams.lovable.app/necklace.jpeg" },
+      { property: "og:url", content: "https://chic-velvet-dreams.lovable.app/" },
+      { property: "twitter:image", content: "https://chic-velvet-dreams.lovable.app/necklace.jpeg" },
     ],
+    links: [{ rel: "canonical", href: "https://chic-velvet-dreams.lovable.app/" }],
   }),
   component: Landing,
 });
+
 
 interface Section {
   word: string;

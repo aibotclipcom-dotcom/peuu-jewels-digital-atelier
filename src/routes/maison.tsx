@@ -10,11 +10,15 @@ export const Route = createFileRoute("/maison")({
       { name: "description", content: "Inside the PEUU Jewels atelier — our heritage, craftsmanship, and the hands that shape every piece." },
       { property: "og:title", content: "Maison — PEUU Jewels" },
       { property: "og:description", content: "The story, the heritage, and the craftsmanship behind PEUU Jewels." },
-      { property: "og:image", content: "/ring.jpeg" },
+      { property: "og:image", content: "https://chic-velvet-dreams.lovable.app/ring.jpeg" },
+      { property: "og:url", content: "https://chic-velvet-dreams.lovable.app/maison" },
+      { property: "twitter:image", content: "https://chic-velvet-dreams.lovable.app/ring.jpeg" },
     ],
+    links: [{ rel: "canonical", href: "https://chic-velvet-dreams.lovable.app/maison" }],
   }),
   component: MaisonPage,
 });
+
 
 const CHAPTERS = [
   {

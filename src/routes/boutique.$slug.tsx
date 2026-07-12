@@ -10,32 +10,93 @@ import { toast } from "sonner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { motion } from "framer-motion";
 
+const SITE = "https://chic-velvet-dreams.lovable.app";
+
 export const Route = createFileRoute("/boutique/$slug")({
-  head: () => ({
-    meta: [
-      { title: "Piece — PEUU Jewels" },
-      { name: "description", content: "Discover this PEUU Jewels piece — hand-finished, heirloom-quality." },
-    ],
-  }),
+  loader: async ({ params }) => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("id,slug,name,description,price,category,materials,image_urls,status")
+      .eq("slug", params.slug)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) throw notFound();
+    return data;
+  },
+  head: ({ params, loaderData }) => {
+    const p = loaderData;
+    const title = p ? `${p.name} — PEUU Jewels` : "Piece — PEUU Jewels";
+    const rawDesc = p?.description
+      ? p.description.replace(/\s+/g, " ").trim()
+      : "Discover this PEUU Jewels piece — hand-finished, heirloom-quality.";
+    const description =
+      rawDesc.length > 155 ? `${rawDesc.slice(0, 152)}…` : rawDesc;
+    const image = p?.image_urls?.[0]
+      ? (p.image_urls[0].startsWith("http") ? p.image_urls[0] : `${SITE}${p.image_urls[0]}`)
+      : `${SITE}/necklace.jpeg`;
+    const url = `${SITE}/boutique/${params.slug}`;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: image },
+        { property: "twitter:image", content: image },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: p
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Product",
+                name: p.name,
+                description: rawDesc,
+                image: [image],
+                sku: p.id,
+                category: p.category,
+                brand: { "@type": "Brand", name: "PEUU Jewels" },
+                offers: {
+                  "@type": "Offer",
+                  price: Number(p.price),
+                  priceCurrency: "INR",
+                  availability:
+                    p.status === "published"
+                      ? "https://schema.org/InStock"
+                      : "https://schema.org/OutOfStock",
+                  url,
+                },
+              }),
+            },
+          ]
+        : [],
+    };
+  },
   component: ProductDetail,
 });
 
 function ProductDetail() {
-  const { slug } = Route.useParams();
+  const product = Route.useLoaderData() as {
+    id: string;
+    slug: string;
+    name: string;
+    description: string;
+    price: number | string;
+    category: string;
+    materials: string[];
+    image_urls: string[];
+    status: string;
+  };
+
   const { add } = useCart();
   const { user } = useAuth();
   const [activeImage, setActiveImage] = useState(0);
   const [wished, setWished] = useState(false);
-
-  const { data: product, isLoading } = useQuery({
-    queryKey: ["product", slug],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("*").eq("slug", slug).maybeSingle();
-      if (error) throw error;
-      if (!data) throw notFound();
-      return data;
-    },
-  });
 
   useQuery({
     queryKey: ["wishlist-check", product?.id, user?.id],
@@ -69,20 +130,6 @@ function ProductDetail() {
     }
   }
 
-  if (isLoading) {
-    return <div className="min-h-screen bg-alabaster pt-40 text-center text-navy/50">Loading…</div>;
-  }
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-alabaster pt-40 text-center">
-        <p className="font-serif text-2xl text-navy">Piece not found.</p>
-        <Link to="/boutique" className="mt-6 inline-block line-draw text-[0.7rem] tracking-luxury uppercase text-navy">
-          Return to the Boutique
-        </Link>
-      </div>
-    );
-  }
-
   const images = product.image_urls.length > 0 ? product.image_urls : ["https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=1200&q=80"];
 
   return (
@@ -103,6 +150,8 @@ function ProductDetail() {
                 <button
                   key={src + i}
                   type="button"
+                  aria-label={`View image ${i + 1} of ${product.name}`}
+                  aria-pressed={i === activeImage}
                   onClick={() => setActiveImage(i)}
                   className={`aspect-square overflow-hidden border bg-cashmere ${
                     i === activeImage ? "border-navy" : "border-transparent"

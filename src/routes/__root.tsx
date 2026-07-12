@@ -84,11 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "PEUU Jewels is an independent atelier of fine jewelry — sculpted by hand, finished with care, made to be worn for a lifetime.",
       },
       { name: "author", content: "PEUU Jewels" },
-      { property: "og:title", content: "PEUU Jewels — Fine Jewelry Atelier" },
-      {
-        property: "og:description",
-        content: "Heirloom-quality necklaces, rings, bracelets and earrings, handcrafted by PEUU Jewels.",
-      },
+      { property: "og:site_name", content: "PEUU Jewels" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -102,7 +98,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "PEUU Jewels",
+          url: "https://chic-velvet-dreams.lovable.app",
+          logo: "https://chic-velvet-dreams.lovable.app/peuu-logo.png",
+          description:
+            "Independent atelier of fine, hand-finished jewelry in recycled 18k and 14k gold.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "PEUU Jewels",
+          url: "https://chic-velvet-dreams.lovable.app",
+        }),
+      },
+    ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
