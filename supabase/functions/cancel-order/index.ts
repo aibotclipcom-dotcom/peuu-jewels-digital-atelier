@@ -4,25 +4,45 @@
 // live in the frontend.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+const ALLOWED_ORIGIN_SUFFIXES = [".lovable.app", ".lovableproject.com"];
+const ALLOWED_ORIGIN_EXACT = new Set<string>([
+  "https://peuujewels.in",
+  "https://www.peuujewels.in",
+]);
+
+function corsFor(origin: string | null) {
+  const allow =
+    origin &&
+    (ALLOWED_ORIGIN_EXACT.has(origin) ||
+      ALLOWED_ORIGIN_SUFFIXES.some((s) => {
+        try {
+          return new URL(origin).hostname.endsWith(s);
+        } catch {
+          return false;
+        }
+      }))
+      ? origin
+      : "";
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
 
 const CANCELLATION_WINDOW_MS = 24 * 60 * 60 * 1000;
 const BLOCKED_STATUSES = new Set(["cancelled", "shipped", "delivered"]);
 
-function json(status: number, body: unknown) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
-
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const cors = corsFor(req.headers.get("Origin"));
+  const json = (status: number, body: unknown) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...cors, "Content-Type": "application/json" },
+    });
+  if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   if (req.method !== "POST") return json(405, { error: "Method not allowed" });
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL");

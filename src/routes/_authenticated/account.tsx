@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +11,7 @@ import {
   ShippingDetailsForm,
   type ShippingValues,
 } from "@/components/checkout/ShippingDetailsForm";
+import { deleteMyAccount } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({ meta: [{ title: "Your Account — PEUU Jewels" }] }),
@@ -257,8 +259,63 @@ function AccountPage() {
             />
           </div>
         </div>
+
+        <DangerZone />
       </section>
       <SiteFooter />
     </main>
+  );
+}
+
+function DangerZone() {
+  const navigate = useNavigate();
+  const deleteFn = useServerFn(deleteMyAccount);
+  const [confirm, setConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete() {
+    if (confirm.trim().toUpperCase() !== "DELETE") {
+      toast.error('Type DELETE to confirm.');
+      return;
+    }
+    setDeleting(true);
+    try {
+      await deleteFn({});
+      await supabase.auth.signOut();
+      toast.success("Your account has been deleted.");
+      navigate({ to: "/" });
+    } catch (e) {
+      toast.error((e as Error).message || "Could not delete account.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div className="mt-20 border-t border-border/60 pt-12">
+      <h2 className="font-serif text-2xl text-navy">Delete account</h2>
+      <p className="mt-2 max-w-xl text-sm text-navy/60">
+        Permanently removes your profile, wishlist, and personal details.
+        Historical orders are anonymised and kept for accounting.
+        This cannot be undone.
+      </p>
+      <div className="mt-6 flex max-w-md flex-col gap-3">
+        <input
+          type="text"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          placeholder='Type DELETE to confirm'
+          className="border border-border/70 bg-transparent px-4 py-3 text-sm text-navy outline-none focus:border-navy"
+        />
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={deleting}
+          className="self-start border border-rose/60 bg-rose/5 px-6 py-3 text-[0.65rem] tracking-luxury uppercase text-rose hover:bg-rose/10 disabled:opacity-50"
+        >
+          {deleting ? "Deleting…" : "Delete my account"}
+        </button>
+      </div>
+    </div>
   );
 }

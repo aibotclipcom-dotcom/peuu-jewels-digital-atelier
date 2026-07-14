@@ -1,9 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(2, "Please enter your name").max(100),
+  email: z.string().trim().email("Enter a valid email").max(255),
+  message: z.string().trim().min(10, "A little more detail, please").max(2000),
+});
 
 export const Route = createFileRoute("/concierge")({
   head: () => ({
@@ -25,12 +32,16 @@ function ConciergePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !email || !message) return;
+    const parsed = contactSchema.safeParse({ name, email, message });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? "Please review the form");
+      return;
+    }
     setSubmitting(true);
-    const { error } = await supabase.from("contact_messages").insert({ name, email, message });
+    const { error } = await supabase.from("contact_messages").insert(parsed.data);
     setSubmitting(false);
     if (error) {
-      toast.error(error.message);
+      toast.error("Could not send your note. Please try again.");
       return;
     }
     toast.success("Your note has been received.", {
