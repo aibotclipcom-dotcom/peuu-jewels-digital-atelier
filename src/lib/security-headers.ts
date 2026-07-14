@@ -22,8 +22,12 @@ const CSP = [
 
 export const securityHeaders = createMiddleware().server(async ({ next }) => {
   const result = await next();
-  const res = result as unknown as { response?: Response };
-  const response = res.response;
+  // TanStack request middleware may return either a Response or a wrapper
+  // object containing one. Set headers on whichever we find.
+  const response: Response | undefined =
+    result instanceof Response
+      ? result
+      : (result as { response?: Response } | undefined)?.response;
   if (response && response.headers && !response.headers.has("x-content-type-options")) {
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("X-Frame-Options", "DENY");
