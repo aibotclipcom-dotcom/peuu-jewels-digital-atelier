@@ -1,42 +1,54 @@
-## Scoped pre-deploy security hardening
 
-The five prompts overlap heavily and cover a lot that's already done in this codebase (RLS everywhere, roles in `user_roles` + `has_role`, server-side price re-calc, Razorpay signature verify, unique `razorpay_payment_id` for replay, 24h cancel re-checked server-side, no service role in client code, passwords via Supabase Auth = bcrypt-family). I'll do a real pass on what's still missing rather than repeat the ceremony.
+## Findings
 
-### What I'll change
+### 1. HIGH — Cancel-window UPDATE policy lets a user rewrite non-status columns on their own orders
 
-1. **Secrets hygiene**
-  - Add `.env` (and `.env.local`, `.dev.vars`) to `.gitignore`.
-  - Create `.env.example` with `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID` (public/anon safe) plus commented server-only names (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`) marked "set as supabase **Edge Functions Secrets**, never commit".
-  - Add a README "Security & secrets" section noting: anon key is public-safe because RLS is enforced; if any secret was ever committed rotate it.
-2. **Security response headers** (via a new `securityHeaders` requestMiddleware in `src/start.ts`)
-  - `X-Content-Type-Options: nosniff`
-  - `X-Frame-Options: DENY`
-  - `Referrer-Policy: strict-origin-when-cross-origin`
-  - `Strict-Transport-Security: max-age=31536000; includeSubDomains`
-  - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
-  - `Content-Security-Policy` scoped to self + Supabase + Razorpay checkout + Google fonts (report-only header to avoid breaking the site if a CDN moves).
-3. **CORS on the one public surface**
-  - Tighten `supabase/functions/cancel-order` `Access-Control-Allow-Origin: *` to the published + preview origins from an allow-list (echo back the caller's `Origin` only if it matches). The function is already JWT-verified, but this closes CSRF-from-browser noise.
-4. **Log/error redaction**
-  - `src/lib/payments.functions.ts` currently logs the raw Razorpay error body. Trim to status + generic message so payment IDs / metadata don't hit logs.
-  - Confirm no other `console.*` leaks PII (already clean — only `__root.tsx` logs the error object, which is fine).
-5. **Input validation on `concierge` / contact form**
-  - Wire Zod (already in deps): `name ≤100`, `email` valid + ≤255, `message` 10–2000, trimmed, before insert. RLS insert policy already enforces shape; this gives a clean client-side error too.
-6. **Account deletion (GDPR-style)**
-  - New protected server fn `deleteMyAccount` (uses `requireSupabaseAuth`, then loads `supabaseAdmin` inside the handler) that:
-    - deletes rows in `wishlist`, `contact_messages`, `order_items` (only for the user's orders), anonymises `orders` (keep for accounting, null-out `shipping_address`/`notes`, set `user_id = null` after adding a nullable FK migration — or simpler: keep `user_id` but scrub PII columns), deletes `profiles`, `user_roles`, then `auth.admin.deleteUser(userId)`.
-  - Migration: allow `orders.user_id` to be nullable OR add `orders.deleted_user` flag + scrub columns. I'll go with **scrub-in-place**: null out `shipping_address`, `notes`, keep `user_id` (RLS still fine, row becomes inaccessible to any real user).
-  - UI: "Delete my account" section in `/account` with a typed-confirmation modal.
-7. **Auth callback safety**
-  - Verify `auth.callback.tsx` only redirects to same-origin relative paths from the saved `next` param (reject absolute URLs / protocol-relative). Small guard if missing.
+The RLS policy `Users can cancel own recent orders` on `public.orders` is:
 
-### Explicitly NOT doing (with reasoning)
+```
+UPDATE ... USING  (auth.uid()=user_id AND status NOT IN (cancelled,shipped,delivered) AND created_at > now()-24h)
+          CHECK  (auth.uid()=user_id AND status='cancelled')
+```
 
-- **Rate limiting** on login/signup/OTP — Supabase Auth already rate-limits these at the provider level, and the platform has no standard rate-limit primitive for app code (per project rules). I'll note this in the README.
-- **httpOnly cookies for the session** — Supabase JS uses `localStorage` by design; changing it would require rewriting auth to SSR cookie flow. Out of scope for a hardening pass.
-- **CSP `strict-dynamic` / nonce** — Razorpay checkout injects inline scripts; a nonce flow needs an SSR nonce plumbed through. Shipping a permissive-but-scoped CSP instead.
-- Repeating fixes already applied in earlier turns (price manipulation, payment replay, RLS split, `has_role` SECURITY INVOKER, sitemap/robots, etc.).
+Postgres RLS validates the resulting row against `CHECK`, but does **not** restrict which columns are written. So within the 24h window an authenticated owner can PATCH `/rest/v1/orders?id=eq.<own-id>` with `{status:"cancelled", total:1, razorpay_payment_id:"pay_xxx", shipping_address:{…}, notes:"…"}` and every one of those writes succeeds. What an attacker gets:
 
-### Deliverable
+- Corrupt their own historical order data (total/shipping/notes) after checkout.
+- Overwrite `razorpay_payment_id` — either to a garbage string (breaks refund lookup on cancel-order edge fn) or to another value they know, poisoning the unique-payment idempotency index.
+- Because this is bypassable client-side (they don't have to use the edge function), the server-side cancel flow's audit fields (`cancelled_at`, `cancellation_reason`, `refund_id`, `refund_status`) can be forged too.
 
-A single change set + one migration (only if the account-deletion scrub needs a column tweak — likely not), a short chat summary listing: (a) every secret found and where it lives, (b) data-flow map (collection → storage → third-party), (c) pre-deploy checklist with pass/fix per item.
+**Fix:** add a `BEFORE UPDATE` trigger on `public.orders` that, when the caller is not an admin, rejects the update unless only these columns change: `status`, `updated_at`, `cancelled_at`, `cancellation_reason`. Everything else stays server-only (edge function uses service role and bypasses the trigger via a `SECURITY DEFINER` bypass — or the trigger just skips when `current_setting('role')='service_role'`).
+
+### 2. MEDIUM — `wishlist.product_id` has no foreign key
+
+`wishlist` stores `product_id uuid NOT NULL` but no FK to `products(id)`. A signed-in user can insert arbitrary UUIDs (or IDs of unpublished/deleted products) into their own wishlist. Impact is limited (only the owner reads it and joins would just drop unmatched rows), but it's a data-integrity gap and lets a user retain references to unpublished draft products.
+
+**Fix:** `ALTER TABLE public.wishlist ADD CONSTRAINT wishlist_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;` (after deleting any existing orphan rows).
+
+### 3. LOW — Product image `signed URL` valid for ~10 years
+
+`AdminProductEditor.uploadOne` mints a signed URL with TTL `60*60*24*365*10` and stores it in `products.image_urls`. Product imagery is effectively public content, but if any single URL leaks (scraper, referrer header, log), it's exploitable for a decade with no rotation path. The signed-URL approach also means "unpublish" doesn't actually hide the pixels.
+
+**Fix (minimal, no bucket change):** cap TTL at 1 year and re-sign at read time in admin views. **Better:** make `peuu-assets/products/*` publicly readable and store the public URL — signing is cargo-cult for content meant to be seen. Deferring this to keep scope tight; flagging only.
+
+## Accepted / no-fix
+
+- **Contact-form spam & signup abuse.** `contact_messages` allows anon INSERT with Zod-strength length/regex validation but no throttling; `supabase.auth.signUp` has no captcha. Per project constraints there is no standard rate-limiting primitive, so I won't add an ad-hoc one without you confirming the tradeoff. Flag: add hCaptcha via Supabase Auth settings for signup, and either hCaptcha or Cloudflare Turnstile on the concierge form when you're ready.
+- **CSP is Report-Only.** Intentional so a missed CDN doesn't break the site; leave as-is until you've watched the report stream for a while.
+- **Admin role compromise → full takeover.** Standard for any admin panel; not a bug.
+- **10-year token / role manipulation.** JWTs are signed with the project HS256 key held by Supabase Auth; `requireSupabaseAuth` verifies via `getClaims` (JWKS), so forged/expired tokens are rejected. No JWT-side role claim to strip; roles come from `user_roles` via RLS-checked `has_role`.
+- **Direct URL guessing to `/admin/*`.** Parent `_authenticated/admin` route calls `getUser()` + `user_roles` check client-side, and every underlying write is gated by `has_role(auth.uid(),'admin')` in RLS — you cannot mutate products/orders as a non-admin by hand-crafting requests.
+- **`.env`, `.git`, health endpoints.** No `/api/health` or admin panel exposed; `.env` is only server-injected values, and the published Cloudflare Worker doesn't serve dotfiles from `public/`.
+
+## Implementation
+
+1. Migration:
+   - Delete orphan `wishlist` rows where `product_id` has no matching product.
+   - Add `wishlist_product_id_fkey`.
+   - Create `public.orders_restrict_self_update()` trigger function and `orders_restrict_self_update_trg BEFORE UPDATE` trigger that raises when the caller is not `service_role` AND columns other than `{status, updated_at, cancelled_at, cancellation_reason}` differ between `OLD` and `NEW`.
+2. No app code changes required — the cancel-order edge function already runs with `SERVICE_ROLE` and only writes the allowed columns, so it's unaffected.
+3. Manually verify by attempting `supabase.from('orders').update({total: 1}).eq('id', myOrder)` from the browser console; expect `permission denied` / trigger raise.
+
+## Files touched
+
+- New migration under `supabase/migrations/` (via migration tool).
+- No source files changed.
