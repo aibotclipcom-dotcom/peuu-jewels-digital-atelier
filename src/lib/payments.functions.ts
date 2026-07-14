@@ -119,8 +119,8 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
     });
 
     if (!res.ok) {
-      const text = await res.text();
-      console.error("Razorpay create order failed:", text);
+      // Do not log the response body — it can include payment identifiers.
+      console.error("Razorpay create order failed with status", res.status);
       throw new Error("Could not create payment order");
     }
     const order = (await res.json()) as { id: string; amount: number; currency: string };
