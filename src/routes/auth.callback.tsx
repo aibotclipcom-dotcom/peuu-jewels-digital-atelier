@@ -27,7 +27,16 @@ function AuthCallback() {
     function getDest() {
       try {
         const saved = sessionStorage.getItem("peuu_post_auth_redirect");
-        if (saved && saved.startsWith("/")) return saved;
+        // Only allow same-origin relative paths — never absolute URLs or
+        // protocol-relative (//evil.com) values.
+        if (
+          saved &&
+          saved.startsWith("/") &&
+          !saved.startsWith("//") &&
+          !saved.startsWith("/\\")
+        ) {
+          return saved;
+        }
       } catch {}
       return "/account";
     }
