@@ -7,7 +7,7 @@ PEUU Jewels is a small maison producing hand-finished fine jewelry. Every piece 
 ## Pages
 
 - [Home](/): Cinematic introduction to the maison and its four chapters — necklaces, rings, bracelets, earrings.
-- [Boutique](/boutique): Browse published pieces by category with pricing in INR.
+- [Collection](/Collection): Browse published pieces by category with pricing in INR.
 - [Maison](/maison): The story, heritage, and craftsmanship behind PEUU Jewels.
 - [Concierge](/concierge): Bespoke commission and private appointment enquiries.
 

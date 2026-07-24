@@ -71,7 +71,7 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (items.length === 0 && !submitting) {
-      navigate({ to: "/boutique", replace: true });
+      navigate({ to: "/Collection", replace: true });
     }
   }, [items.length, navigate, submitting]);
 

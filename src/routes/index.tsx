@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "PEUU Jewels — A Cinematic Fine Jewelry Atelier" },
       {
         property: "og:description",
-        content: "A cinematic boutique experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
+        content: "A cinematic Collection experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
       },
       { property: "og:image", content: "https://chic-velvet-dreams.lovable.app/necklace.jpeg" },
       { property: "og:url", content: "https://chic-velvet-dreams.lovable.app/" },
@@ -46,7 +46,7 @@ const SECTIONS: Section[] = [
     copy: "Hand-finished chains in 18k gold — engineered to drape, sculpted to last.",
     image: "/necklace.jpeg",
     tone: "rose",
-    cta: { label: "Shop Necklaces", to: "/boutique" },
+    cta: { label: "Shop Necklaces", to: "/Collection" },
   },
   {
     word: "RINGS",
@@ -55,7 +55,7 @@ const SECTIONS: Section[] = [
     copy: "Cluster solitaires and knife-edge bands, set by hand in our Maison.",
     image: "/ring.jpeg",
     tone: "champagne",
-    cta: { label: "Shop Rings", to: "/boutique" },
+    cta: { label: "Shop Rings", to: "/Collection" },
   },
   {
     word: "BRACELETS",
@@ -64,7 +64,7 @@ const SECTIONS: Section[] = [
     copy: "Charm bracelets and polished cuffs that mark a moment.",
     image: "/bracelet.jpeg",
     tone: "cashmere",
-    cta: { label: "Shop Bracelets", to: "/boutique" },
+    cta: { label: "Shop Bracelets", to: "/Collection" },
   },
   {
     word: "EARRINGS",
@@ -73,7 +73,7 @@ const SECTIONS: Section[] = [
     copy: "Pavé hoops and stud trios designed to be worn together.",
     image: "/earrings.jpeg",
     tone: "ivory",
-    cta: { label: "Shop Earrings", to: "/boutique" },
+    cta: { label: "Shop Earrings", to: "/Collection" },
   },
 ];
 
@@ -136,10 +136,10 @@ function Hero() {
           className="mt-12 flex flex-wrap items-center justify-center gap-8"
         >
           <Link
-            to="/boutique"
+            to="/Collection"
             className="group inline-flex items-center gap-3 bg-navy px-9 py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft"
           >
-            Enter the Boutique
+            Enter the Collection
             <span className="inline-block h-px w-6 bg-alabaster transition-all group-hover:w-10" />
           </Link>
           <Link

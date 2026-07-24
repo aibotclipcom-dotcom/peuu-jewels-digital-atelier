@@ -32,10 +32,10 @@ export function CartDrawer() {
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
             <div className="font-serif text-xl text-navy">Your atelier basket is empty.</div>
             <p className="mt-3 max-w-xs text-sm text-navy/60">
-              Begin curating your collection from The Boutique.
+              Begin curating your collection from The Collection.
             </p>
             <Link
-              to="/boutique"
+              to="/Collection"
               onClick={() => setOpen(false)}
               className="mt-8 line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
             >
@@ -55,7 +55,7 @@ export function CartDrawer() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <Link
-                            to="/boutique/$slug"
+                            to="/Collection/$slug"
                             params={{ slug: item.slug }}
                             onClick={() => setOpen(false)}
                             className="block truncate font-serif text-base text-navy"

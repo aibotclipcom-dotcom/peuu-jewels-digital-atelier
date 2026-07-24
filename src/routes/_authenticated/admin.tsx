@@ -65,7 +65,7 @@ function AdminLayout() {
             to="/"
             className="mt-auto flex items-center gap-2 pt-6 text-[0.65rem] tracking-luxury uppercase text-navy/55 hover:text-navy"
           >
-            <ArrowLeft className="h-3 w-3" /> Back to Boutique
+            <ArrowLeft className="h-3 w-3" /> Back to Collection
           </Link>
         </aside>
 

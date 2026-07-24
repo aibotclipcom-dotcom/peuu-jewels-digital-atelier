@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 const NAV = [
   { to: "/", label: "Home" },
-  { to: "/boutique", label: "The Boutique" },
+  { to: "/Collection", label: "The Collection" },
   { to: "/maison", label: "Maison" },
   { to: "/concierge", label: "Concierge" },
 ] as const;

@@ -169,7 +169,7 @@ function AccountPage() {
                       </div>
                       <div className="flex-1">
                         <div className="text-[0.6rem] tracking-luxury uppercase text-navy/50">{p.category}</div>
-                        <Link to="/boutique/$slug" params={{ slug: p.slug }} className="font-serif text-lg text-navy">
+                        <Link to="/Collection/$slug" params={{ slug: p.slug }} className="font-serif text-lg text-navy">
                           {p.name}
                         </Link>
                       </div>

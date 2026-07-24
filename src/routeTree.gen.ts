@@ -13,11 +13,11 @@ import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MaisonRouteImport } from './routes/maison'
 import { Route as ConciergeRouteImport } from './routes/concierge'
-import { Route as BoutiqueRouteImport } from './routes/boutique'
+import { Route as CollectionRouteImport } from './routes/Collection'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BoutiqueSlugRouteImport } from './routes/boutique.$slug'
+import { Route as CollectionSlugRouteImport } from './routes/Collection.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -49,9 +49,9 @@ const ConciergeRoute = ConciergeRouteImport.update({
   path: '/concierge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BoutiqueRoute = BoutiqueRouteImport.update({
-  id: '/boutique',
-  path: '/boutique',
+const CollectionRoute = CollectionRouteImport.update({
+  id: '/Collection',
+  path: '/Collection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -68,10 +68,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BoutiqueSlugRoute = BoutiqueSlugRouteImport.update({
+const CollectionSlugRoute = CollectionSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
-  getParentRoute: () => BoutiqueRoute,
+  getParentRoute: () => CollectionRoute,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
@@ -132,7 +132,7 @@ const AuthenticatedAdminProductsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/boutique': typeof BoutiqueRouteWithChildren
+  '/Collection': typeof CollectionRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -141,7 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/boutique/$slug': typeof BoutiqueSlugRoute
+  '/Collection/$slug': typeof CollectionSlugRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -152,7 +152,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/boutique': typeof BoutiqueRouteWithChildren
+  '/Collection': typeof CollectionRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -160,7 +160,7 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/boutique/$slug': typeof BoutiqueSlugRoute
+  '/Collection/$slug': typeof CollectionSlugRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
@@ -172,7 +172,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
-  '/boutique': typeof BoutiqueRouteWithChildren
+  '/Collection': typeof CollectionRouteWithChildren
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -181,7 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/boutique/$slug': typeof BoutiqueSlugRoute
+  '/Collection/$slug': typeof CollectionSlugRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -194,7 +194,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/boutique'
+    | '/Collection'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -203,7 +203,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/checkout'
     | '/auth/callback'
-    | '/boutique/$slug'
+    | '/Collection/$slug'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/'
@@ -214,7 +214,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/boutique'
+    | '/Collection'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -222,7 +222,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/checkout'
     | '/auth/callback'
-    | '/boutique/$slug'
+    | '/Collection/$slug'
     | '/admin/orders'
     | '/admin'
     | '/admin/products/$id'
@@ -233,7 +233,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/boutique'
+    | '/Collection'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -242,7 +242,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/checkout'
     | '/auth/callback'
-    | '/boutique/$slug'
+    | '/Collection/$slug'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/'
@@ -255,7 +255,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  BoutiqueRoute: typeof BoutiqueRouteWithChildren
+  CollectionRoute: typeof CollectionRouteWithChildren
   ConciergeRoute: typeof ConciergeRoute
   MaisonRoute: typeof MaisonRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
@@ -292,11 +292,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConciergeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/boutique': {
-      id: '/boutique'
-      path: '/boutique'
-      fullPath: '/boutique'
-      preLoaderRoute: typeof BoutiqueRouteImport
+    '/Collection': {
+      id: '/Collection'
+      path: '/Collection'
+      fullPath: '/Collection'
+      preLoaderRoute: typeof CollectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -320,12 +320,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/boutique/$slug': {
-      id: '/boutique/$slug'
+    '/Collection/$slug': {
+      id: '/Collection/$slug'
       path: '/$slug'
-      fullPath: '/boutique/$slug'
-      preLoaderRoute: typeof BoutiqueSlugRouteImport
-      parentRoute: typeof BoutiqueRoute
+      fullPath: '/Collection/$slug'
+      preLoaderRoute: typeof CollectionSlugRouteImport
+      parentRoute: typeof CollectionRoute
     }
     '/auth/callback': {
       id: '/auth/callback'
@@ -458,23 +458,23 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface BoutiqueRouteChildren {
-  BoutiqueSlugRoute: typeof BoutiqueSlugRoute
+interface CollectionRouteChildren {
+  CollectionSlugRoute: typeof CollectionSlugRoute
 }
 
-const BoutiqueRouteChildren: BoutiqueRouteChildren = {
-  BoutiqueSlugRoute: BoutiqueSlugRoute,
+const CollectionRouteChildren: CollectionRouteChildren = {
+  CollectionSlugRoute: CollectionSlugRoute,
 }
 
-const BoutiqueRouteWithChildren = BoutiqueRoute._addFileChildren(
-  BoutiqueRouteChildren,
+const CollectionRouteWithChildren = CollectionRoute._addFileChildren(
+  CollectionRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  BoutiqueRoute: BoutiqueRouteWithChildren,
+  CollectionRoute: CollectionRouteWithChildren,
   ConciergeRoute: ConciergeRoute,
   MaisonRoute: MaisonRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,

@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 const SITE = "https://chic-velvet-dreams.lovable.app";
 
-export const Route = createFileRoute("/boutique/$slug")({
+export const Route = createFileRoute("/Collection/$slug")({
   loader: async ({ params }) => {
     const { data, error } = await supabase
       .from("products")
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/boutique/$slug")({
     const image = p?.image_urls?.[0]
       ? (p.image_urls[0].startsWith("http") ? p.image_urls[0] : `${SITE}${p.image_urls[0]}`)
       : `${SITE}/necklace.jpeg`;
-    const url = `${SITE}/boutique/${params.slug}`;
+    const url = `${SITE}/Collection/${params.slug}`;
 
     return {
       meta: [
@@ -165,8 +165,8 @@ function ProductDetail() {
         </div>
 
         <div className="flex flex-col justify-start pt-4">
-          <Link to="/boutique" className="text-[0.65rem] tracking-luxury uppercase text-navy/50 hover:text-navy">
-            ← The Boutique
+          <Link to="/Collection" className="text-[0.65rem] tracking-luxury uppercase text-navy/50 hover:text-navy">
+            ← The Collection
           </Link>
           <span className="mt-6 text-[0.65rem] tracking-luxury uppercase text-rose">
             {product.category}

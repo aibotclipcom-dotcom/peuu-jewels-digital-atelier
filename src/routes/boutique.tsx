@@ -7,21 +7,21 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
-export const Route = createFileRoute("/boutique")({
+export const Route = createFileRoute("/Collection")({
   head: () => ({
     meta: [
-      { title: "The Boutique — PEUU Jewels" },
+      { title: "The Collection — PEUU Jewels" },
       { name: "description", content: "Browse the PEUU Jewels collection — handcrafted necklaces, rings, bracelets and earrings." },
-      { property: "og:title", content: "The Boutique — PEUU Jewels" },
+      { property: "og:title", content: "The Collection — PEUU Jewels" },
       { property: "og:description", content: "An editorial selection of fine jewelry from PEUU Jewels." },
     ],
   }),
-  component: BoutiquePage,
+  component: CollectionPage,
 });
 
 const CATEGORIES = ["All", "Necklaces", "Rings", "Bracelets", "Earrings"] as const;
 
-function BoutiquePage() {
+function CollectionPage() {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products", "published", category],
@@ -41,7 +41,7 @@ function BoutiquePage() {
     <main className="min-h-screen bg-alabaster pt-28 sm:pt-32">
       <section className="mx-auto max-w-[1400px] px-6 sm:px-10">
         <div className="flex flex-col items-start gap-6">
-          <span className="text-[0.7rem] tracking-luxury uppercase text-rose">The Boutique</span>
+          <span className="text-[0.7rem] tracking-luxury uppercase text-rose">The Collection</span>
           <h1 className="font-serif text-5xl leading-tight text-navy sm:text-7xl">
             A curated <em className="italic text-coral/90">selection</em>.
           </h1>
@@ -130,7 +130,7 @@ function ProductCard({
       className={`group ${offset}`}
     >
       <Link
-        to="/boutique/$slug"
+        to="/Collection/$slug"
         params={{ slug: product.slug }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -167,7 +167,7 @@ function ProductCard({
         <div className="min-w-0">
           <div className="text-[0.6rem] tracking-luxury uppercase text-navy/45">{product.category}</div>
           <Link
-            to="/boutique/$slug"
+            to="/Collection/$slug"
             params={{ slug: product.slug }}
             className="mt-1 block truncate font-serif text-lg text-navy"
           >
