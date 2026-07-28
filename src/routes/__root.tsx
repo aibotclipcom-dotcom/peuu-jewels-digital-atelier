@@ -15,6 +15,8 @@ import { CartProvider } from "@/hooks/use-cart";
 import { SiteNav } from "@/components/layout/SiteNav";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { Toaster } from "@/components/ui/sonner";
+import { FirstOrderCouponModal } from "@/components/marketing/FirstOrderCouponModal";
+
 
 
 function NotFoundComponent() {
@@ -159,6 +161,8 @@ function RootComponent() {
               "!bg-navy !text-alabaster !border-navy-soft !rounded-none !font-sans tracking-wide",
           }}
         />
+        <FirstOrderCouponModal />
+
       </CartProvider>
     </QueryClientProvider>
   );
