@@ -132,6 +132,8 @@ function TermsPage() {
       <p><strong>Refund Timelines (If Approved):</strong></p>
       <ul>
         <li><strong>Prepaid Orders:</strong> Refunded to the original source of payment.</li>
+      </ul>
+
 
       <p>Please allow 7–10 business days for the funds to reflect in your account post-verification.</p>
 
