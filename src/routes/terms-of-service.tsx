@@ -67,15 +67,17 @@ function TermsPage() {
       </ul>
 
       <h2>4. Payments</h2>
-      <p>We offer a variety of secure payment methods for your convenience:</p>
+      <p>We offer secure online payment methods for your convenience:</p>
       <ul>
         <li>UPI</li>
         <li>Credit & Debit Cards</li>
         <li>Net Banking</li>
-        <li>Cash on Delivery (COD) [Subject to availability based on pin code]</li>
         <li>International Cards</li>
       </ul>
-      <p>Orders (excluding COD) are dispatched strictly post-payment verification.</p>
+      <p>
+        All orders are prepaid — a minimum order value of <strong>₹300</strong> applies.
+        Cash on Delivery is not available. Orders are dispatched strictly post-payment verification.
+      </p>
 
       <h2>5. Shipping & Delivery</h2>
       <p>
@@ -86,11 +88,13 @@ function TermsPage() {
       </p>
 
       <h2>6. Order Cancellations</h2>
-      <ul>
-        <li><strong>Pre-Dispatch:</strong> You may request an order cancellation before the item has been shipped from our facility.</li>
-        <li><strong>Post-Dispatch:</strong> Once an order is handed over to our logistics partner, it cannot be cancelled.</li>
-        <li><strong>Our Rights:</strong> We reserve the right to cancel any order flagged for suspected fraud, unauthorized payment, pricing errors, or lack of inventory.</li>
-      </ul>
+      <p>
+        Once an order is successfully placed and payment is confirmed, it cannot be cancelled
+        by the customer. We reserve the right to cancel any order flagged for suspected fraud,
+        unauthorized payment, pricing errors, or lack of inventory, in which case a full
+        refund will be issued to the original source of payment.
+      </p>
+
 
       <h2>7. Exchange Policy (Strictly Monitored)</h2>
       <p>
@@ -128,8 +132,7 @@ function TermsPage() {
       <p><strong>Refund Timelines (If Approved):</strong></p>
       <ul>
         <li><strong>Prepaid Orders:</strong> Refunded to the original source of payment.</li>
-        <li><strong>COD Orders:</strong> Refunded via secure UPI or Bank Transfer link.</li>
-      </ul>
+
       <p>Please allow 7–10 business days for the funds to reflect in your account post-verification.</p>
 
       <h2>9. International Orders</h2>
