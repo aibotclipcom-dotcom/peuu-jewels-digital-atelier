@@ -13,6 +13,7 @@ import {
 } from "@/components/checkout/ShippingDetailsForm";
 import { deleteMyAccount } from "@/lib/account.functions";
 
+
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({ meta: [{ title: "Your Account — PEUU Jewels" }] }),
   component: AccountPage,
@@ -50,34 +51,8 @@ function AccountPage() {
 
   const qc = useQueryClient();
   const [savingProfile, setSavingProfile] = useState(false);
-  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
-  const CANCEL_WINDOW_MS = 24 * 60 * 60 * 1000;
-  const BLOCKED = new Set(["cancelled", "shipped", "delivered"]);
-  const canCancel = (o: { created_at: string; status: string }) =>
-    !BLOCKED.has(String(o.status)) &&
-    Date.now() - new Date(o.created_at).getTime() < CANCEL_WINDOW_MS;
 
-  async function handleCancel(orderId: string) {
-    if (!confirm("Cancel this order? Any Razorpay payment will be refunded.")) return;
-    const reason = window.prompt("Reason (optional)") ?? "";
-    setCancellingId(orderId);
-    try {
-      const { data, error } = await supabase.functions.invoke("cancel-order", {
-        body: { orderId, reason },
-      });
-      if (error) throw error;
-      const refund = (data as { refund?: { id: string } } | null)?.refund;
-      toast.success(
-        refund ? `Order cancelled — refund initiated (${refund.id}).` : "Order cancelled.",
-      );
-      qc.invalidateQueries({ queryKey: ["account-orders", user?.id] });
-    } catch (e) {
-      toast.error((e as Error).message || "Could not cancel order.");
-    } finally {
-      setCancellingId(null);
-    }
-  }
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     enabled: !!user,
@@ -215,19 +190,8 @@ function AccountPage() {
                         ))}
                       </ul>
                     )}
-                    {canCancel(o) && (
-                      <div className="mt-4 flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => handleCancel(o.id)}
-                          disabled={cancellingId === o.id}
-                          className="border border-navy/20 px-4 py-2 text-[0.6rem] tracking-luxury uppercase text-navy hover:bg-navy/5 disabled:opacity-50"
-                        >
-                          {cancellingId === o.id ? "Cancelling…" : "Cancel order"}
-                        </button>
-                      </div>
-                    )}
                   </li>
+
                 ))}
               </ul>
             )}
