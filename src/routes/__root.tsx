@@ -163,7 +163,6 @@ function RootComponent() {
         />
         <FirstOrderCouponModal />
 
-        />
       </CartProvider>
     </QueryClientProvider>
   );
