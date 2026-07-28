@@ -102,17 +102,25 @@ export function CartDrawer() {
                 <span className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Subtotal</span>
                 <span className="font-serif text-2xl text-navy">{formatPrice(total)}</span>
               </div>
-              <p className="mt-2 text-xs text-navy/55">
-                Shipping details are collected on the next step.
-              </p>
+              {total < 300 ? (
+                <p className="mt-2 text-xs text-rose">
+                  Minimum order value is ₹300. Add {formatPrice(300 - total)} more to check out.
+                </p>
+              ) : (
+                <p className="mt-2 text-xs text-navy/55">
+                  Shipping details are collected on the next step.
+                </p>
+              )}
               <button
                 type="button"
                 onClick={handleContinue}
-                className="mt-5 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft"
+                disabled={total < 300}
+                className="mt-5 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Continue to Checkout
               </button>
             </div>
+
           </>
         )}
       </SheetContent>
