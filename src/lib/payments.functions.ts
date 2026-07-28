@@ -74,9 +74,38 @@ async function loadProductPrices(
 }
 
 
+const MIN_ORDER_INR = 300;
+
+async function resolveCoupon(
+  supabase: { from: (t: string) => any },
+  code: string | undefined,
+  email: string | undefined,
+): Promise<{ id: string; percent_off: number } | null> {
+  if (!code) return null;
+  const normalized = code.trim().toUpperCase();
+  if (!normalized) return null;
+  const { data: coupon } = await supabase
+    .from("coupons")
+    .select("id, percent_off, first_order_only, active, expires_at")
+    .eq("code", normalized)
+    .maybeSingle();
+  if (!coupon || !coupon.active) return null;
+  if (coupon.expires_at && new Date(coupon.expires_at as string) < new Date()) return null;
+  if (coupon.first_order_only && email) {
+    const { data: red } = await supabase
+      .from("coupon_redemptions")
+      .select("used_at")
+      .eq("coupon_id", coupon.id)
+      .eq("email", email.toLowerCase())
+      .maybeSingle();
+    if (red?.used_at) return null;
+  }
+  return { id: coupon.id as string, percent_off: Number(coupon.percent_off) };
+}
+
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { items: CartLine[] }) => {
+  .inputValidator((data: { items: CartLine[]; couponCode?: string }) => {
     if (!Array.isArray(data?.items) || data.items.length === 0) {
       throw new Error("Cart is empty");
     }
@@ -90,16 +119,27 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
     const items = normalizeItems(data.items);
     const priceMap = await loadProductPrices(context.supabase, items.map((i) => i.id));
 
-    let total = 0;
+    let subtotal = 0;
     for (const i of items) {
       const p = priceMap.get(i.id);
       if (!p) throw new Error(`Product not available: ${i.id}`);
       if (!Number.isFinite(p.price) || p.price <= 0) {
         throw new Error(`Invalid product price: ${i.id}`);
       }
-      total += p.price * i.quantity;
+      subtotal += p.price * i.quantity;
     }
-    if (!Number.isFinite(total) || total <= 0) throw new Error("Invalid total");
+    if (!Number.isFinite(subtotal) || subtotal <= 0) throw new Error("Invalid total");
+    if (subtotal < MIN_ORDER_INR) {
+      throw new Error(`Minimum order value is ₹${MIN_ORDER_INR}.`);
+    }
+
+    const coupon = await resolveCoupon(
+      context.supabase,
+      data.couponCode,
+      context.claims?.email as string | undefined,
+    );
+    const discount = coupon ? Math.round(subtotal * (coupon.percent_off / 100)) : 0;
+    const total = Math.max(0, subtotal - discount);
 
     const amountPaise = Math.round(total * 100);
     const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
@@ -115,11 +155,11 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
         currency: "INR",
         receipt: `peuu_${Date.now()}`,
         payment_capture: 1,
+        notes: coupon ? { coupon_id: coupon.id } : undefined,
       }),
     });
 
     if (!res.ok) {
-      // Do not log the response body — it can include payment identifiers.
       console.error("Razorpay create order failed with status", res.status);
       throw new Error("Could not create payment order");
     }
@@ -130,8 +170,13 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
       amount: order.amount,
       currency: order.currency,
       keyId,
+      subtotal,
+      discount,
+      total,
+      couponApplied: coupon ? { code: (data.couponCode ?? "").toUpperCase(), percent_off: coupon.percent_off } : null,
     };
   });
+
 
 export const verifyRazorpayPayment = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
