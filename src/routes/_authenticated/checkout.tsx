@@ -148,7 +148,14 @@ function CheckoutPage() {
       };
       const notes = values.notes ?? "";
 
-      const order = await createOrder({ data: { items: lineItems } });
+      const trimmedCoupon = couponCode.trim().toUpperCase();
+      const order = await createOrder({ data: { items: lineItems, couponCode: trimmedCoupon || undefined } });
+      if (trimmedCoupon && !order.couponApplied) {
+        toast.warning("Coupon could not be applied", {
+          description: "The code is invalid, expired, or already used. Continuing without a discount.",
+        });
+      }
+
 
       const rzp = new window.Razorpay({
         key: order.keyId,
@@ -180,13 +187,16 @@ function CheckoutPage() {
                 items: lineItems,
                 shipping,
                 notes,
+                couponCode: trimmedCoupon || undefined,
               },
             });
             clear();
+            if (typeof window !== "undefined") window.localStorage.removeItem("peuu_coupon_code");
             toast.success("Payment received.", {
               description: "Your order is confirmed — thank you.",
             });
             navigate({ to: "/account" });
+
           } catch (e) {
             toast.error((e as Error).message);
           } finally {
