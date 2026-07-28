@@ -64,6 +64,11 @@ function CheckoutPage() {
   const verifyPayment = useServerFn(verifyRazorpayPayment);
   const [submitting, setSubmitting] = useState(false);
   const [savePreference, setSavePreference] = useState(true);
+  const [couponCode, setCouponCode] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem("peuu_coupon_code") ?? "";
+  });
+  const belowMin = total < 300;
 
   useEffect(() => {
     void loadRazorpay();
@@ -74,6 +79,7 @@ function CheckoutPage() {
       navigate({ to: "/Collection", replace: true });
     }
   }, [items.length, navigate, submitting]);
+
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -100,8 +106,13 @@ function CheckoutPage() {
       toast.error("Your cart is empty.");
       return;
     }
+    if (total < 300) {
+      toast.error("Minimum order value is ₹300.");
+      return;
+    }
     setSubmitting(true);
     try {
+
       if (savePreference) {
         const { error: pErr } = await supabase
           .from("profiles")
