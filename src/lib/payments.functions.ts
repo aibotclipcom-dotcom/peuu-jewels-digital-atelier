@@ -188,6 +188,7 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       items: CartLine[];
       shipping: ShippingPayload;
       notes?: string;
+      couponCode?: string;
     }) => {
       if (
         !data?.razorpay_order_id ||
@@ -215,8 +216,9 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     }
 
     const { supabase, userId } = context;
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
 
-    // Idempotency: if this payment has already been recorded, return it.
+    // Idempotency
     const { data: existing } = await supabase
       .from("orders")
       .select("id")
@@ -229,16 +231,23 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     const items = normalizeItems(data.items);
     const priceMap = await loadProductPrices(supabase, items.map((i) => i.id));
 
-    let total = 0;
+    let subtotal = 0;
     const priced = items.map((i) => {
       const p = priceMap.get(i.id);
       if (!p) throw new Error(`Product not available: ${i.id}`);
       if (!Number.isFinite(p.price) || p.price <= 0) {
         throw new Error(`Invalid product price: ${i.id}`);
       }
-      total += p.price * i.quantity;
+      subtotal += p.price * i.quantity;
       return { ...i, name: p.name || i.name, unit_price: p.price };
     });
+    if (subtotal < MIN_ORDER_INR) {
+      throw new Error(`Minimum order value is ₹${MIN_ORDER_INR}.`);
+    }
+
+    const coupon = await resolveCoupon(supabase, data.couponCode, email);
+    const discount = coupon ? Math.round(subtotal * (coupon.percent_off / 100)) : 0;
+    const total = Math.max(0, subtotal - discount);
 
     const { data: order, error } = await supabase
       .from("orders")
@@ -255,7 +264,6 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       .select()
       .single();
     if (error) {
-      // Unique-violation race: another call already inserted this payment.
       const code = (error as { code?: string }).code;
       if (code === "23505") {
         const { data: dup } = await supabase
@@ -279,5 +287,15 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     );
     if (itemsErr) throw new Error(itemsErr.message);
 
-    return { orderId: order.id };
+    if (coupon && email) {
+      await supabase
+        .from("coupon_redemptions")
+        .upsert(
+          { coupon_id: coupon.id, email, user_id: userId, order_id: order.id, used_at: new Date().toISOString() },
+          { onConflict: "coupon_id,email" },
+        );
+    }
+
+    return { orderId: order.id, total, discount };
   });
+
