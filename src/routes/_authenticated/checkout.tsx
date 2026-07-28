@@ -273,10 +273,31 @@ function CheckoutPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-6 border-t border-border/60 pt-5">
+            <label className="text-[0.6rem] tracking-luxury uppercase text-navy/60">
+              Discount code
+            </label>
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder="e.g. WELCOME10"
+              className="mt-2 w-full border border-border/60 bg-alabaster px-3 py-2 text-sm text-navy placeholder:text-navy/30 focus:border-navy focus:outline-none"
+            />
+            <p className="mt-1.5 text-[0.65rem] text-navy/50">
+              Applied at payment. Discount will be verified before charging.
+            </p>
+          </div>
           <div className="mt-6 flex items-baseline justify-between border-t border-border/60 pt-5">
-            <span className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Total</span>
+            <span className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Subtotal</span>
             <span className="font-serif text-2xl text-navy">{formatPrice(total)}</span>
           </div>
+          {belowMin && (
+            <p className="mt-2 text-xs text-rose">
+              Minimum order value is ₹300. Add {formatPrice(300 - total)} more to continue.
+            </p>
+          )}
+
           <p className="mt-4 text-[0.7rem] leading-relaxed text-navy/55">
             By placing this order you agree to our{" "}
             <Link to="/terms-of-service" className="underline">Terms of Service</Link> and{" "}
