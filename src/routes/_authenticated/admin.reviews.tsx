@@ -13,12 +13,14 @@ function AdminReviews() {
   const { data = [], isLoading } = useQuery({
     queryKey: ["admin-reviews"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("product_reviews")
-        .select("*, products(name)")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      const [reviewsRes, productsRes] = await Promise.all([
+        supabase.from("product_reviews").select("*").order("created_at", { ascending: false }),
+        supabase.from("products").select("id, name"),
+      ]);
+      if (reviewsRes.error) throw reviewsRes.error;
+      if (productsRes.error) throw productsRes.error;
+      const nameById = new Map((productsRes.data ?? []).map((p) => [p.id, p.name]));
+      return (reviewsRes.data ?? []).map((r) => ({ ...r, productName: nameById.get(r.product_id) ?? "Unknown piece" }));
     },
   });
 
@@ -61,7 +63,7 @@ function AdminReviews() {
                       ))}
                     </div>
                     <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">
-                      {(r as { products?: { name: string } | null }).products?.name ?? "Unknown piece"}
+                      {r.productName}
                     </span>
                   </div>
                   {r.title && <h3 className="mt-2 font-serif text-lg text-navy">{r.title}</h3>}
