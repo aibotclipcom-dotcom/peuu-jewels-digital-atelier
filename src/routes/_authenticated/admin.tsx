@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
-import { LayoutGrid, Package, ScrollText, ArrowLeft } from "lucide-react";
+import { LayoutGrid, Package, ScrollText, ArrowLeft, FolderTree, Tags, SlidersHorizontal, Award, HelpCircle, MessageSquareText, Ticket, Layers } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Atelier Console — PEUU Jewels" }] }),
@@ -20,7 +20,17 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 type NavItem = {
-  to: "/admin" | "/admin/products" | "/admin/orders";
+  to:
+    | "/admin"
+    | "/admin/products"
+    | "/admin/orders"
+    | "/admin/categories"
+    | "/admin/product-types"
+    | "/admin/filters"
+    | "/admin/badges"
+    | "/admin/global-faqs"
+    | "/admin/reviews"
+    | "/admin/coupons";
   label: string;
   icon: typeof LayoutGrid;
   exact?: boolean;
@@ -29,6 +39,13 @@ const NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutGrid, exact: true },
   { to: "/admin/products", label: "Inventory", icon: Package },
   { to: "/admin/orders", label: "Orders", icon: ScrollText },
+  { to: "/admin/categories", label: "Categories", icon: FolderTree },
+  { to: "/admin/product-types", label: "Product Types", icon: Layers },
+  { to: "/admin/filters", label: "Filters", icon: SlidersHorizontal },
+  { to: "/admin/badges", label: "Badges", icon: Award },
+  { to: "/admin/global-faqs", label: "Global FAQs", icon: HelpCircle },
+  { to: "/admin/reviews", label: "Reviews", icon: MessageSquareText },
+  { to: "/admin/coupons", label: "Coupons", icon: Ticket },
 ];
 
 function AdminLayout() {
