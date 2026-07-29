@@ -37,7 +37,7 @@ function AdminBadges() {
   }
 
   async function update(id: string, patch: Record<string, unknown>) {
-    const { error } = await supabase.from("badges").update(patch).eq("id", id);
+    const { error } = await supabase.from("badges").update(patch as never).eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["admin-badges"] });
   }
