@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const STATIC_NAV = [
   { to: "/", label: "Home" },
-  { to: "/maison", label: "Maison" },
+  { to: "/maison", label: "OUR STORY" },
   { to: "/concierge", label: "Concierge" },
 ] as const;
 
