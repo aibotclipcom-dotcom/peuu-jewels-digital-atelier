@@ -259,20 +259,21 @@ function CollectionPage() {
   }, [products, descendantIds, activeCategory, search.type, search.sort, types, activeAttrs, attrMap]);
 
   function setCategory(slug?: string) {
-    navigate({ search: (prev) => ({ ...prev, category: slug }) });
+    navigate({ search: (prev: Search) => ({ ...prev, category: slug }) });
   }
   function setType(slug?: string) {
-    navigate({ search: (prev) => ({ ...prev, type: slug }) });
+    navigate({ search: (prev: Search) => ({ ...prev, type: slug }) });
   }
   function setSort(key: string) {
-    navigate({ search: (prev) => ({ ...prev, sort: key === "new" ? undefined : key }) });
+    navigate({ search: (prev: Search) => ({ ...prev, sort: key === "new" ? undefined : key }) });
   }
   function toggleAttr(key: string, value: string) {
     const next = { ...activeAttrs };
     const cur = next[key] ?? [];
     next[key] = cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value];
-    navigate({ search: (prev) => ({ ...prev, attrs: serializeAttrs(next) }) });
+    navigate({ search: (prev: Search) => ({ ...prev, attrs: serializeAttrs(next) }) });
   }
+
   function clearAll() {
     navigate({ search: {} });
   }
