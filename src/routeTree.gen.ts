@@ -96,9 +96,9 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const CollectionSlugRoute = CollectionSlugRouteImport.update({
-  id: '/Collection/$slug',
-  path: '/Collection/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CollectionRoute,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -350,7 +350,6 @@ export interface RootRouteChildren {
   MaisonRoute: typeof MaisonRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
-  CollectionSlugRoute: typeof CollectionSlugRoute
   CollectionIndexRoute: typeof CollectionIndexRoute
 }
 
@@ -442,10 +441,10 @@ declare module '@tanstack/react-router' {
     }
     '/Collection/$slug': {
       id: '/Collection/$slug'
-      path: '/Collection/$slug'
+      path: '/$slug'
       fullPath: '/Collection/$slug'
       preLoaderRoute: typeof CollectionSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CollectionRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -621,9 +620,18 @@ const rootRouteChildren: RootRouteChildren = {
   MaisonRoute: MaisonRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
-  CollectionSlugRoute: CollectionSlugRoute,
   CollectionIndexRoute: CollectionIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
