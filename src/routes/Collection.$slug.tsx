@@ -277,7 +277,7 @@ function ProductDetail() {
 
           {(images.length > 1 || videos.length > 0) && (
             <div className="mt-4 grid grid-cols-5 gap-3">
-              {images.map((src, i) => (
+              {images.map((src: string, i: number) => (
                 <button
                   key={src + i}
                   type="button"
