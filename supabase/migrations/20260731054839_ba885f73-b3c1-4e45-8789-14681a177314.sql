@@ -1,0 +1,29 @@
+GRANT SELECT ON public.categories TO anon;
+GRANT SELECT ON public.product_types TO anon;
+GRANT SELECT ON public.filter_definitions TO anon;
+GRANT SELECT ON public.product_attributes TO anon;
+GRANT SELECT ON public.badges TO anon;
+GRANT SELECT ON public.product_badges TO anon;
+GRANT SELECT ON public.product_faqs TO anon;
+GRANT SELECT ON public.global_faqs TO anon;
+GRANT SELECT ON public.product_reviews TO anon;
+
+GRANT SELECT ON public.categories TO authenticated;
+GRANT SELECT ON public.product_types TO authenticated;
+GRANT SELECT ON public.filter_definitions TO authenticated;
+GRANT SELECT ON public.product_attributes TO authenticated;
+GRANT SELECT ON public.badges TO authenticated;
+GRANT SELECT ON public.product_badges TO authenticated;
+GRANT SELECT ON public.product_faqs TO authenticated;
+GRANT SELECT ON public.global_faqs TO authenticated;
+
+GRANT ALL ON public.categories TO service_role;
+GRANT ALL ON public.product_types TO service_role;
+GRANT ALL ON public.filter_definitions TO service_role;
+GRANT ALL ON public.product_attributes TO service_role;
+GRANT ALL ON public.badges TO service_role;
+GRANT ALL ON public.product_badges TO service_role;
+GRANT ALL ON public.product_faqs TO service_role;
+GRANT ALL ON public.global_faqs TO service_role;
+GRANT ALL ON public.product_reviews TO service_role;
+GRANT ALL ON public.review_helpful_votes TO service_role;
