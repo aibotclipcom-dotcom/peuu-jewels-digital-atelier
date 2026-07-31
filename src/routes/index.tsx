@@ -108,7 +108,7 @@ function Hero() {
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="text-[0.7rem] tracking-luxury uppercase text-rose"
         >
-          Maison PEUU · Est. — Your happiness, our priority
+          PEUU Jewels · Est. — Handcrafted elegance, just for you
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 32 }}
@@ -116,9 +116,9 @@ function Hero() {
           transition={{ duration: 1.4, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 font-serif text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.95] tracking-tight text-navy"
         >
-          The art of <em className="italic text-coral/90">adornment,</em>
+          Timeless Jewelry,
           <br />
-          quietly perfected.
+          Crafted for <em className="italic text-coral/90">your special moments.</em>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -126,8 +126,8 @@ function Hero() {
           transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 max-w-xl text-sm leading-relaxed text-navy/70 sm:text-base"
         >
-          An independent atelier of fine jewelry — sculpted by hand, finished with care, made to be
-          worn for a lifetime.
+          Discover our exclusive collection of fine handcrafted jewelry. Designed with passion,
+          finished with perfection, and made to celebrate you every day.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -139,14 +139,14 @@ function Hero() {
             to="/Collection"
             className="group inline-flex items-center gap-3 bg-navy px-9 py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft"
           >
-            Enter the Collection
+            Explore the Collection
             <span className="inline-block h-px w-6 bg-alabaster transition-all group-hover:w-10" />
           </Link>
           <Link
             to="/maison"
             className="line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
           >
-            Discover the Maison
+            Our Story
           </Link>
         </motion.div>
 
