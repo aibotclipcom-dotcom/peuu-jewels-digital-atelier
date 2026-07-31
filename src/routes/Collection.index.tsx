@@ -17,7 +17,7 @@ type Search = {
   attrs?: string;
 };
 
-export const Route = createFileRoute("/Collection")({
+export const Route = createFileRoute("/Collection/")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     category: typeof search.category === "string" ? search.category : undefined,
     type: typeof search.type === "string" ? search.type : undefined,
