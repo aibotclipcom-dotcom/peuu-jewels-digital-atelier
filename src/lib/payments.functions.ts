@@ -288,7 +288,10 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     if (itemsErr) throw new Error(itemsErr.message);
 
     if (coupon && email) {
-      await supabase
+      // Redemption rows are marked used server-side with elevated privileges:
+      // the RLS insert policy intentionally forbids clients from setting used_at/order_id.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin
         .from("coupon_redemptions")
         .upsert(
           { coupon_id: coupon.id, email, user_id: userId, order_id: order.id, used_at: new Date().toISOString() },
