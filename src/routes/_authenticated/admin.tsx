@@ -30,7 +30,8 @@ type NavItem = {
     | "/admin/badges"
     | "/admin/global-faqs"
     | "/admin/reviews"
-    | "/admin/coupons";
+    | "/admin/coupons"
+    | "/admin/settings";
   label: string;
   icon: typeof LayoutGrid;
   exact?: boolean;
@@ -46,6 +47,7 @@ const NAV: NavItem[] = [
   { to: "/admin/global-faqs", label: "Global FAQs", icon: HelpCircle },
   { to: "/admin/reviews", label: "Reviews", icon: MessageSquareText },
   { to: "/admin/coupons", label: "Coupons", icon: Ticket },
+  { to: "/admin/settings", label: "Store Settings", icon: Settings },
 ];
 
 function AdminLayout() {
