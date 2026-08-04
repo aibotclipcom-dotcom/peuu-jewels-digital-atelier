@@ -3,6 +3,7 @@ import { ShoppingBag, User2, Menu, X, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Logo } from "@/components/brand/Logo";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,6 +71,7 @@ export function SiteNav() {
       }`}
       onMouseLeave={() => setMegaOpen(false)}
     >
+      <AnnouncementBar />
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-5 sm:h-20 sm:px-10">
         <Logo />
 

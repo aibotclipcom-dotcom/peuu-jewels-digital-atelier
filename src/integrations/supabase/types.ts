@@ -59,6 +59,7 @@ export type Database = {
           created_at: string
           icon_url: string | null
           id: string
+          image_url: string | null
           is_visible: boolean
           name: string
           parent_id: string | null
@@ -71,6 +72,7 @@ export type Database = {
           created_at?: string
           icon_url?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           name: string
           parent_id?: string | null
@@ -83,6 +85,7 @@ export type Database = {
           created_at?: string
           icon_url?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           name?: string
           parent_id?: string | null
@@ -172,33 +175,51 @@ export type Database = {
       coupons: {
         Row: {
           active: boolean
+          amount_off: number
           code: string
           created_at: string
+          discount_type: string
           expires_at: string | null
           first_order_only: boolean
           id: string
+          min_order_amount: number
           percent_off: number
+          single_use: boolean
           updated_at: string
+          usage_limit: number | null
+          used_count: number
         }
         Insert: {
           active?: boolean
+          amount_off?: number
           code: string
           created_at?: string
+          discount_type?: string
           expires_at?: string | null
           first_order_only?: boolean
           id?: string
+          min_order_amount?: number
           percent_off: number
+          single_use?: boolean
           updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
         }
         Update: {
           active?: boolean
+          amount_off?: number
           code?: string
           created_at?: string
+          discount_type?: string
           expires_at?: string | null
           first_order_only?: boolean
           id?: string
+          min_order_amount?: number
           percent_off?: number
+          single_use?: boolean
           updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
         }
         Relationships: []
       }
@@ -312,9 +333,12 @@ export type Database = {
       }
       orders: {
         Row: {
+          billing_address: Json | null
           cancellation_reason: string | null
           cancelled_at: string | null
+          coupon_code: string | null
           created_at: string
+          discount_total: number
           id: string
           notes: string | null
           payment_method: string | null
@@ -323,15 +347,21 @@ export type Database = {
           refund_id: string | null
           refund_status: string | null
           shipping_address: Json | null
+          shipping_total: number
           status: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          tax_total: number
           total: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          billing_address?: Json | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
+          coupon_code?: string | null
           created_at?: string
+          discount_total?: number
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -340,15 +370,21 @@ export type Database = {
           refund_id?: string | null
           refund_status?: string | null
           shipping_address?: Json | null
+          shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          tax_total?: number
           total?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          billing_address?: Json | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
+          coupon_code?: string | null
           created_at?: string
+          discount_total?: number
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -357,7 +393,10 @@ export type Database = {
           refund_id?: string | null
           refund_status?: string | null
           shipping_address?: Json | null
+          shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          tax_total?: number
           total?: number
           updated_at?: string
           user_id?: string
@@ -515,6 +554,7 @@ export type Database = {
       }
       products: {
         Row: {
+          best_seller_sort: number
           care: string | null
           category: string
           category_id: string | null
@@ -523,6 +563,7 @@ export type Database = {
           description: string | null
           id: string
           image_urls: string[]
+          is_best_seller: boolean
           materials: string[]
           name: string
           og_image: string | null
@@ -542,6 +583,7 @@ export type Database = {
           video_urls: string[]
         }
         Insert: {
+          best_seller_sort?: number
           care?: string | null
           category: string
           category_id?: string | null
@@ -550,6 +592,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_urls?: string[]
+          is_best_seller?: boolean
           materials?: string[]
           name: string
           og_image?: string | null
@@ -569,6 +612,7 @@ export type Database = {
           video_urls?: string[]
         }
         Update: {
+          best_seller_sort?: number
           care?: string | null
           category?: string
           category_id?: string | null
@@ -577,6 +621,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_urls?: string[]
+          is_best_seller?: boolean
           materials?: string[]
           name?: string
           og_image?: string | null
@@ -682,6 +727,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      site_settings: {
+        Row: {
+          created_at: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

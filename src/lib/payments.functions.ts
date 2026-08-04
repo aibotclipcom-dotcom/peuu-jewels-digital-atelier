@@ -1,13 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createHmac } from "crypto";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-
-interface CartLine {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import { buildQuote, type CartLineInput } from "@/lib/order-pricing";
 
 interface ShippingPayload {
   full_name: string;
@@ -37,111 +31,78 @@ function validateShipping(s: unknown): ShippingPayload {
   };
 }
 
-function normalizeItems(items: CartLine[]) {
-  const normalized = items.map((i) => {
-    const id = String(i?.id ?? "").trim();
-    const quantity = Math.floor(Number(i?.quantity));
-    if (!id) throw new Error("Invalid item id");
-    if (!Number.isFinite(quantity) || quantity <= 0) {
-      throw new Error("Invalid item quantity");
+function optionalAddress(s: unknown): ShippingPayload | null {
+  if (!s || typeof s !== "object") return null;
+  try {
+    return validateShipping(s);
+  } catch {
+    return null;
+  }
+}
+
+/** Live coupon check for the cart/checkout "Apply" button. */
+export const validateCoupon = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { items: CartLineInput[]; code: string }) => {
+    if (!Array.isArray(data?.items)) throw new Error("Cart is empty");
+    if (typeof data?.code !== "string" || !data.code.trim()) {
+      throw new Error("Enter a discount code.");
     }
-    return { id, quantity, name: String(i?.name ?? "") };
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
+    const quote = await buildQuote(context.supabase, data.items, data.code, email);
+    if (!quote.coupon.coupon) {
+      return { valid: false as const, reason: quote.coupon.reason ?? "Invalid coupon code." };
+    }
+    return {
+      valid: true as const,
+      code: quote.coupon.coupon.code,
+      discount: quote.totals.couponDiscount,
+      totals: quote.totals,
+    };
   });
-  // Merge duplicate product ids to prevent inflated totals via repeated lines.
-  const merged = new Map<string, { id: string; quantity: number; name: string }>();
-  for (const it of normalized) {
-    const prev = merged.get(it.id);
-    if (prev) prev.quantity += it.quantity;
-    else merged.set(it.id, { ...it });
-  }
-  return [...merged.values()];
-}
 
-async function loadProductPrices(
-  supabase: { from: (t: string) => any },
-  ids: string[],
-) {
-  const { data, error } = await supabase
-    .from("products")
-    .select("id, name, price")
-    .in("id", ids);
-  if (error) throw new Error(error.message);
-  const map = new Map<string, { name: string; price: number }>();
-  for (const p of (data ?? []) as Array<{ id: string; name: string; price: number }>) {
-    map.set(p.id, { name: p.name, price: Number(p.price) });
-  }
-  return map;
-}
-
-
-const MIN_ORDER_INR = 300;
-
-async function resolveCoupon(
-  supabase: { from: (t: string) => any },
-  code: string | undefined,
-  email: string | undefined,
-): Promise<{ id: string; percent_off: number } | null> {
-  if (!code) return null;
-  const normalized = code.trim().toUpperCase();
-  if (!normalized) return null;
-  const { data: coupon } = await supabase
-    .from("coupons")
-    .select("id, percent_off, first_order_only, active, expires_at")
-    .eq("code", normalized)
-    .maybeSingle();
-  if (!coupon || !coupon.active) return null;
-  if (coupon.expires_at && new Date(coupon.expires_at as string) < new Date()) return null;
-  if (coupon.first_order_only && email) {
-    const { data: red } = await supabase
-      .from("coupon_redemptions")
-      .select("used_at")
-      .eq("coupon_id", coupon.id)
-      .eq("email", email.toLowerCase())
-      .maybeSingle();
-    if (red?.used_at) return null;
-  }
-  return { id: coupon.id as string, percent_off: Number(coupon.percent_off) };
-}
+/** Server-authoritative totals for the cart summary. */
+export const quoteCart = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { items: CartLineInput[]; couponCode?: string }) => {
+    if (!Array.isArray(data?.items) || data.items.length === 0) throw new Error("Cart is empty");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
+    const quote = await buildQuote(context.supabase, data.items, data.couponCode, email);
+    return {
+      totals: quote.totals,
+      couponApplied: quote.coupon.coupon,
+      couponReason: quote.coupon.reason,
+    };
+  });
 
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { items: CartLine[]; couponCode?: string }) => {
+  .inputValidator((data: { items: CartLineInput[]; couponCode?: string }) => {
     if (!Array.isArray(data?.items) || data.items.length === 0) {
       throw new Error("Cart is empty");
     }
     return data;
   })
   .handler(async ({ data, context }) => {
-    const keyId = process.env.RAZORPAY_KEY_ID;
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const keyId = process.env["RAZORPAY_KEY_ID"];
+    const keySecret = process.env["RAZORPAY_KEY_SECRET"];
     if (!keyId || !keySecret) throw new Error("Razorpay is not configured");
 
-    const items = normalizeItems(data.items);
-    const priceMap = await loadProductPrices(context.supabase, items.map((i) => i.id));
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
+    const quote = await buildQuote(context.supabase, data.items, data.couponCode, email);
+    const { totals, coupon } = quote;
 
-    let subtotal = 0;
-    for (const i of items) {
-      const p = priceMap.get(i.id);
-      if (!p) throw new Error(`Product not available: ${i.id}`);
-      if (!Number.isFinite(p.price) || p.price <= 0) {
-        throw new Error(`Invalid product price: ${i.id}`);
-      }
-      subtotal += p.price * i.quantity;
-    }
-    if (!Number.isFinite(subtotal) || subtotal <= 0) throw new Error("Invalid total");
-    if (subtotal < MIN_ORDER_INR) {
-      throw new Error(`Minimum order value is ₹${MIN_ORDER_INR}.`);
+    if (!Number.isFinite(totals.grandTotal) || totals.grandTotal <= 0) {
+      throw new Error("Invalid total");
     }
 
-    const coupon = await resolveCoupon(
-      context.supabase,
-      data.couponCode,
-      context.claims?.email as string | undefined,
-    );
-    const discount = coupon ? Math.round(subtotal * (coupon.percent_off / 100)) : 0;
-    const total = Math.max(0, subtotal - discount);
-
-    const amountPaise = Math.round(total * 100);
+    const amountPaise = Math.round(totals.grandTotal * 100);
     const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
 
     const res = await fetch("https://api.razorpay.com/v1/orders", {
@@ -155,7 +116,7 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
         currency: "INR",
         receipt: `peuu_${Date.now()}`,
         payment_capture: 1,
-        notes: coupon ? { coupon_id: coupon.id } : undefined,
+        notes: coupon.couponId ? { coupon_id: coupon.couponId } : undefined,
       }),
     });
 
@@ -170,13 +131,11 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
       amount: order.amount,
       currency: order.currency,
       keyId,
-      subtotal,
-      discount,
-      total,
-      couponApplied: coupon ? { code: (data.couponCode ?? "").toUpperCase(), percent_off: coupon.percent_off } : null,
+      totals,
+      couponApplied: coupon.coupon,
+      couponReason: coupon.reason,
     };
   });
-
 
 export const verifyRazorpayPayment = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -185,8 +144,9 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       razorpay_order_id: string;
       razorpay_payment_id: string;
       razorpay_signature: string;
-      items: CartLine[];
+      items: CartLineInput[];
       shipping: ShippingPayload;
+      billing?: ShippingPayload | null;
       notes?: string;
       couponCode?: string;
     }) => {
@@ -199,12 +159,13 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         throw new Error("Missing payment payload");
       }
       const shipping = validateShipping(data.shipping);
+      const billing = optionalAddress(data.billing);
       const notes = typeof data.notes === "string" ? data.notes.slice(0, 1000) : "";
-      return { ...data, shipping, notes };
+      return { ...data, shipping, billing, notes };
     },
   )
   .handler(async ({ data, context }) => {
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const keySecret = process.env["RAZORPAY_KEY_SECRET"];
     if (!keySecret) throw new Error("Razorpay is not configured");
 
     const expected = createHmac("sha256", keySecret)
@@ -218,51 +179,38 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const email = (context.claims?.email as string | undefined)?.toLowerCase();
 
-    // Idempotency
+    // Idempotency — a replayed payment id must never create a second order.
     const { data: existing } = await supabase
       .from("orders")
       .select("id")
       .eq("razorpay_payment_id", data.razorpay_payment_id)
       .maybeSingle();
-    if (existing?.id) {
-      return { orderId: existing.id };
-    }
+    if (existing?.id) return { orderId: existing.id };
 
-    const items = normalizeItems(data.items);
-    const priceMap = await loadProductPrices(supabase, items.map((i) => i.id));
-
-    let subtotal = 0;
-    const priced = items.map((i) => {
-      const p = priceMap.get(i.id);
-      if (!p) throw new Error(`Product not available: ${i.id}`);
-      if (!Number.isFinite(p.price) || p.price <= 0) {
-        throw new Error(`Invalid product price: ${i.id}`);
-      }
-      subtotal += p.price * i.quantity;
-      return { ...i, name: p.name || i.name, unit_price: p.price };
-    });
-    if (subtotal < MIN_ORDER_INR) {
-      throw new Error(`Minimum order value is ₹${MIN_ORDER_INR}.`);
-    }
-
-    const coupon = await resolveCoupon(supabase, data.couponCode, email);
-    const discount = coupon ? Math.round(subtotal * (coupon.percent_off / 100)) : 0;
-    const total = Math.max(0, subtotal - discount);
+    const quote = await buildQuote(supabase, data.items, data.couponCode, email);
+    const { totals, coupon, lines } = quote;
 
     const { data: order, error } = await supabase
       .from("orders")
       .insert({
         user_id: userId,
-        total,
+        total: totals.grandTotal,
+        subtotal: totals.itemsTotal,
+        discount_total: totals.couponDiscount,
+        shipping_total: totals.shipping,
+        tax_total: totals.tax,
+        coupon_code: coupon.coupon?.code ?? null,
         status: "confirmed",
         payment_method: "razorpay",
         razorpay_order_id: data.razorpay_order_id,
         razorpay_payment_id: data.razorpay_payment_id,
         shipping_address: { ...data.shipping } as Record<string, string>,
+        billing_address: (data.billing ?? data.shipping) as unknown as Record<string, string>,
         notes: data.notes || null,
       })
       .select()
       .single();
+
     if (error) {
       const code = (error as { code?: string }).code;
       if (code === "23505") {
@@ -277,28 +225,42 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     }
 
     const { error: itemsErr } = await supabase.from("order_items").insert(
-      priced.map((i) => ({
+      lines.map((i) => ({
         order_id: order.id,
         product_id: i.id,
         product_name: i.name,
         quantity: i.quantity,
-        unit_price: i.unit_price,
+        unit_price: i.price,
       })),
     );
     if (itemsErr) throw new Error(itemsErr.message);
 
-    if (coupon && email) {
-      // Redemption rows are marked used server-side with elevated privileges:
-      // the RLS insert policy intentionally forbids clients from setting used_at/order_id.
+    if (coupon.couponId) {
+      // Redemption + usage counters are written with elevated privileges:
+      // RLS intentionally forbids clients from setting used_at / order_id.
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin
-        .from("coupon_redemptions")
-        .upsert(
-          { coupon_id: coupon.id, email, user_id: userId, order_id: order.id, used_at: new Date().toISOString() },
+      if (email) {
+        await supabaseAdmin.from("coupon_redemptions").upsert(
+          {
+            coupon_id: coupon.couponId,
+            email,
+            user_id: userId,
+            order_id: order.id,
+            used_at: new Date().toISOString(),
+          },
           { onConflict: "coupon_id,email" },
         );
+      }
+      const { data: current } = await supabaseAdmin
+        .from("coupons")
+        .select("used_count")
+        .eq("id", coupon.couponId)
+        .maybeSingle();
+      await supabaseAdmin
+        .from("coupons")
+        .update({ used_count: (Number(current?.used_count) || 0) + 1 })
+        .eq("id", coupon.couponId);
     }
 
-    return { orderId: order.id, total, discount };
+    return { orderId: order.id, totals };
   });
-
