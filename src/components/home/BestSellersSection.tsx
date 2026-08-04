@@ -12,22 +12,14 @@ export function BestSellersSection({ limit = 8 }: { limit?: number }) {
   if (!isLoading && products.length === 0) return null;
 
   return (
-    <section className="bg-cashmere/25 px-6 py-24 sm:px-10">
+    <section className="bg-alabaster px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1400px]">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Most loved</span>
-            <h2 className="mt-3 font-serif text-4xl leading-tight text-navy sm:text-5xl">
-              Best Sellers
-            </h2>
-          </div>
-          <Link
-            to="/best-sellers"
-            className="line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
-          >
-            View all best sellers
-          </Link>
+        <div className="text-center">
+          <h2 className="font-serif text-4xl leading-tight text-navy sm:text-5xl">
+            Best Sellers
+          </h2>
         </div>
+
 
         {isLoading ? (
           <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-4">
