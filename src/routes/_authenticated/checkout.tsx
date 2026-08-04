@@ -6,15 +6,15 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
+import { useCartTotals } from "@/hooks/use-cart-totals";
 import { formatPrice } from "@/lib/format";
+import { CouponField } from "@/components/cart/CouponField";
+import { TotalsBreakdown } from "@/components/cart/TotalsBreakdown";
 import {
   ShippingDetailsForm,
   type ShippingValues,
 } from "@/components/checkout/ShippingDetailsForm";
-import {
-  createRazorpayOrder,
-  verifyRazorpayPayment,
-} from "@/lib/payments.functions";
+import { createRazorpayOrder, verifyRazorpayPayment } from "@/lib/payments.functions";
 
 declare global {
   interface Window {
@@ -58,17 +58,14 @@ export const Route = createFileRoute("/_authenticated/checkout")({
 
 function CheckoutPage() {
   const { user } = useAuth();
-  const { items, total, clear } = useCart();
+  const { items, clear, couponCode, appliedCoupon } = useCart();
+  const totals = useCartTotals();
   const navigate = useNavigate();
   const createOrder = useServerFn(createRazorpayOrder);
   const verifyPayment = useServerFn(verifyRazorpayPayment);
   const [submitting, setSubmitting] = useState(false);
   const [savePreference, setSavePreference] = useState(true);
-  const [couponCode, setCouponCode] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return window.localStorage.getItem("peuu_coupon_code") ?? "";
-  });
-  const belowMin = total < 300;
+  const belowMin = totals.itemsTotal < totals.minOrderValue;
 
   useEffect(() => {
     void loadRazorpay();
@@ -80,16 +77,13 @@ function CheckoutPage() {
     }
   }, [items.length, navigate, submitting]);
 
-
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select(
-          "full_name, phone, street_address, city, state, postal_code",
-        )
+        .select("full_name, phone, street_address, city, state, postal_code")
         .eq("id", user!.id)
         .maybeSingle();
       if (error) throw error;
@@ -106,38 +100,12 @@ function CheckoutPage() {
       toast.error("Your cart is empty.");
       return;
     }
-    if (total < 300) {
-      toast.error("Minimum order value is ₹300.");
+    if (belowMin) {
+      toast.error(`Minimum order value is ${formatPrice(totals.minOrderValue)}.`);
       return;
     }
     setSubmitting(true);
     try {
-
-      if (savePreference) {
-        const { error: pErr } = await supabase
-          .from("profiles")
-          .update({
-            full_name: values.full_name,
-            phone: values.phone,
-            street_address: values.street_address,
-            city: values.city,
-            state: values.state,
-            postal_code: values.postal_code,
-          })
-          .eq("id", user.id);
-        if (pErr) console.warn("Profile save failed:", pErr.message);
-      }
-
-      const loaded = await loadRazorpay();
-      if (!loaded || !window.Razorpay) throw new Error("Razorpay failed to load");
-
-      const lineItems = items.map((i) => ({
-        id: i.id,
-        name: i.name,
-        price: i.price,
-        quantity: i.quantity,
-      }));
-
       const shipping = {
         full_name: values.full_name,
         phone: values.phone,
@@ -146,16 +114,44 @@ function CheckoutPage() {
         state: values.state,
         postal_code: values.postal_code,
       };
-      const notes = values.notes ?? "";
+      const billing = values.billing_same
+        ? shipping
+        : {
+            full_name: values.billing_full_name ?? "",
+            phone: values.billing_phone ?? "",
+            street_address: values.billing_street_address ?? "",
+            city: values.billing_city ?? "",
+            state: values.billing_state ?? "",
+            postal_code: values.billing_postal_code ?? "",
+          };
 
-      const trimmedCoupon = couponCode.trim().toUpperCase();
-      const order = await createOrder({ data: { items: lineItems, couponCode: trimmedCoupon || undefined } });
-      if (trimmedCoupon && !order.couponApplied) {
-        toast.warning("Coupon could not be applied", {
-          description: "The code is invalid, expired, or already used. Continuing without a discount.",
-        });
+      if (savePreference) {
+        const { error: pErr } = await supabase
+          .from("profiles")
+          .update({ ...shipping })
+          .eq("id", user.id);
+        if (pErr) {
+          toast.warning("We couldn't save these details to your profile.", {
+            description: "Your order will still go through.",
+          });
+        }
       }
 
+      const loaded = await loadRazorpay();
+      if (!loaded || !window.Razorpay) throw new Error("Razorpay failed to load");
+
+      const lineItems = items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity }));
+      const notes = values.notes ?? "";
+      const trimmedCoupon = appliedCoupon ? appliedCoupon.code : couponCode.trim().toUpperCase();
+
+      const order = await createOrder({
+        data: { items: lineItems, couponCode: trimmedCoupon || undefined },
+      });
+      if (trimmedCoupon && !order.couponApplied) {
+        toast.warning("Coupon could not be applied", {
+          description: order.couponReason ?? "Continuing without a discount.",
+        });
+      }
 
       const rzp = new window.Razorpay({
         key: order.keyId,
@@ -170,9 +166,7 @@ function CheckoutPage() {
           contact: values.phone,
         },
         theme: { color: "#0A192F" },
-        modal: {
-          ondismiss: () => setSubmitting(false),
-        },
+        modal: { ondismiss: () => setSubmitting(false) },
         handler: async (response: {
           razorpay_order_id: string;
           razorpay_payment_id: string;
@@ -186,6 +180,7 @@ function CheckoutPage() {
                 razorpay_signature: response.razorpay_signature,
                 items: lineItems,
                 shipping,
+                billing,
                 notes,
                 couponCode: trimmedCoupon || undefined,
               },
@@ -196,7 +191,6 @@ function CheckoutPage() {
               description: "Your order is confirmed — thank you.",
             });
             navigate({ to: "/account" });
-
           } catch (e) {
             toast.error((e as Error).message);
           } finally {
@@ -228,6 +222,7 @@ function CheckoutPage() {
             <ShippingDetailsForm
               submitLabel="Continue to Payment"
               submitting={submitting}
+              showBilling
               defaultValues={{
                 full_name:
                   profile?.full_name ??
@@ -273,28 +268,17 @@ function CheckoutPage() {
               </li>
             ))}
           </ul>
+
+          <CouponField />
+
           <div className="mt-6 border-t border-border/60 pt-5">
-            <label className="text-[0.6rem] tracking-luxury uppercase text-navy/60">
-              Discount code
-            </label>
-            <input
-              type="text"
-              value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-              placeholder="e.g. WELCOME10"
-              className="mt-2 w-full border border-border/60 bg-alabaster px-3 py-2 text-sm text-navy placeholder:text-navy/30 focus:border-navy focus:outline-none"
-            />
-            <p className="mt-1.5 text-[0.65rem] text-navy/50">
-              Applied at payment. Discount will be verified before charging.
-            </p>
+            <TotalsBreakdown />
           </div>
-          <div className="mt-6 flex items-baseline justify-between border-t border-border/60 pt-5">
-            <span className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Subtotal</span>
-            <span className="font-serif text-2xl text-navy">{formatPrice(total)}</span>
-          </div>
+
           {belowMin && (
             <p className="mt-2 text-xs text-rose">
-              Minimum order value is ₹300. Add {formatPrice(300 - total)} more to continue.
+              Minimum order value is {formatPrice(totals.minOrderValue)}. Add{" "}
+              {formatPrice(totals.minOrderValue - totals.itemsTotal)} more to continue.
             </p>
           )}
 
