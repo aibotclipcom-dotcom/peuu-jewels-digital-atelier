@@ -235,6 +235,18 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     );
     if (itemsErr) throw new Error(itemsErr.message);
 
+    // Inventory is reduced atomically once the payment is verified. Stock was
+    // already validated in buildQuote; a failure here must not lose the paid
+    // order, so it is logged and the order stands for manual review.
+    {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { error: stockErr } = await supabaseAdmin.rpc("consume_product_stock", {
+        _items: lines.map((i) => ({ id: i.id, quantity: i.quantity })),
+      });
+      if (stockErr) console.error("Stock consumption failed for order", order.id, stockErr.message);
+    }
+
+
     if (coupon.couponId) {
       // Redemption + usage counters are written with elevated privileges:
       // RLS intentionally forbids clients from setting used_at / order_id.
