@@ -1,13 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, LayoutGrid, GalleryHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { homeCategoriesQuery } from "@/lib/catalog";
 
-/** Shoppable category cards with a grid / slider toggle. */
+/** Shoppable category cards in a slider layout. */
 export function CategoriesSection() {
   const { data: categories = [], isLoading } = useQuery(homeCategoriesQuery);
-  const [mode, setMode] = useState<"grid" | "slider">("grid");
   const trackRef = useRef<HTMLDivElement>(null);
 
   function scrollBy(dir: 1 | -1) {
@@ -21,9 +20,7 @@ export function CategoriesSection() {
       key={c.id}
       to="/Collection"
       search={{ category: c.slug }}
-      className={`group relative overflow-hidden bg-cashmere ${
-        mode === "slider" ? "w-[260px] shrink-0 snap-start" : ""
-      }`}
+      className="group relative w-[260px] shrink-0 snap-start overflow-hidden bg-cashmere"
     >
       <div className="aspect-[4/5] w-full overflow-hidden">
         {c.image_url || c.icon_url ? (
@@ -52,45 +49,19 @@ export function CategoriesSection() {
   return (
     <section className="bg-alabaster px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1400px]">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Explore</span>
-            <h2 className="mt-3 font-serif text-4xl leading-tight text-navy sm:text-5xl">
-              Our Categories
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setMode("grid")}
-              aria-label="Grid view"
-              className={`grid h-9 w-9 place-items-center border transition-colors ${
-                mode === "grid" ? "border-navy bg-navy text-alabaster" : "border-border/60 text-navy/60"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" strokeWidth={1.5} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("slider")}
-              aria-label="Slider view"
-              className={`grid h-9 w-9 place-items-center border transition-colors ${
-                mode === "slider" ? "border-navy bg-navy text-alabaster" : "border-border/60 text-navy/60"
-              }`}
-            >
-              <GalleryHorizontal className="h-4 w-4" strokeWidth={1.5} />
-            </button>
-          </div>
+        <div>
+          <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Explore</span>
+          <h2 className="mt-3 font-serif text-4xl leading-tight text-navy sm:text-5xl">
+            Our Categories
+          </h2>
         </div>
 
         {isLoading ? (
-          <div className="mt-10 grid grid-cols-2 gap-5 md:grid-cols-4">
+          <div className="mt-10 flex gap-5 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="aspect-[4/5] animate-pulse bg-cashmere" />
+              <div key={i} className="aspect-[4/5] w-[260px] shrink-0 animate-pulse bg-cashmere" />
             ))}
           </div>
-        ) : mode === "grid" ? (
-          <div className="mt-10 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">{cards}</div>
         ) : (
           <div className="relative mt-10">
             <div
