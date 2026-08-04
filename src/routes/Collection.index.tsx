@@ -15,6 +15,7 @@ type Search = {
   type?: string;
   sort?: string;
   attrs?: string;
+  q?: string;
 };
 
 export const Route = createFileRoute("/Collection/")({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/Collection/")({
     type: typeof search.type === "string" ? search.type : undefined,
     sort: typeof search.sort === "string" ? search.sort : undefined,
     attrs: typeof search.attrs === "string" ? search.attrs : undefined,
+    q: typeof search.q === "string" && search.q.trim() ? search.q : undefined,
   }),
   head: () => ({
     meta: [
@@ -219,6 +221,17 @@ function CollectionPage() {
   const filtered = useMemo(() => {
     let list = products.slice();
 
+    if (search.q) {
+      const q = search.q.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          (p.category ?? "").toLowerCase().includes(q) ||
+          (p.materials ?? "").toString().toLowerCase().includes(q),
+      );
+    }
+
+
     if (descendantIds) {
       list = list.filter(
         (p) =>
@@ -256,7 +269,7 @@ function CollectionPage() {
         break;
     }
     return list;
-  }, [products, descendantIds, activeCategory, search.type, search.sort, types, activeAttrs, attrMap]);
+  }, [products, descendantIds, activeCategory, search.type, search.sort, search.q, types, activeAttrs, attrMap]);
 
   function setCategory(slug?: string) {
     navigate({ search: (prev: Search) => ({ ...prev, category: slug }) });

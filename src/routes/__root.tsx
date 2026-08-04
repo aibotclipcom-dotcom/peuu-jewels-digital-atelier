@@ -16,6 +16,7 @@ import { SiteNav } from "@/components/layout/SiteNav";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { Toaster } from "@/components/ui/sonner";
 import { FirstOrderCouponModal } from "@/components/marketing/FirstOrderCouponModal";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 
 
@@ -78,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "PEUU Jewels — Fine Jewelry Atelier" },
       {
         name: "description",
@@ -152,7 +153,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <CartProvider>
         <SiteNav />
-        <Outlet />
+        <div className="pb-[calc(64px+env(safe-area-inset-bottom,0px))] md:pb-0">
+          <Outlet />
+        </div>
+        <MobileBottomNav />
         <CartDrawer />
         <Toaster
           position="bottom-right"
