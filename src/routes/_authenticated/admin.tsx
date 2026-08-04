@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
-import { LayoutGrid, Package, ScrollText, ArrowLeft, FolderTree, Tags, SlidersHorizontal, Award, HelpCircle, MessageSquareText, Ticket, Layers } from "lucide-react";
+import { LayoutGrid, Package, ScrollText, ArrowLeft, FolderTree, Tags, SlidersHorizontal, Award, HelpCircle, MessageSquareText, Ticket, Layers, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Atelier Console — PEUU Jewels" }] }),
