@@ -177,6 +177,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [urlDraft, setUrlDraft] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
+  const [isBestSeller, setIsBestSeller] = useState(false);
+  const [bestSellerSort, setBestSellerSort] = useState("0");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [replacingIdx, setReplacingIdx] = useState<number | null>(null);
