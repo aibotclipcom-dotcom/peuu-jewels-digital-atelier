@@ -580,7 +580,8 @@ function ProductCard({
             add({
               id: product.id,
               name: product.name,
-              price: Number(product.price),
+              price: sale.price,
+              compareAt: sale.compareAt,
               image: img1,
               slug: product.slug,
             });
