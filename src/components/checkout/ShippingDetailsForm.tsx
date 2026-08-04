@@ -24,7 +24,7 @@ export const shippingSchema = z
   .object({
     ...addressBase,
     notes: z.string().trim().max(1000).optional().or(z.literal("")),
-    billing_same: z.boolean().default(true),
+    billing_same: z.boolean(),
     billing_full_name: optionalString,
     billing_phone: optionalString,
     billing_street_address: optionalString,
