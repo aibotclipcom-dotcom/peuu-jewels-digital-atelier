@@ -153,7 +153,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <CartProvider>
         <SiteNav />
-        <Outlet />
+        <div className="pb-[calc(64px+env(safe-area-inset-bottom,0px))] md:pb-0">
+          <Outlet />
+        </div>
+        <MobileBottomNav />
         <CartDrawer />
         <Toaster
           position="bottom-right"
