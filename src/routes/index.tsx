@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { useRef } from "react";
 import { FloralMark } from "@/components/brand/Logo";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { CategoriesSection } from "@/components/home/CategoriesSection";
+import { BestSellersSection } from "@/components/home/BestSellersSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
