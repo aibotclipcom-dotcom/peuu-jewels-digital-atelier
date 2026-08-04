@@ -147,6 +147,7 @@ function AdminCategories() {
         <table className="min-w-full text-sm">
           <thead className="bg-cashmere/40 text-left text-[0.6rem] tracking-luxury uppercase text-navy/55">
             <tr>
+              <th className="px-4 py-3">Image</th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Slug</th>
               <th className="px-4 py-3">Parent</th>
@@ -156,10 +157,16 @@ function AdminCategories() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
-            {isLoading ? <tr><td colSpan={6} className="px-4 py-8 text-center text-navy/50">Loading…</td></tr>
-              : data.length === 0 ? <tr><td colSpan={6} className="px-4 py-8 text-center text-navy/50">No categories.</td></tr>
+            {isLoading ? <tr><td colSpan={7} className="px-4 py-8 text-center text-navy/50">Loading…</td></tr>
+              : data.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-navy/50">No categories.</td></tr>
               : data.map((c) => (
                 <tr key={c.id} className="text-navy">
+                  <td className="px-4 py-3">
+                    <CategoryImageCell
+                      url={c.image_url}
+                      onChange={(v) => update(c.id, { image_url: v })}
+                    />
+                  </td>
                   <td className="px-4 py-3"><input defaultValue={c.name} onBlur={(e) => e.target.value !== c.name && update(c.id, { name: e.target.value })} className="w-full bg-transparent outline-none" /></td>
                   <td className="px-4 py-3 font-mono text-xs">{c.slug}</td>
                   <td className="px-4 py-3">
