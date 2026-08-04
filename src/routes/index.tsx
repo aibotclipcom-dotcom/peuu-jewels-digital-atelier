@@ -81,6 +81,8 @@ function Landing() {
   return (
     <main className="bg-alabaster">
       <Hero />
+      <CategoriesSection />
+      <BestSellersSection />
       {SECTIONS.map((section, i) => (
         <EditorialSection key={section.word} section={section} index={i} />
       ))}
