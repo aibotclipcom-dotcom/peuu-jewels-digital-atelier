@@ -269,7 +269,7 @@ function CollectionPage() {
         break;
     }
     return list;
-  }, [products, descendantIds, activeCategory, search.type, search.sort, types, activeAttrs, attrMap]);
+  }, [products, descendantIds, activeCategory, search.type, search.sort, search.q, types, activeAttrs, attrMap]);
 
   function setCategory(slug?: string) {
     navigate({ search: (prev: Search) => ({ ...prev, category: slug }) });
