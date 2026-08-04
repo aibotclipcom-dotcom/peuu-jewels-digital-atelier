@@ -362,6 +362,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       image_urls: images,
       video_urls: videos,
       status,
+      is_best_seller: isBestSeller,
+      best_seller_sort: Number(bestSellerSort) || 0,
     };
 
     try {
