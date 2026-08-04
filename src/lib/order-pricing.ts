@@ -21,7 +21,10 @@ export interface ServerPricedLine {
   quantity: number;
   price: number;
   compareAt: number | null;
+  /** Inventory available at quote time. */
+  stock: number;
 }
+
 
 export interface CouponResult {
   coupon: AppliedCoupon | null;
@@ -57,7 +60,8 @@ export async function priceLines(db: Db, items: CartLineInput[]): Promise<Server
   const ids = items.map((i) => i.id);
   const { data, error } = await db
     .from("products")
-    .select("id, name, price, compare_at_price, sale_starts_at, sale_ends_at")
+    .select("id, name, price, compare_at_price, sale_starts_at, sale_ends_at, stock, status")
+    .eq("status", "published")
     .in("id", ids);
   if (error) throw new Error(error.message);
 
@@ -75,6 +79,7 @@ export async function priceLines(db: Db, items: CartLineInput[]): Promise<Server
       quantity: 0,
       price: sale.price,
       compareAt: sale.compareAt,
+      stock: Math.max(0, Math.floor(Number(p.stock) || 0)),
     });
   }
 
@@ -84,9 +89,14 @@ export async function priceLines(db: Db, items: CartLineInput[]): Promise<Server
     if (!Number.isFinite(found.price) || found.price <= 0) {
       throw new Error(`Invalid product price: ${found.name}`);
     }
+    if (found.stock <= 0) throw new Error(`${found.name} is sold out.`);
+    if (i.quantity > found.stock) {
+      throw new Error(`Only ${found.stock} left of ${found.name}.`);
+    }
     return { ...found, quantity: i.quantity };
   });
 }
+
 
 /**
  * Validates a coupon against every configured rule and returns a human
