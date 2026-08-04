@@ -15,6 +15,7 @@ type Search = {
   type?: string;
   sort?: string;
   attrs?: string;
+  q?: string;
 };
 
 export const Route = createFileRoute("/Collection/")({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/Collection/")({
     type: typeof search.type === "string" ? search.type : undefined,
     sort: typeof search.sort === "string" ? search.sort : undefined,
     attrs: typeof search.attrs === "string" ? search.attrs : undefined,
+    q: typeof search.q === "string" && search.q.trim() ? search.q : undefined,
   }),
   head: () => ({
     meta: [
