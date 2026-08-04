@@ -177,6 +177,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [urlDraft, setUrlDraft] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
+  const [isBestSeller, setIsBestSeller] = useState(false);
+  const [bestSellerSort, setBestSellerSort] = useState("0");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [replacingIdx, setReplacingIdx] = useState<number | null>(null);
@@ -212,6 +214,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       })),
     );
     setStatus(existing.status);
+    setIsBestSeller(existing.is_best_seller ?? false);
+    setBestSellerSort(String(existing.best_seller_sort ?? 0));
   }, [existing]);
 
   useEffect(() => {
@@ -358,6 +362,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       image_urls: images,
       video_urls: videos,
       status,
+      is_best_seller: isBestSeller,
+      best_seller_sort: Number(bestSellerSort) || 0,
     };
 
     try {
@@ -435,6 +441,23 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
             { value: "published", label: "published" },
           ]}
         />
+        <label className="flex items-center gap-3 text-sm text-navy/75">
+          <input
+            type="checkbox"
+            checked={isBestSeller}
+            onChange={(e) => setIsBestSeller(e.target.checked)}
+            className="h-4 w-4 accent-navy"
+          />
+          Feature in Best Sellers
+        </label>
+        {isBestSeller && (
+          <Field
+            label="Best seller sort order (lower shows first)"
+            type="number"
+            value={bestSellerSort}
+            onChange={setBestSellerSort}
+          />
+        )}
       </Section>
 
       <Section title="Pricing & stock">

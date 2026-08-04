@@ -1,12 +1,17 @@
 import { useCart } from "@/hooks/use-cart";
+import { useCartTotals } from "@/hooks/use-cart-totals";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { formatPrice } from "@/lib/format";
 import { Minus, Plus, X } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { CouponField } from "@/components/cart/CouponField";
+import { TotalsBreakdown } from "@/components/cart/TotalsBreakdown";
 
 export function CartDrawer() {
-  const { items, total, open, setOpen, remove, setQuantity } = useCart();
+  const { items, open, setOpen, remove, setQuantity } = useCart();
+  const totals = useCartTotals();
   const navigate = useNavigate();
+  const belowMin = totals.itemsTotal < totals.minOrderValue;
 
   function handleContinue() {
     setOpen(false);
@@ -15,10 +20,7 @@ export function CartDrawer() {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent
-        side="right"
-        className="w-full max-w-md bg-alabaster p-0 sm:max-w-lg"
-      >
+      <SheetContent side="right" className="flex w-full max-w-md flex-col bg-alabaster p-0 sm:max-w-lg">
         <SheetHeader className="border-b border-border/60 px-6 py-5">
           <SheetTitle className="font-serif text-2xl tracking-tight text-navy">
             Your Selection
@@ -62,7 +64,14 @@ export function CartDrawer() {
                           >
                             {item.name}
                           </Link>
-                          <div className="mt-1 text-sm text-navy/70">{formatPrice(item.price)}</div>
+                          <div className="mt-1 flex items-baseline gap-2 text-sm">
+                            <span className="text-navy/70">{formatPrice(item.price)}</span>
+                            {item.compareAt && item.compareAt > item.price && (
+                              <span className="text-xs text-navy/40 line-through">
+                                {formatPrice(item.compareAt)}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <button
                           type="button"
@@ -78,6 +87,7 @@ export function CartDrawer() {
                           type="button"
                           onClick={() => setQuantity(item.id, item.quantity - 1)}
                           className="grid h-7 w-7 place-items-center border border-border text-navy hover:bg-cashmere"
+                          aria-label="Decrease quantity"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
@@ -88,6 +98,7 @@ export function CartDrawer() {
                           type="button"
                           onClick={() => setQuantity(item.id, item.quantity + 1)}
                           className="grid h-7 w-7 place-items-center border border-border text-navy hover:bg-cashmere"
+                          aria-label="Increase quantity"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -97,30 +108,27 @@ export function CartDrawer() {
                 ))}
               </ul>
             </div>
-            <div className="border-t border-border/60 bg-cashmere/40 px-6 py-6">
-              <div className="flex items-baseline justify-between">
-                <span className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Subtotal</span>
-                <span className="font-serif text-2xl text-navy">{formatPrice(total)}</span>
+
+            <div className="border-t border-border/60 bg-cashmere/40 px-6 py-5">
+              <CouponField compact />
+              <div className="mt-4 border-t border-border/60 pt-3">
+                <TotalsBreakdown />
               </div>
-              {total < 300 ? (
+              {belowMin && (
                 <p className="mt-2 text-xs text-rose">
-                  Minimum order value is ₹300. Add {formatPrice(300 - total)} more to check out.
-                </p>
-              ) : (
-                <p className="mt-2 text-xs text-navy/55">
-                  Shipping details are collected on the next step.
+                  Minimum order value is {formatPrice(totals.minOrderValue)}. Add{" "}
+                  {formatPrice(totals.minOrderValue - totals.itemsTotal)} more to check out.
                 </p>
               )}
               <button
                 type="button"
                 onClick={handleContinue}
-                disabled={total < 300}
-                className="mt-5 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={belowMin}
+                className="mt-4 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Continue to Checkout
               </button>
             </div>
-
           </>
         )}
       </SheetContent>

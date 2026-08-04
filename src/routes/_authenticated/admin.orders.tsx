@@ -75,10 +75,77 @@ function AdminOrders() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-5 grid gap-6 border-t border-border/40 pt-4 sm:grid-cols-3">
+                <dl className="space-y-1 text-xs text-navy/70">
+                  <div className="text-[0.55rem] tracking-luxury uppercase text-navy/45">Totals</div>
+                  <Row label="Subtotal" value={o.subtotal} />
+                  {Number(o.discount_total) > 0 && (
+                    <Row label="Discount" value={-Number(o.discount_total)} />
+                  )}
+                  <Row label="Shipping" value={o.shipping_total} />
+                  {Number(o.tax_total) > 0 && <Row label="Tax" value={o.tax_total} />}
+                  <Row label="Total" value={o.total} strong />
+                  {o.coupon_code && (
+                    <div className="pt-1 font-mono text-[0.65rem] uppercase text-rose">
+                      {o.coupon_code}
+                    </div>
+                  )}
+                </dl>
+                <Address title="Shipping address" value={o.shipping_address} />
+                <Address title="Billing address" value={o.billing_address ?? o.shipping_address} />
+              </div>
+              {o.notes && (
+                <p className="mt-4 border-t border-border/40 pt-3 text-xs italic text-navy/60">
+                  “{o.notes}”
+                </p>
+              )}
             </div>
           ))
         )}
       </div>
+    </div>
+  );
+}
+
+function Row({
+  label,
+  value,
+  strong,
+}: {
+  label: string;
+  value: number | string | null;
+  strong?: boolean;
+}) {
+  return (
+    <div className={`flex justify-between gap-4 ${strong ? "font-medium text-navy" : ""}`}>
+      <dt>{label}</dt>
+      <dd className="tabular-nums">{formatPrice(Number(value ?? 0))}</dd>
+    </div>
+  );
+}
+
+function Address({ title, value }: { title: string; value: unknown }) {
+  const a = (value ?? {}) as Record<string, string>;
+  const lines = [
+    a.full_name,
+    a.phone,
+    a.street_address,
+    [a.city, a.state].filter(Boolean).join(", "),
+    a.postal_code,
+  ].filter(Boolean);
+  return (
+    <div className="text-xs text-navy/70">
+      <div className="text-[0.55rem] tracking-luxury uppercase text-navy/45">{title}</div>
+      {lines.length === 0 ? (
+        <p className="mt-1 text-navy/40">—</p>
+      ) : (
+        <address className="mt-1 not-italic leading-relaxed">
+          {lines.map((l) => (
+            <div key={l}>{l}</div>
+          ))}
+        </address>
+      )}
     </div>
   );
 }

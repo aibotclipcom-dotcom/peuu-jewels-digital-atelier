@@ -13,6 +13,7 @@ import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MaisonRouteImport } from './routes/maison'
 import { Route as ConciergeRouteImport } from './routes/concierge'
+import { Route as BestSellersRouteImport } from './routes/best-sellers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as CollectionSlugRouteImport } from './routes/Collection.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin.reviews'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminProductTypesRouteImport } from './routes/_authenticated/admin.product-types'
@@ -54,6 +56,11 @@ const MaisonRoute = MaisonRouteImport.update({
 const ConciergeRoute = ConciergeRouteImport.update({
   id: '/concierge',
   path: '/concierge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BestSellersRoute = BestSellersRouteImport.update({
+  id: '/best-sellers',
+  path: '/best-sellers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -105,6 +112,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminReviewsRoute =
   AuthenticatedAdminReviewsRouteImport.update({
     id: '/reviews',
@@ -181,6 +194,7 @@ const AuthenticatedAdminProductsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -200,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
@@ -208,6 +223,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -225,6 +241,7 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
@@ -235,6 +252,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -254,6 +272,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/_authenticated/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
@@ -264,6 +283,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/best-sellers'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -283,6 +303,7 @@ export interface FileRouteTypes {
     | '/admin/product-types'
     | '/admin/products'
     | '/admin/reviews'
+    | '/admin/settings'
     | '/admin/'
     | '/admin/products/$id'
     | '/admin/products/new'
@@ -291,6 +312,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/best-sellers'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -308,6 +330,7 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/product-types'
     | '/admin/reviews'
+    | '/admin/settings'
     | '/admin'
     | '/admin/products/$id'
     | '/admin/products/new'
@@ -317,6 +340,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/best-sellers'
     | '/concierge'
     | '/maison'
     | '/privacy-policy'
@@ -336,6 +360,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/product-types'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/reviews'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/products/$id'
     | '/_authenticated/admin/products/new'
@@ -346,6 +371,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  BestSellersRoute: typeof BestSellersRoute
   ConciergeRoute: typeof ConciergeRoute
   MaisonRoute: typeof MaisonRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
@@ -382,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/concierge'
       fullPath: '/concierge'
       preLoaderRoute: typeof ConciergeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/best-sellers': {
+      id: '/best-sellers'
+      path: '/best-sellers'
+      fullPath: '/best-sellers'
+      preLoaderRoute: typeof BestSellersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -452,6 +485,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/reviews': {
@@ -569,6 +609,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminProductTypesRoute: typeof AuthenticatedAdminProductTypesRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRouteWithChildren
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -582,6 +623,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminProductTypesRoute: AuthenticatedAdminProductTypesRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRouteWithChildren,
   AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -617,6 +659,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  BestSellersRoute: BestSellersRoute,
   ConciergeRoute: ConciergeRoute,
   MaisonRoute: MaisonRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
@@ -627,13 +670,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

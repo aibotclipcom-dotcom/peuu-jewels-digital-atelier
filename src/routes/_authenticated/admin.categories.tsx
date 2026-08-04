@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, UploadCloud, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/categories")({
   component: AdminCategories,
@@ -11,6 +11,74 @@ export const Route = createFileRoute("/_authenticated/admin/categories")({
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+async function uploadImage(file: File): Promise<string> {
+  const path = `categories/${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${
+    slugify(file.name) || "asset"
+  }`;
+  const { error: upErr } = await supabase.storage
+    .from("peuu-assets")
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (upErr) throw upErr;
+  const { data: signed, error: signErr } = await supabase.storage
+    .from("peuu-assets")
+    .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+  if (signErr) throw signErr;
+  return signed.signedUrl;
+}
+
+function CategoryImageCell({
+  url,
+  onChange,
+}: {
+  url: string | null;
+  onChange: (v: string | null) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="flex items-center gap-2">
+      <div className="h-12 w-12 shrink-0 overflow-hidden border border-border/60 bg-alabaster">
+        {url ? (
+          <img src={url} alt="" className="h-full w-full object-cover" />
+        ) : null}
+      </div>
+      <label className="cursor-pointer text-navy/60 hover:text-navy" title="Upload image">
+        {busy ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <UploadCloud className="h-4 w-4" />
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            if (!file) return;
+            setBusy(true);
+            try {
+              onChange(await uploadImage(file));
+            } catch (err) {
+              toast.error((err as Error).message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        />
+      </label>
+      {url && (
+        <button
+          type="button"
+          onClick={() => onChange(null)}
+          className="text-[0.6rem] uppercase tracking-luxury text-destructive"
+        >
+          Clear
+        </button>
+      )}
+    </div>
+  );
 }
 
 function AdminCategories() {
@@ -79,6 +147,7 @@ function AdminCategories() {
         <table className="min-w-full text-sm">
           <thead className="bg-cashmere/40 text-left text-[0.6rem] tracking-luxury uppercase text-navy/55">
             <tr>
+              <th className="px-4 py-3">Image</th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Slug</th>
               <th className="px-4 py-3">Parent</th>
@@ -88,10 +157,16 @@ function AdminCategories() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
-            {isLoading ? <tr><td colSpan={6} className="px-4 py-8 text-center text-navy/50">Loading…</td></tr>
-              : data.length === 0 ? <tr><td colSpan={6} className="px-4 py-8 text-center text-navy/50">No categories.</td></tr>
+            {isLoading ? <tr><td colSpan={7} className="px-4 py-8 text-center text-navy/50">Loading…</td></tr>
+              : data.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-navy/50">No categories.</td></tr>
               : data.map((c) => (
                 <tr key={c.id} className="text-navy">
+                  <td className="px-4 py-3">
+                    <CategoryImageCell
+                      url={c.image_url}
+                      onChange={(v) => update(c.id, { image_url: v })}
+                    />
+                  </td>
                   <td className="px-4 py-3"><input defaultValue={c.name} onBlur={(e) => e.target.value !== c.name && update(c.id, { name: e.target.value })} className="w-full bg-transparent outline-none" /></td>
                   <td className="px-4 py-3 font-mono text-xs">{c.slug}</td>
                   <td className="px-4 py-3">
