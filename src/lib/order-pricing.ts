@@ -21,7 +21,10 @@ export interface ServerPricedLine {
   quantity: number;
   price: number;
   compareAt: number | null;
+  /** Inventory available at quote time. */
+  stock: number;
 }
+
 
 export interface CouponResult {
   coupon: AppliedCoupon | null;
