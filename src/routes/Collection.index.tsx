@@ -221,6 +221,17 @@ function CollectionPage() {
   const filtered = useMemo(() => {
     let list = products.slice();
 
+    if (search.q) {
+      const q = search.q.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          (p.category ?? "").toLowerCase().includes(q) ||
+          (p.materials ?? "").toString().toLowerCase().includes(q),
+      );
+    }
+
+
     if (descendantIds) {
       list = list.filter(
         (p) =>
