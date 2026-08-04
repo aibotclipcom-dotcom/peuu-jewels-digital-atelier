@@ -40,7 +40,17 @@ export function BestSellersSection({ limit = 8 }: { limit?: number }) {
             ))}
           </div>
         )}
+
+        <div className="mt-14 text-center">
+          <Link
+            to="/best-sellers"
+            className="line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
+          >
+            View all best sellers
+          </Link>
+        </div>
       </div>
+
     </section>
   );
 }
