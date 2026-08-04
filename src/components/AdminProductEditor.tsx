@@ -441,6 +441,23 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
             { value: "published", label: "published" },
           ]}
         />
+        <label className="flex items-center gap-3 text-sm text-navy/75">
+          <input
+            type="checkbox"
+            checked={isBestSeller}
+            onChange={(e) => setIsBestSeller(e.target.checked)}
+            className="h-4 w-4 accent-navy"
+          />
+          Feature in Best Sellers
+        </label>
+        {isBestSeller && (
+          <Field
+            label="Best seller sort order (lower shows first)"
+            type="number"
+            value={bestSellerSort}
+            onChange={setBestSellerSort}
+          />
+        )}
       </Section>
 
       <Section title="Pricing & stock">
