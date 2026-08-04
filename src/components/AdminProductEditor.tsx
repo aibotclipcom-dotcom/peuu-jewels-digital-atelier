@@ -214,6 +214,8 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       })),
     );
     setStatus(existing.status);
+    setIsBestSeller(existing.is_best_seller ?? false);
+    setBestSellerSort(String(existing.best_seller_sort ?? 0));
   }, [existing]);
 
   useEffect(() => {
