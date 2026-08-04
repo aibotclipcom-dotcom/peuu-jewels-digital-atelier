@@ -16,6 +16,7 @@ import { SiteNav } from "@/components/layout/SiteNav";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { Toaster } from "@/components/ui/sonner";
 import { FirstOrderCouponModal } from "@/components/marketing/FirstOrderCouponModal";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 
 
