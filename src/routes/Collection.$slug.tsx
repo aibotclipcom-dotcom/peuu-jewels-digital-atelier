@@ -14,7 +14,7 @@ import { BadgeRow, type BadgeShape } from "@/components/product/BadgeRow";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
-const SITE = "https://chic-velvet-dreams.lovable.app";
+const SITE = "https://peuujewels.lovable.app";
 
 export const Route = createFileRoute("/Collection/$slug")({
   loader: async ({ params }) => {
@@ -27,7 +27,23 @@ export const Route = createFileRoute("/Collection/$slug")({
       .maybeSingle();
     if (error) throw error;
     if (!data) throw notFound();
-    return data;
+
+    const [{ data: productFaqs }, { data: globalFaqs }] = await Promise.all([
+      supabase
+        .from("product_faqs")
+        .select("question, answer")
+        .eq("product_id", data.id)
+        .order("sort_order"),
+      supabase.from("global_faqs").select("question, answer").order("sort_order"),
+    ]);
+
+    return {
+      ...data,
+      faqs: [...(productFaqs ?? []), ...(globalFaqs ?? [])] as Array<{
+        question: string;
+        answer: string;
+      }>,
+    };
   },
   head: ({ params, loaderData }) => {
     const p = loaderData;
@@ -90,6 +106,22 @@ export const Route = createFileRoute("/Collection/$slug")({
             },
           }),
         },
+        ...(p.faqs && p.faqs.length > 0
+          ? [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  mainEntity: p.faqs.map((f) => ({
+                    "@type": "Question",
+                    name: f.question,
+                    acceptedAnswer: { "@type": "Answer", text: f.answer },
+                  })),
+                }),
+              },
+            ]
+          : []),
       ],
     };
   },
