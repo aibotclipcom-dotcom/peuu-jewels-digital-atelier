@@ -21,14 +21,6 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <h4 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Care</h4>
-          <ul className="mt-5 space-y-3 text-sm text-navy/80">
-            <li>Lifetime Polishing</li>
-            <li>Bespoke Commissions</li>
-            <li>Private Appointments</li>
-          </ul>
-        </div>
-        <div>
           <h4 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Legal</h4>
           <ul className="mt-5 space-y-3 text-sm text-navy/80">
             <li><Link to="/privacy-policy" className="line-draw">Privacy Policy</Link></li>
