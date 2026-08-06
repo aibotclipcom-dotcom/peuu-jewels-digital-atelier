@@ -27,7 +27,23 @@ export const Route = createFileRoute("/Collection/$slug")({
       .maybeSingle();
     if (error) throw error;
     if (!data) throw notFound();
-    return data;
+
+    const [{ data: productFaqs }, { data: globalFaqs }] = await Promise.all([
+      supabase
+        .from("product_faqs")
+        .select("question, answer")
+        .eq("product_id", data.id)
+        .order("sort_order"),
+      supabase.from("global_faqs").select("question, answer").order("sort_order"),
+    ]);
+
+    return {
+      ...data,
+      faqs: [...(productFaqs ?? []), ...(globalFaqs ?? [])] as Array<{
+        question: string;
+        answer: string;
+      }>,
+    };
   },
   head: ({ params, loaderData }) => {
     const p = loaderData;
