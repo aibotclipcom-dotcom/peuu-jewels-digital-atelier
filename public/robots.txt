@@ -6,4 +6,4 @@ Disallow: /account
 Disallow: /checkout
 Disallow: /admin
 
-Sitemap: https://chic-velvet-dreams.lovable.app/sitemap.xml
+Sitemap: https://peuujewels.lovable.app/sitemap.xml

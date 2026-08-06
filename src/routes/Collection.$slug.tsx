@@ -14,7 +14,7 @@ import { BadgeRow, type BadgeShape } from "@/components/product/BadgeRow";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
-const SITE = "https://chic-velvet-dreams.lovable.app";
+const SITE = "https://peuujewels.lovable.app";
 
 export const Route = createFileRoute("/Collection/$slug")({
   loader: async ({ params }) => {
