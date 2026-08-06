@@ -40,8 +40,10 @@ export const Route = createFileRoute("/best-sellers")({
         content: "Shop the PEUU Jewels pieces our clients return to again and again.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peuujewels.lovable.app/best-sellers" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/best-sellers" }],
   }),
   component: BestSellersPage,
 });
