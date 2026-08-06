@@ -40,7 +40,27 @@ export const Route = createFileRoute("/Collection/")({
         content: "An editorial selection of fine jewelry from PEUU Jewels.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peuujewels.lovable.app/Collection" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/Collection" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "The Collection — PEUU Jewels",
+          description:
+            "Browse the PEUU Jewels collection — handcrafted necklaces, rings, bracelets and earrings.",
+          url: "https://peuujewels.lovable.app/Collection",
+          isPartOf: {
+            "@type": "WebSite",
+            name: "PEUU Jewels",
+            url: "https://peuujewels.lovable.app",
+          },
+        }),
+      },
     ],
   }),
   component: CollectionPage,
