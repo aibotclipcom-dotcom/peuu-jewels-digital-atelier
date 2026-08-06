@@ -106,6 +106,22 @@ export const Route = createFileRoute("/Collection/$slug")({
             },
           }),
         },
+        ...(p.faqs && p.faqs.length > 0
+          ? [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  mainEntity: p.faqs.map((f) => ({
+                    "@type": "Question",
+                    name: f.question,
+                    acceptedAnswer: { "@type": "Answer", text: f.answer },
+                  })),
+                }),
+              },
+            ]
+          : []),
       ],
     };
   },
