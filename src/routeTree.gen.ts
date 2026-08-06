@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BespokeRouteImport } from './routes/bespoke'
 import { Route as BestSellersRouteImport } from './routes/best-sellers'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as MaisonRouteImport } from './routes/maison'
@@ -50,6 +51,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BespokeRoute = BespokeRouteImport.update({
+  id: '/bespoke',
+  path: '/bespoke',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BestSellersRoute = BestSellersRouteImport.update({
@@ -194,6 +200,7 @@ const AuthenticatedAdminProductsNewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bespoke': typeof BespokeRoute
   '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/bespoke': typeof BespokeRoute
   '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
@@ -252,6 +260,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/bespoke': typeof BespokeRoute
   '/best-sellers': typeof BestSellersRoute
   '/concierge': typeof ConciergeRoute
   '/maison': typeof MaisonRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/bespoke'
     | '/best-sellers'
     | '/concierge'
     | '/maison'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/bespoke'
     | '/best-sellers'
     | '/concierge'
     | '/maison'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/bespoke'
     | '/best-sellers'
     | '/concierge'
     | '/maison'
@@ -371,6 +383,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  BespokeRoute: typeof BespokeRoute
   BestSellersRoute: typeof BestSellersRoute
   ConciergeRoute: typeof ConciergeRoute
   MaisonRoute: typeof MaisonRoute
@@ -401,6 +414,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bespoke': {
+      id: '/bespoke'
+      path: '/bespoke'
+      fullPath: '/bespoke'
+      preLoaderRoute: typeof BespokeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/best-sellers': {
@@ -659,6 +679,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  BespokeRoute: BespokeRoute,
   BestSellersRoute: BestSellersRoute,
   ConciergeRoute: ConciergeRoute,
   MaisonRoute: MaisonRoute,
