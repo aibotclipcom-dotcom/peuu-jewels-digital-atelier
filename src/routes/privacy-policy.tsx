@@ -15,7 +15,10 @@ export const Route = createFileRoute("/privacy-policy")({
         property: "og:description",
         content: "Our commitment to your data privacy and security.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://peuujewels.lovable.app/privacy-policy" },
     ],
+    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/privacy-policy" }],
   }),
   component: PrivacyPolicy,
 });
