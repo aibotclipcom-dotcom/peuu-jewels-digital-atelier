@@ -260,7 +260,7 @@ function DangerZone() {
       <h2 className="font-serif text-2xl text-navy">Delete account</h2>
       <p className="mt-2 max-w-xl text-sm text-navy/60">
         Permanently removes your profile, wishlist, and personal details.
-        Historical orders are anonymised and kept for accounting.
+        Historical orders are anonymized and kept for accounting.
         This cannot be undone.
       </p>
       <div className="mt-6 flex max-w-md flex-col gap-3">

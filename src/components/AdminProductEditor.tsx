@@ -340,7 +340,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       name: name.trim(),
       slug: (slug || slugify(name)).trim(),
       sku: sku.trim(),
-      category: category || "Uncategorised",
+      category: category || "Uncategorized",
       category_id: categoryId || null,
       product_type_id: productTypeId || null,
       price: Number(price) || 0,
