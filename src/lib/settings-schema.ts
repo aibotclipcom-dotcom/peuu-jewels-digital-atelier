@@ -20,6 +20,9 @@ export interface CartSettings {
 
 export interface HeroSettings {
   auto_slide_delay_seconds: number;
+  overlay_enabled: boolean;
+  overlay_color: string;
+  overlay_opacity: number;
 }
 
 export interface SiteSettings {
