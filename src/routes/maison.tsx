@@ -25,64 +25,57 @@ const CHAPTERS = [
     eyebrow: "",
     title: "A small atelier with an unwavering belief.",
     body: (
-      <div className="space-y-4 text-justify">
-        <p>
-          Every journey begins with a subtle dream and a deep-rooted belief. For me, the story of PEUU Jewels was no different—it was born out of pure dedication and heartfelt emotion. That "unwavering belief" is far more than just words; it is the very foundation upon which we stand.
-        </p>
-        <p>
-          We took our first step with a single conviction: that a piece of jewelry should never be a mere accessory, but a quiet companion to a life. From day one, our vision has extended beyond crafting fine ornaments—we strive to become a meaningful part of the story you live every day.
-        </p>
+      <div className="space-y-4">
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Every journey begins with a subtle dream and a deep-rooted belief. For me, the story of PEUU Jewels was no different—it was born out of pure dedication and heartfelt emotion. That "unwavering belief" is far more than just words; it is the very foundation upon which we stand.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        </div>
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;We took our first step with a single conviction: that a piece of jewelry should never be a more accessory, but a quiet companion to a life. From day one, our vision has extended beyond crafting fine ornaments—we strive to become a meaningful part of the story you live every day.
+        </div>
       </div>
     ),
   },
   {
     eyebrow: "",
     title: "A Legacy of Love: The Heartbeat of PEUU.",
-    body: (
-      <p className="text-justify">
-        Behind every piece we craft at PEUU Jewels is a personal story, and the deepest one is our own. This brand was founded in profound dedication to our beloved late sister. Her spirit, her love for beauty and meaningful things, inspired us. PEUU Jewels is not just a creation of metal and stone; it is a living tribute. Her name, and her memory, are the heartbeat of our atelier, guiding every quiet companion we create.
-      </p>
-    ),
+    body: "              Behind every piece we craft at PEUU Jewels is a personal story, and the deepest one is our own. This brand was founded in profound dedication to our beloved late sister. Her spirit, her love for beauty and meaningful things, inspired us. PEUU Jewels is not just a creation of metal and stone; it is a living tribute. Her name, and her memory, are the heartbeat of our atelier, guiding every quiet companion we create.",
   },
   {
     eyebrow: "",
     title: "A Shared Dream, An Unshakable Legacy",
     body: (
       <div className="space-y-6">
-        <div className="font-serif text-xl text-navy">
-          Miss. Priyanka Bhujbal — Our Eternal Muse & Soul
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Miss. Priyanka Bhujbal — Our Eternal Muse & Soul
         </div>
-        <div className="space-y-4 text-justify">
-          <p>
-            PEUU Jewels was created in her loving memory. She is the heart of this brand, and her spirit continues to inspire the warmth, elegance, and meaning behind every creation we release.
-          </p>
-          <div className="font-serif text-lg text-navy">
-            Miss. Tanvi Parteti & Mr. Pritesh Bhujbal — Guardians of the Vision
+        <div className="space-y-4">
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PEUU Jewels was created in her loving memory. She is the heart of this brand, and her spirit continues to inspire the warmth, elegance, and meaning behind every creation we release.
           </div>
-          <p>
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Miss. Tanvi Parteti & Mr. Pritesh Bhujbal — Guardians of the Vision
+          </div>
+          <div className="pl-0">
             The driving forces who steer and manage PEUU Jewels every single day. Together, they channel their passion, creativity, and hard work to turn a personal legacy into a living reality.
-          </p>
-          <div className="font-serif text-lg text-navy">
-            Mrs. Archana Bhujbal & Mr. Ganesh Bhujbal — Our Foundation & Pillars of Strength
           </div>
-          <p>
-            The backbone of this entire journey. Without their selfless support, constant sacrifices, and unwavering belief, PEUU Jewels would never have taken root, nor reached the heights it stands at today.
-          </p>
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Mrs. Archana Bhujbal & Mr. Ganesh Bhujbal — Our Foundation & Pillars of Strength&nbsp;The backbone of this entire journey. Without their selfless support, constant sacrifices, and unwavering belief, PEUU Jewels would never have taken root, nor reached the heights it stands at today.
+          </div>
         </div>
       </div>
     ),
   },
   {
     eyebrow: "",
-    title: "Our Mission",
+    title: "Our Mission ",
     body: (
-      <div className="space-y-4 text-justify">
-        <p>
-          At PEUU JEWELS, our mission is to make everyday luxury, elegance, and durability accessible to everyone at unbeatable prices. Our vision is to ensure you can wear stunning, high-quality jewelry every single day without worrying about color fading or skin irritation.
-        </p>
-        <p>
-          We craft 18k gold-plated, anti-tarnish, waterproof, and sweatproof accessories designed to effortlessly suit your active lifestyle. From elegant enamel rings to unique bracelets and statement neckpieces, every single piece is 100% hypoallergenic and crafted with care. Premium quality, unique designs, and lasting shine—now within your budget.
-        </p>
+      <div className="space-y-4">
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;At PEUU JEWELS, our mission is to make everyday luxury, elegance, and durability accessible to everyone at unbeatable prices. Our vision is to ensure you can wear stunning, high-quality jewelry every single day without worrying about color fading or skin irritation.
+        </div>
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;We craft 18k gold-plated, anti-tarnish, waterproof, and sweatproof accessories designed to effortlessly suit your active lifestyle. From elegant enamel rings to unique bracelets and statement neckpieces, every single piece is 100% hypoallergenic and crafted with care. Premium quality, unique designs, and lasting shine—now within your budget.
+        </div>
       </div>
     ),
   },
