@@ -18,10 +18,15 @@ export interface CartSettings {
   tax_label: string;
 }
 
+export interface HeroSettings {
+  auto_slide_delay_seconds: number;
+}
+
 export interface SiteSettings {
   announcement: AnnouncementSettings;
   shipping: ShippingSettings;
   cart: CartSettings;
+  hero: HeroSettings;
 }
 
 /**
@@ -46,6 +51,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     min_order_value: 300,
     tax_percent: 0,
     tax_label: "Tax",
+  },
+  hero: {
+    auto_slide_delay_seconds: 5,
   },
 };
 
@@ -75,6 +83,7 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
   const a = map.get("announcement") ?? {};
   const s = map.get("shipping") ?? {};
   const c = map.get("cart") ?? {};
+  const h = map.get("hero") ?? {};
   const d = DEFAULT_SETTINGS;
 
   return {
@@ -94,6 +103,12 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
       min_order_value: num(c.min_order_value, d.cart.min_order_value),
       tax_percent: num(c.tax_percent, d.cart.tax_percent),
       tax_label: str(c.tax_label, d.cart.tax_label),
+    },
+    hero: {
+      auto_slide_delay_seconds: Math.min(
+        60,
+        Math.max(2, num(h.auto_slide_delay_seconds, d.hero.auto_slide_delay_seconds)),
+      ),
     },
   };
 }
