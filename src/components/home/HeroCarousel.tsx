@@ -159,7 +159,16 @@ export function HeroCarousel() {
               {(active || i === 0 || Math.abs(i - index) === 1) && (
                 <HeroSlideMedia slide={slide} active={active} eager={i === 0} />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/25 to-navy/10" />
+              {hero.overlay_enabled && (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundColor: hero.overlay_color,
+                    opacity: Math.min(100, Math.max(0, hero.overlay_opacity)) / 100,
+                  }}
+                />
+              )}
+
 
               <div className="absolute inset-0 flex items-center">
                 <div className="mx-auto w-full max-w-6xl px-6 sm:px-10">
