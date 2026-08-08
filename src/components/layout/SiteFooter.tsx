@@ -10,7 +10,7 @@ export function SiteFooter() {
           <p className="mt-6 max-w-md text-sm leading-relaxed text-navy/70 whitespace-pre-line">
             PEUU JEWELS{"\u00a0\n"}
             <div className="font-medium text-navy tracking-luxury uppercase text-[0.7rem] mt-2 mb-1">YOUR HAPPINESS OUR PRIORITY</div>
-            <div className="text-navy/60">Made to be worn for a lifetime.</div>
+            <div className="text-navy/60">{"\n"}</div>
           </p>
         </div>
         <div>
