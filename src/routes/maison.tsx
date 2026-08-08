@@ -6,9 +6,9 @@ import { FloralMark } from "@/components/brand/Logo";
 export const Route = createFileRoute("/maison")({
   head: () => ({
     meta: [
-      { title: "Maison — The Story of PEUU Jewels" },
+      { title: "OUR STORY — PEUU Jewels" },
       { name: "description", content: "Inside the PEUU Jewels atelier — our heritage, craftsmanship, and the hands that shape every piece." },
-      { property: "og:title", content: "Maison — PEUU Jewels" },
+      { property: "og:title", content: "OUR STORY — PEUU Jewels" },
       { property: "og:description", content: "The story, the heritage, and the craftsmanship behind PEUU Jewels." },
       { property: "og:image", content: "https://peuujewels.lovable.app/ring.jpeg" },
       { property: "og:url", content: "https://peuujewels.lovable.app/maison" },
@@ -22,24 +22,62 @@ export const Route = createFileRoute("/maison")({
 
 const CHAPTERS = [
   {
-    eyebrow: "01 · Origin",
+    eyebrow: "",
     title: "A small atelier with an unwavering belief.",
-    body: "PEUU Jewels was founded on a single conviction: that a piece of jewelry is not an accessory, but a quiet companion to a life. Every commission we accept begins with a conversation — about who you are, and who you are becoming.",
+    body: (
+      <div className="space-y-4">
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Every journey begins with a subtle dream and a deep-rooted belief. For me, the story of PEUU Jewels was no different—it was born out of pure dedication and heartfelt emotion. That "unwavering belief" is far more than just words; it is the very foundation upon which we stand.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        </div>
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;We took our first step with a single conviction: that a piece of jewelry should never be a more accessory, but a quiet companion to a life. From day one, our vision has extended beyond crafting fine ornaments—we strive to become a meaningful part of the story you live every day.
+        </div>
+      </div>
+    ),
   },
   {
-    eyebrow: "02 · Hand",
-    title: "Eight pairs of hands. One piece.",
-    body: "Each design moves through our atelier slowly. It is sketched, modeled, cast, set, and finished by hand. We refuse the speed of mass production because patience is the only material we cannot buy.",
+    eyebrow: "",
+    title: "A Legacy of Love: The Heartbeat of PEUU.",
+    body: "              Behind every piece we craft at PEUU Jewels is a personal story, and the deepest one is our own. This brand was founded in profound dedication to our beloved late sister. Her spirit, her love for beauty and meaningful things, inspired us. PEUU Jewels is not just a creation of metal and stone; it is a living tribute. Her name, and her memory, are the heartbeat of our atelier, guiding every quiet companion we create.",
   },
   {
-    eyebrow: "03 · Material",
-    title: "Sourced with intention, set with care.",
-    body: "We work in recycled 18k and 14k gold, platinum, and ethically sourced diamonds and gemstones. We choose suppliers who can name the mine, the cutter, and the hand that polished the stone.",
+    eyebrow: "",
+    title: "A Shared Dream, An Unshakable Legacy",
+    body: (
+      <div className="space-y-6">
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Miss. Priyanka Bhujbal — Our Eternal Muse & Soul
+        </div>
+        <div className="space-y-4">
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PEUU Jewels was created in her loving memory. She is the heart of this brand, and her spirit continues to inspire the warmth, elegance, and meaning behind every creation we release.
+          </div>
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Miss. Tanvi Parteti & Mr. Pritesh Bhujbal — Guardians of the Vision
+          </div>
+          <div className="pl-0">
+            The driving forces who steer and manage PEUU Jewels every single day. Together, they channel their passion, creativity, and hard work to turn a personal legacy into a living reality.
+          </div>
+          <div>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Mrs. Archana Bhujbal & Mr. Ganesh Bhujbal — Our Foundation & Pillars of Strength&nbsp;The backbone of this entire journey. Without their selfless support, constant sacrifices, and unwavering belief, PEUU Jewels would never have taken root, nor reached the heights it stands at today.
+          </div>
+        </div>
+      </div>
+    ),
   },
   {
-    eyebrow: "04 · Forever",
-    title: "Made to be repaired, not replaced.",
-    body: "Every PEUU piece carries a lifetime promise of polishing, refinishing, and resizing. A ring you receive today will outlast every screen, every season, every fleeting fashion.",
+    eyebrow: "",
+    title: "Our Mission ",
+    body: (
+      <div className="space-y-4">
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;At PEUU JEWELS, our mission is to make everyday luxury, elegance, and durability accessible to everyone at unbeatable prices. Our vision is to ensure you can wear stunning, high-quality jewelry every single day without worrying about color fading or skin irritation.
+        </div>
+        <div>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;We craft 18k gold-plated, anti-tarnish, waterproof, and sweatproof accessories designed to effortlessly suit your active lifestyle. From elegant enamel rings to unique bracelets and statement neckpieces, every single piece is 100% hypoallergenic and crafted with care. Premium quality, unique designs, and lasting shine—now within your budget.
+        </div>
+      </div>
+    ),
   },
 ];
 
@@ -48,15 +86,12 @@ function MaisonPage() {
     <main className="bg-alabaster pt-24 sm:pt-32">
       <section className="relative mx-auto max-w-5xl px-6 pb-24 pt-16 text-center sm:px-10">
         <FloralMark className="pointer-events-none absolute left-4 top-0 h-40 w-40 text-coral/10" />
-        <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Maison PEUU</span>
+        <span className="text-[0.7rem] tracking-luxury uppercase text-rose"></span>
         <h1 className="mt-6 font-serif text-5xl leading-tight text-navy sm:text-7xl">
-          A house built by <em className="italic text-coral/90">hand</em>,
           <br />
-          one piece at a time.
         </h1>
         <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-navy/70">
-          We are not a factory. We are not a brand. We are a small atelier of jewelers who believe
-          that what you wear closest to your skin should be the thing you keep for the longest.
+          <br />
         </p>
       </section>
 
@@ -69,7 +104,7 @@ function MaisonPage() {
       <section className="mx-auto max-w-4xl space-y-32 px-6 py-32 sm:px-10">
         {CHAPTERS.map((c, i) => (
           <motion.article
-            key={c.eyebrow}
+            key={i}
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
@@ -81,7 +116,7 @@ function MaisonPage() {
             </div>
             <div>
               <h2 className="font-serif text-3xl leading-snug text-navy sm:text-4xl">{c.title}</h2>
-              <p className="mt-5 text-base leading-relaxed text-navy/75">{c.body}</p>
+              <div className="mt-5 text-base leading-relaxed text-navy/75">{c.body}</div>
             </div>
           </motion.article>
         ))}
@@ -98,7 +133,7 @@ function MaisonPage() {
           >
             "What we make is small. What it means is not."
           </motion.h2>
-          <p className="mt-6 text-[0.7rem] tracking-luxury uppercase text-gold-soft">— The Maison</p>
+          <p className="mt-6 text-[0.7rem] tracking-luxury uppercase text-gold-soft">| PEUU JEWELS |&nbsp;&nbsp;</p>
         </div>
       </section>
 
