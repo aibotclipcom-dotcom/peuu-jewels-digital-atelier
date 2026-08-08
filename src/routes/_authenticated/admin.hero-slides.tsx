@@ -133,30 +133,46 @@ function DelaySetting() {
   const qc = useQueryClient();
   const { data } = useQuery(siteSettingsQuery);
   const [seconds, setSeconds] = useState(DEFAULT_SETTINGS.hero.auto_slide_delay_seconds);
+  const [overlayEnabled, setOverlayEnabled] = useState(DEFAULT_SETTINGS.hero.overlay_enabled);
+  const [overlayColor, setOverlayColor] = useState(DEFAULT_SETTINGS.hero.overlay_color);
+  const [overlayOpacity, setOverlayOpacity] = useState(DEFAULT_SETTINGS.hero.overlay_opacity);
 
   useEffect(() => {
-    if (data) setSeconds(data.hero.auto_slide_delay_seconds);
+    if (!data) return;
+    setSeconds(data.hero.auto_slide_delay_seconds);
+    setOverlayEnabled(data.hero.overlay_enabled);
+    setOverlayColor(data.hero.overlay_color);
+    setOverlayOpacity(data.hero.overlay_opacity);
   }, [data]);
 
   const save = useMutation({
-    mutationFn: async (v: number) => {
-      const { error } = await supabase
-        .from("site_settings")
-        .upsert([{ key: "hero", value: { auto_slide_delay_seconds: v } }] as never, {
-          onConflict: "key",
-        });
+    mutationFn: async () => {
+      const { error } = await supabase.from("site_settings").upsert(
+        [
+          {
+            key: "hero",
+            value: {
+              auto_slide_delay_seconds: seconds,
+              overlay_enabled: overlayEnabled,
+              overlay_color: overlayColor,
+              overlay_opacity: overlayOpacity,
+            },
+          },
+        ] as never,
+        { onConflict: "key" },
+      );
       if (error) throw error;
     },
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: siteSettingsQuery.queryKey });
-      toast.success("Auto-slide delay saved");
+      toast.success("Hero settings saved");
     },
     onError: (e) => toast.error((e as Error).message),
   });
 
   return (
     <section className="mt-8 border border-border/60 bg-cashmere/20 p-6">
-      <h2 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Auto slide</h2>
+      <h2 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Hero settings</h2>
       <div className="mt-4 flex flex-wrap items-end gap-4">
         <label className="block">
           <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">
@@ -172,9 +188,47 @@ function DelaySetting() {
             className={`${inputCls} w-40`}
           />
         </label>
+
+        <label className="flex items-center gap-2 pb-2">
+          <input
+            type="checkbox"
+            checked={overlayEnabled}
+            onChange={(e) => setOverlayEnabled(e.target.checked)}
+            className="h-4 w-4"
+          />
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Overlay on</span>
+        </label>
+
+        <label className="block">
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Overlay color</span>
+          <input
+            type="color"
+            value={overlayColor}
+            disabled={!overlayEnabled}
+            onChange={(e) => setOverlayColor(e.target.value)}
+            className={`${inputCls} h-11 w-24 p-1 disabled:opacity-50`}
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">
+            Overlay opacity ({overlayOpacity}%)
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={overlayOpacity}
+            disabled={!overlayEnabled}
+            onChange={(e) => setOverlayOpacity(Number(e.target.value))}
+            className="mt-3 block w-48 disabled:opacity-50"
+          />
+        </label>
+
         <button
           type="button"
-          onClick={() => save.mutate(seconds)}
+          onClick={() => save.mutate()}
           disabled={save.isPending}
           className="inline-flex items-center gap-2 bg-navy px-6 py-2.5 text-[0.7rem] tracking-luxury uppercase text-alabaster disabled:opacity-60"
         >
@@ -184,6 +238,7 @@ function DelaySetting() {
     </section>
   );
 }
+
 
 function SlideCard({
   slide,
