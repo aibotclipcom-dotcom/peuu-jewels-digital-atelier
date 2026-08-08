@@ -12,7 +12,7 @@ const STATIC_NAV = [
   { to: "/", label: "Home" },
   { to: "/best-sellers", label: "Best Sellers" },
   { to: "/maison", label: "OUR STORY" },
-  { to: "/concierge", label: "Concierge" },
+  { to: "/concierge", label: "CONTACT US" },
 ] as const;
 
 type Category = {
