@@ -173,7 +173,7 @@ export function HeroCarousel() {
               <div className="absolute inset-0 flex items-center">
                 <div className="mx-auto w-full max-w-6xl px-6 sm:px-10">
                   <div
-                    className={`max-w-xl text-alabaster transition-all duration-700 ${
+                    className={`max-w-xl text-alabaster [text-shadow:0_1px_18px_rgba(10,25,47,0.55)] transition-all duration-700 ${
                       active ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                     }`}
                   >
