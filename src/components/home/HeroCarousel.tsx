@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/lib/settings";
@@ -173,21 +172,12 @@ export function HeroCarousel() {
                     )}
                     {slide.cta_text && slide.cta_link && (
                       <div className="mt-8">
-                        {slide.cta_link.startsWith("http") ? (
-                          <a
-                            href={slide.cta_link}
-                            className="inline-flex min-h-11 items-center gap-3 bg-alabaster px-8 py-3 text-[0.7rem] tracking-luxury uppercase text-navy transition-colors hover:bg-gold-soft"
-                          >
-                            {slide.cta_text}
-                          </a>
-                        ) : (
-                          <Link
-                            to={slide.cta_link}
-                            className="inline-flex min-h-11 items-center gap-3 bg-alabaster px-8 py-3 text-[0.7rem] tracking-luxury uppercase text-navy transition-colors hover:bg-gold-soft"
-                          >
-                            {slide.cta_text}
-                          </Link>
-                        )}
+                        <a
+                          href={slide.cta_link}
+                          className="inline-flex min-h-11 items-center gap-3 bg-alabaster px-8 py-3 text-[0.7rem] tracking-luxury uppercase text-navy transition-colors hover:bg-gold-soft"
+                        >
+                          {slide.cta_text}
+                        </a>
                       </div>
                     )}
                   </div>
