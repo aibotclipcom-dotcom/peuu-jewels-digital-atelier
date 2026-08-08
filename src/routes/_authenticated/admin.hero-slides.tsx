@@ -193,7 +193,7 @@ function SlideCard({
   onMoveDown,
 }: {
   slide: Row;
-  onSave: (patch: Record<string, unknown>) => void | Promise<void>;
+  onSave: (patch: Record<string, unknown>) => unknown;
   onDelete: () => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
