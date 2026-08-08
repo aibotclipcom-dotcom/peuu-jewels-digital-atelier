@@ -18,10 +18,15 @@ export interface CartSettings {
   tax_label: string;
 }
 
+export interface HeroSettings {
+  auto_slide_delay_seconds: number;
+}
+
 export interface SiteSettings {
   announcement: AnnouncementSettings;
   shipping: ShippingSettings;
   cart: CartSettings;
+  hero: HeroSettings;
 }
 
 /**
