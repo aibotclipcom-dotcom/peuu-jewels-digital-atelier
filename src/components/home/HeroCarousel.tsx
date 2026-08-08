@@ -92,7 +92,19 @@ export function HeroCarousel() {
   const { hero } = useSiteSettings();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [navHeight, setNavHeight] = useState(0);
   const touchX = useRef<number | null>(null);
+
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+    const measure = () => setNavHeight(header.getBoundingClientRect().height);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
+
 
   const count = slides.length;
   const go = useCallback(
