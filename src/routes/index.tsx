@@ -5,6 +5,7 @@ import { FloralMark } from "@/components/brand/Logo";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CategoriesSection } from "@/components/home/CategoriesSection";
 import { BestSellersSection } from "@/components/home/BestSellersSection";
+import { HeroCarousel } from "@/components/home/HeroCarousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -82,6 +83,7 @@ const SECTIONS: Section[] = [
 function Landing() {
   return (
     <main className="bg-alabaster">
+      <HeroCarousel />
       <Hero />
       <CategoriesSection />
       <BestSellersSection />
