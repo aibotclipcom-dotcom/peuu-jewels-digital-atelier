@@ -4,6 +4,12 @@ export interface AnnouncementSettings {
   bg_color: string;
   text_color: string;
   link: string;
+  auto_swipe_delay_seconds: number;
+}
+
+export interface HomeNavSettings {
+  auto_swipe_delay_seconds: number;
+  auto_scroll_enabled: boolean;
 }
 
 export interface ShippingSettings {
