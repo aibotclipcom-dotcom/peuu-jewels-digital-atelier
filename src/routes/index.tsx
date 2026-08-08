@@ -120,9 +120,9 @@ function Hero() {
           transition={{ duration: 1.4, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 font-serif text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.95] tracking-tight text-navy"
         >
-          Real Anti Tarnish\u00a018k Gold Plated Western Jewellery.
+          Real Anti Tarnish
           <br />
-          <em className="italic text-coral/90">18k gold plated western jewellery.</em>
+          18k Gold Plated Western Jewellery.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
