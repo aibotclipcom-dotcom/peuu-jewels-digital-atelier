@@ -127,7 +127,8 @@ export function HeroCarousel() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-navy"
+      className="relative w-full overflow-hidden bg-cashmere"
+      style={{ marginTop: navHeight }}
       aria-roledescription="carousel"
       aria-label="Featured"
       onMouseEnter={() => setPaused(true)}
