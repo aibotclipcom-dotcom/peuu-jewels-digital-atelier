@@ -57,6 +57,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
   hero: {
     auto_slide_delay_seconds: 5,
+    overlay_enabled: false,
+    overlay_color: "#0A192F",
+    overlay_opacity: 35,
   },
 };
 
