@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminProductTypesRouteImport } from './routes/_authenticated/admin.product-types'
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
+import { Route as AuthenticatedAdminHomeNavRouteImport } from './routes/_authenticated/admin.home-nav'
 import { Route as AuthenticatedAdminHeroSlidesRouteImport } from './routes/_authenticated/admin.hero-slides'
 import { Route as AuthenticatedAdminGlobalFaqsRouteImport } from './routes/_authenticated/admin.global-faqs'
 import { Route as AuthenticatedAdminFiltersRouteImport } from './routes/_authenticated/admin.filters'
@@ -150,6 +151,12 @@ const AuthenticatedAdminOrdersRoute =
     path: '/orders',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminHomeNavRoute =
+  AuthenticatedAdminHomeNavRouteImport.update({
+    id: '/home-nav',
+    path: '/home-nav',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminHeroSlidesRoute =
   AuthenticatedAdminHeroSlidesRouteImport.update({
     id: '/hero-slides',
@@ -233,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/admin/filters': typeof AuthenticatedAdminFiltersRoute
   '/admin/global-faqs': typeof AuthenticatedAdminGlobalFaqsRoute
   '/admin/hero-slides': typeof AuthenticatedAdminHeroSlidesRoute
+  '/admin/home-nav': typeof AuthenticatedAdminHomeNavRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
@@ -264,6 +272,7 @@ export interface FileRoutesByTo {
   '/admin/filters': typeof AuthenticatedAdminFiltersRoute
   '/admin/global-faqs': typeof AuthenticatedAdminGlobalFaqsRoute
   '/admin/hero-slides': typeof AuthenticatedAdminHeroSlidesRoute
+  '/admin/home-nav': typeof AuthenticatedAdminHomeNavRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -297,6 +306,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/filters': typeof AuthenticatedAdminFiltersRoute
   '/_authenticated/admin/global-faqs': typeof AuthenticatedAdminGlobalFaqsRoute
   '/_authenticated/admin/hero-slides': typeof AuthenticatedAdminHeroSlidesRoute
+  '/_authenticated/admin/home-nav': typeof AuthenticatedAdminHomeNavRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/product-types': typeof AuthenticatedAdminProductTypesRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRouteWithChildren
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/admin/filters'
     | '/admin/global-faqs'
     | '/admin/hero-slides'
+    | '/admin/home-nav'
     | '/admin/orders'
     | '/admin/product-types'
     | '/admin/products'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/admin/filters'
     | '/admin/global-faqs'
     | '/admin/hero-slides'
+    | '/admin/home-nav'
     | '/admin/orders'
     | '/admin/product-types'
     | '/admin/reviews'
@@ -394,6 +406,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/filters'
     | '/_authenticated/admin/global-faqs'
     | '/_authenticated/admin/hero-slides'
+    | '/_authenticated/admin/home-nav'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/product-types'
     | '/_authenticated/admin/products'
@@ -568,6 +581,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/home-nav': {
+      id: '/_authenticated/admin/home-nav'
+      path: '/home-nav'
+      fullPath: '/admin/home-nav'
+      preLoaderRoute: typeof AuthenticatedAdminHomeNavRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/hero-slides': {
       id: '/_authenticated/admin/hero-slides'
       path: '/hero-slides'
@@ -667,6 +687,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminFiltersRoute: typeof AuthenticatedAdminFiltersRoute
   AuthenticatedAdminGlobalFaqsRoute: typeof AuthenticatedAdminGlobalFaqsRoute
   AuthenticatedAdminHeroSlidesRoute: typeof AuthenticatedAdminHeroSlidesRoute
+  AuthenticatedAdminHomeNavRoute: typeof AuthenticatedAdminHomeNavRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
   AuthenticatedAdminProductTypesRoute: typeof AuthenticatedAdminProductTypesRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRouteWithChildren
@@ -683,6 +704,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminFiltersRoute: AuthenticatedAdminFiltersRoute,
   AuthenticatedAdminGlobalFaqsRoute: AuthenticatedAdminGlobalFaqsRoute,
   AuthenticatedAdminHeroSlidesRoute: AuthenticatedAdminHeroSlidesRoute,
+  AuthenticatedAdminHomeNavRoute: AuthenticatedAdminHomeNavRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
   AuthenticatedAdminProductTypesRoute: AuthenticatedAdminProductTypesRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRouteWithChildren,

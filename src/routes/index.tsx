@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CategoriesSection } from "@/components/home/CategoriesSection";
 import { BestSellersSection } from "@/components/home/BestSellersSection";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
+import { HomeNavBar } from "@/components/home/HomeNavBar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -84,6 +85,7 @@ function Landing() {
   return (
     <main className="bg-alabaster">
       <HeroCarousel />
+      <HomeNavBar />
       <Hero />
       <CategoriesSection />
       <BestSellersSection />
