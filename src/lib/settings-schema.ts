@@ -4,6 +4,12 @@ export interface AnnouncementSettings {
   bg_color: string;
   text_color: string;
   link: string;
+  auto_swipe_delay_seconds: number;
+}
+
+export interface HomeNavSettings {
+  auto_swipe_delay_seconds: number;
+  auto_scroll_enabled: boolean;
 }
 
 export interface ShippingSettings {
@@ -27,6 +33,7 @@ export interface HeroSettings {
 
 export interface SiteSettings {
   announcement: AnnouncementSettings;
+  home_nav: HomeNavSettings;
   shipping: ShippingSettings;
   cart: CartSettings;
   hero: HeroSettings;
@@ -44,6 +51,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     bg_color: "#0A192F",
     text_color: "#FAF7F2",
     link: "",
+    auto_swipe_delay_seconds: 5,
+  },
+  home_nav: {
+    auto_swipe_delay_seconds: 5,
+    auto_scroll_enabled: true,
   },
   shipping: {
     free_shipping_enabled: true,
@@ -90,6 +102,7 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
   const s = map.get("shipping") ?? {};
   const c = map.get("cart") ?? {};
   const h = map.get("hero") ?? {};
+  const n = map.get("home_nav") ?? {};
   const d = DEFAULT_SETTINGS;
 
   return {
@@ -99,6 +112,17 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
       bg_color: str(a.bg_color, d.announcement.bg_color),
       text_color: str(a.text_color, d.announcement.text_color),
       link: typeof a.link === "string" ? a.link : "",
+      auto_swipe_delay_seconds: Math.min(
+        60,
+        Math.max(2, num(a.auto_swipe_delay_seconds, d.announcement.auto_swipe_delay_seconds)),
+      ),
+    },
+    home_nav: {
+      auto_swipe_delay_seconds: Math.min(
+        60,
+        Math.max(2, num(n.auto_swipe_delay_seconds, d.home_nav.auto_swipe_delay_seconds)),
+      ),
+      auto_scroll_enabled: bool(n.auto_scroll_enabled, d.home_nav.auto_scroll_enabled),
     },
     shipping: {
       free_shipping_enabled: bool(s.free_shipping_enabled, d.shipping.free_shipping_enabled),

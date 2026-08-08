@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
-import { LayoutGrid, Package, ScrollText, ArrowLeft, FolderTree, Tags, SlidersHorizontal, Award, HelpCircle, MessageSquareText, Ticket, Layers, Settings, GalleryHorizontal } from "lucide-react";
+import { LayoutGrid, Package, ScrollText, ArrowLeft, FolderTree, Tags, SlidersHorizontal, Award, HelpCircle, MessageSquareText, Ticket, Layers, Settings, GalleryHorizontal, Megaphone, Navigation } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Atelier Console — PEUU Jewels" }] }),
@@ -32,7 +32,9 @@ type NavItem = {
     | "/admin/reviews"
     | "/admin/coupons"
     | "/admin/settings"
-    | "/admin/hero-slides";
+    | "/admin/hero-slides"
+    | "/admin/announcements"
+    | "/admin/home-nav";
   label: string;
   icon: typeof LayoutGrid;
   exact?: boolean;
@@ -49,6 +51,8 @@ const NAV: NavItem[] = [
   { to: "/admin/reviews", label: "Reviews", icon: MessageSquareText },
   { to: "/admin/coupons", label: "Coupons", icon: Ticket },
   { to: "/admin/hero-slides", label: "Home Hero Slider", icon: GalleryHorizontal },
+  { to: "/admin/announcements", label: "Announcement Bar", icon: Megaphone },
+  { to: "/admin/home-nav", label: "Home Navigation", icon: Navigation },
   { to: "/admin/settings", label: "Store Settings", icon: Settings },
 ];
 

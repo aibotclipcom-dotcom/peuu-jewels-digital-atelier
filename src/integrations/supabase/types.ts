@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          bg_color: string
+          created_at: string
+          id: string
+          is_active: boolean
+          link: string | null
+          link_text: string | null
+          sort_order: number
+          text: string
+          text_color: string
+          updated_at: string
+        }
+        Insert: {
+          bg_color?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          link?: string | null
+          link_text?: string | null
+          sort_order?: number
+          text?: string
+          text_color?: string
+          updated_at?: string
+        }
+        Update: {
+          bg_color?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          link?: string | null
+          link_text?: string | null
+          sort_order?: number
+          text?: string
+          text_color?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           bg_color: string
@@ -330,6 +369,42 @@ export type Database = {
           mobile_media_url?: string | null
           sort_order?: number
           subheading?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      home_nav_items: {
+        Row: {
+          badge_label: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          link: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          badge_label?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          badge_label?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link?: string
+          name?: string
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []
