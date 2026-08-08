@@ -9,7 +9,7 @@ import { HeroSlideMedia, heroSlidesQuery, type HeroSlide } from "@/components/ho
 
 export const Route = createFileRoute("/_authenticated/admin/hero-slides")({
   head: () => ({ meta: [{ title: "Home Hero Slider — Atelier Console" }] }),
-  component: AdminHeroSlides;
+  component: AdminHeroSlides,
 });
 
 type Row = HeroSlide & {
