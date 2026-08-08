@@ -44,8 +44,8 @@ const SECTIONS: Section[] = [
   {
     word: "NECKLACES",
     eyebrow: "Chapter One",
-    title: "Layered, weightless, eternal.",
-    copy: "Hand-finished chains in 18k gold — engineered to drape, sculpted to last.",
+    title: "\u00a0Layer Neakpeace.",
+    copy: "Anti Tarnish\u00a0chains in 18k gold \u2014 engineered to drape, sculpted to last.",
     image: "/necklace.jpeg",
     tone: "rose",
     cta: { label: "Shop Necklaces", to: "/Collection" },
@@ -53,8 +53,8 @@ const SECTIONS: Section[] = [
   {
     word: "RINGS",
     eyebrow: "Chapter Two",
-    title: "Architectural, brilliant, yours.",
-    copy: "Cluster solitaires and knife-edge bands, set by hand in our Maison.",
+    title: "Teasing All Rings",
+    copy: "Rings Built for Life, Styled for\u00a0\u2022\u00a0You\u00a0Anti-Tarnish\u00a0\n\u2022 Waterproof \u2022 Hypoallergenic \u2022 18K Gold Plated\u00a0",
     image: "/ring.jpeg",
     tone: "champagne",
     cta: { label: "Shop Rings", to: "/Collection" },
@@ -70,9 +70,9 @@ const SECTIONS: Section[] = [
   },
   {
     word: "EARRINGS",
-    eyebrow: "Chapter Four",
-    title: "A study in light.",
-    copy: "Pavé hoops and stud trios designed to be worn together.",
+    eyebrow: "CHAPTER FOUR",
+    title: "Earring, Hoops & Studs.",
+    copy: "\u00a0Hoops and stud designed to be worn together.",
     image: "/earrings.jpeg",
     tone: "ivory",
     cta: { label: "Shop Earrings", to: "/Collection" },
@@ -112,7 +112,7 @@ function Hero() {
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="text-[0.7rem] tracking-luxury uppercase text-rose"
         >
-          PEUU Jewels · Est. — Handcrafted elegance, just for you
+          PEUU JEWELS - YOURS HAPPINESS OUR PRIORITY
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 32 }}
@@ -120,9 +120,9 @@ function Hero() {
           transition={{ duration: 1.4, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 font-serif text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.95] tracking-tight text-navy"
         >
-          Timeless Jewelry,
+          Real Anti Tarnish\u00a018k Gold Plated Western Jewellery.
           <br />
-          Crafted for <em className="italic text-coral/90">your special moments.</em>
+          <em className="italic text-coral/90">18k gold plated western jewellery.</em>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -130,8 +130,8 @@ function Hero() {
           transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 max-w-xl text-sm leading-relaxed text-navy/70 sm:text-base"
         >
-          Discover our exclusive collection of fine handcrafted jewelry. Designed with passion,
-          finished with perfection, and made to celebrate you every day.
+          Experience & Discover our Exclusive Collection of Real Anti Tarnish Jewellery. Designed with Passion,
+          Finished with Perfection, and Made to Celebrate You Every Day.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -287,7 +287,7 @@ function ClosingChapter() {
         transition={{ duration: 1.2 }}
         className="text-[0.7rem] tracking-luxury uppercase text-gold-soft"
       >
-        Bespoke · Concierge · Private Atelier
+        {"\n"}
       </motion.span>
       <motion.h2
         initial={{ opacity: 0, y: 24 }}
@@ -305,14 +305,13 @@ function ClosingChapter() {
         transition={{ duration: 1.4, delay: 0.4 }}
         className="mt-6 max-w-lg text-center text-sm leading-relaxed text-alabaster/70"
       >
-        Commission a piece from the Maison. Our concierge will guide you through stones, settings,
-        and engravings — privately, patiently, beautifully.
+        Not just accessories, But a reflection of the real you.
       </motion.p>
       <Link
         to="/concierge"
         className="mt-12 inline-flex items-center gap-3 border border-gold-soft/60 px-9 py-4 text-[0.7rem] tracking-luxury uppercase text-gold-soft transition-all hover:bg-gold-soft hover:text-navy"
       >
-        Begin a Bespoke
+        CONTACT US{"\n"}
         <span className="inline-block h-px w-6 bg-current" />
       </Link>
     </section>

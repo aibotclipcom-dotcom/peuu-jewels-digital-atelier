@@ -120,7 +120,7 @@ export function SiteNav() {
             className="hidden items-center gap-2 rounded-full border border-navy/15 px-4 py-2 text-[0.65rem] tracking-luxury uppercase text-navy transition-all hover:border-navy/40 hover:bg-navy/5 sm:inline-flex"
           >
             <User2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-            {user ? "Account" : "VIP Login"}
+            {user ? "Account" : "VIP LOGIN"}
           </Link>
           <button
             type="button"
@@ -256,7 +256,7 @@ export function SiteNav() {
               to={user ? "/account" : "/auth"}
               className="border-b border-border/40 py-4 text-[0.7rem] tracking-luxury uppercase text-navy"
             >
-              {user ? "Account" : "VIP Login"}
+              {user ? "Account" : "VIP LOGIN"}
             </Link>
           </nav>
         </div>
