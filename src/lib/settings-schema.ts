@@ -20,6 +20,9 @@ export interface CartSettings {
 
 export interface HeroSettings {
   auto_slide_delay_seconds: number;
+  overlay_enabled: boolean;
+  overlay_color: string;
+  overlay_opacity: number;
 }
 
 export interface SiteSettings {
@@ -54,6 +57,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
   hero: {
     auto_slide_delay_seconds: 5,
+    overlay_enabled: false,
+    overlay_color: "#0A192F",
+    overlay_opacity: 35,
   },
 };
 
@@ -109,6 +115,9 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
         60,
         Math.max(2, num(h.auto_slide_delay_seconds, d.hero.auto_slide_delay_seconds)),
       ),
+      overlay_enabled: bool(h.overlay_enabled, d.hero.overlay_enabled),
+      overlay_color: str(h.overlay_color, d.hero.overlay_color),
+      overlay_opacity: Math.min(100, num(h.overlay_opacity, d.hero.overlay_opacity)),
     },
   };
 }

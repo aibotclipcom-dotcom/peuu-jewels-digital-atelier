@@ -92,7 +92,19 @@ export function HeroCarousel() {
   const { hero } = useSiteSettings();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [navHeight, setNavHeight] = useState(0);
   const touchX = useRef<number | null>(null);
+
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+    const measure = () => setNavHeight(header.getBoundingClientRect().height);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
+
 
   const count = slides.length;
   const go = useCallback(
@@ -115,7 +127,8 @@ export function HeroCarousel() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-navy"
+      className="relative w-full overflow-hidden bg-cashmere"
+      style={{ marginTop: navHeight }}
       aria-roledescription="carousel"
       aria-label="Featured"
       onMouseEnter={() => setPaused(true)}
@@ -146,12 +159,21 @@ export function HeroCarousel() {
               {(active || i === 0 || Math.abs(i - index) === 1) && (
                 <HeroSlideMedia slide={slide} active={active} eager={i === 0} />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/25 to-navy/10" />
+              {hero.overlay_enabled && (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundColor: hero.overlay_color,
+                    opacity: Math.min(100, Math.max(0, hero.overlay_opacity)) / 100,
+                  }}
+                />
+              )}
+
 
               <div className="absolute inset-0 flex items-center">
                 <div className="mx-auto w-full max-w-6xl px-6 sm:px-10">
                   <div
-                    className={`max-w-xl text-alabaster transition-all duration-700 ${
+                    className={`max-w-xl text-alabaster [text-shadow:0_1px_18px_rgba(10,25,47,0.55)] transition-all duration-700 ${
                       active ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                     }`}
                   >
