@@ -10,6 +10,9 @@ export interface AnnouncementSettings {
 export interface HomeNavSettings {
   auto_swipe_delay_seconds: number;
   auto_scroll_enabled: boolean;
+  bg_color: string;
+  text_color: string;
+  border_color: string;
 }
 
 export interface ShippingSettings {
@@ -56,6 +59,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   home_nav: {
     auto_swipe_delay_seconds: 5,
     auto_scroll_enabled: true,
+    bg_color: "#FAF7F2",
+    text_color: "#0A192F",
+    border_color: "#E2DDD5",
   },
   shipping: {
     free_shipping_enabled: true,
@@ -123,6 +129,9 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
         Math.max(2, num(n.auto_swipe_delay_seconds, d.home_nav.auto_swipe_delay_seconds)),
       ),
       auto_scroll_enabled: bool(n.auto_scroll_enabled, d.home_nav.auto_scroll_enabled),
+      bg_color: str(n.bg_color, d.home_nav.bg_color),
+      text_color: str(n.text_color, d.home_nav.text_color),
+      border_color: str(n.border_color, d.home_nav.border_color),
     },
     shipping: {
       free_shipping_enabled: bool(s.free_shipping_enabled, d.shipping.free_shipping_enabled),
