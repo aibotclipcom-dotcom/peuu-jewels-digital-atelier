@@ -25,6 +25,15 @@ export const homeNavItemsQuery = {
   },
 };
 
+function hexToRgba(hex: string, alpha: number): string {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.slice(0, 2), 16);
+  const g = parseInt(clean.slice(2, 4), 16);
+  const b = parseInt(clean.slice(4, 6), 16);
+  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) return hex;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 /**
  * Continuously scrolling marquee strip shown only on the home page, directly
  * below the hero slider. Items loop seamlessly and pause on hover.
@@ -46,7 +55,7 @@ export function HomeNavBar() {
           key={`${ariaHidden ? "dup" : "main"}-${item.id}`}
           href={item.link || "/"}
           tabIndex={ariaHidden ? -1 : undefined}
-          className="group flex shrink-0 items-center gap-2 whitespace-nowrap text-[0.68rem] tracking-luxury uppercase text-navy/75 transition-colors hover:text-navy"
+          className="group flex shrink-0 items-center gap-2 whitespace-nowrap text-[0.68rem] tracking-luxury uppercase transition-colors hover:opacity-80"
         >
           {item.image_url && (
             <img
@@ -63,7 +72,7 @@ export function HomeNavBar() {
               {item.badge_label}
             </span>
           )}
-          <span aria-hidden className="pl-8 text-navy/25 sm:pl-12">
+          <span aria-hidden className="pl-8 opacity-25 sm:pl-12">
             |
           </span>
         </a>
@@ -74,7 +83,13 @@ export function HomeNavBar() {
   return (
     <nav
       aria-label="Featured categories"
-      className="group/marquee w-full overflow-hidden border-y border-border/60 bg-alabaster py-4"
+      className="group/marquee w-full overflow-hidden border-y py-4"
+      style={{
+        backgroundColor: home_nav.bg_color,
+        color: home_nav.text_color,
+        borderTopColor: hexToRgba(home_nav.border_color, 0.6),
+        borderBottomColor: hexToRgba(home_nav.border_color, 0.6),
+      }}
     >
       <div
         className="flex w-max"
@@ -92,4 +107,3 @@ export function HomeNavBar() {
     </nav>
   );
 }
-
