@@ -144,11 +144,17 @@ function DelaySetting() {
   const { data } = useQuery(siteSettingsQuery);
   const [seconds, setSeconds] = useState(DEFAULT_SETTINGS.home_nav.auto_swipe_delay_seconds);
   const [enabled, setEnabled] = useState(DEFAULT_SETTINGS.home_nav.auto_scroll_enabled);
+  const [bgColor, setBgColor] = useState(DEFAULT_SETTINGS.home_nav.bg_color);
+  const [textColor, setTextColor] = useState(DEFAULT_SETTINGS.home_nav.text_color);
+  const [borderColor, setBorderColor] = useState(DEFAULT_SETTINGS.home_nav.border_color);
 
   useEffect(() => {
     if (!data) return;
     setSeconds(data.home_nav.auto_swipe_delay_seconds);
     setEnabled(data.home_nav.auto_scroll_enabled);
+    setBgColor(data.home_nav.bg_color);
+    setTextColor(data.home_nav.text_color);
+    setBorderColor(data.home_nav.border_color);
   }, [data]);
 
   const save = useMutation({
@@ -157,7 +163,13 @@ function DelaySetting() {
         [
           {
             key: "home_nav",
-            value: { auto_swipe_delay_seconds: seconds, auto_scroll_enabled: enabled },
+            value: {
+              auto_swipe_delay_seconds: seconds,
+              auto_scroll_enabled: enabled,
+              bg_color: bgColor,
+              text_color: textColor,
+              border_color: borderColor,
+            },
           },
         ] as never,
         { onConflict: "key" },
@@ -173,8 +185,35 @@ function DelaySetting() {
 
   return (
     <section className="mt-8 border border-border/60 bg-cashmere/20 p-6">
-      <h2 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Auto-scroll</h2>
-      <div className="mt-4 flex flex-wrap items-end gap-4">
+      <h2 className="text-[0.65rem] tracking-luxury uppercase text-navy/60">Appearance & auto-scroll</h2>
+      <div className="mt-4 grid flex-wrap gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <label className="block">
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Background colour</span>
+          <input
+            type="color"
+            value={bgColor}
+            onChange={(e) => setBgColor(e.target.value)}
+            className="mt-1 h-10 w-full border border-border/60 bg-alabaster cursor-pointer"
+          />
+        </label>
+        <label className="block">
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Text colour</span>
+          <input
+            type="color"
+            value={textColor}
+            onChange={(e) => setTextColor(e.target.value)}
+            className="mt-1 h-10 w-full border border-border/60 bg-alabaster cursor-pointer"
+          />
+        </label>
+        <label className="block">
+          <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Border colour</span>
+          <input
+            type="color"
+            value={borderColor}
+            onChange={(e) => setBorderColor(e.target.value)}
+            className="mt-1 h-10 w-full border border-border/60 bg-alabaster cursor-pointer"
+          />
+        </label>
         <label className="flex items-center gap-2 pb-2 text-sm text-navy/75">
           <input
             type="checkbox"
@@ -195,18 +234,18 @@ function DelaySetting() {
             step="1"
             value={seconds}
             onChange={(e) => setSeconds(Math.max(2, Math.min(60, Number(e.target.value) || 2)))}
-            className={`${inputCls} w-40`}
+            className={`${inputCls} w-full sm:w-40`}
           />
         </label>
-        <button
-          type="button"
-          onClick={() => save.mutate()}
-          disabled={save.isPending}
-          className="inline-flex items-center gap-2 bg-navy px-6 py-2.5 text-[0.7rem] tracking-luxury uppercase text-alabaster disabled:opacity-60"
-        >
-          {save.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save
-        </button>
       </div>
+      <button
+        type="button"
+        onClick={() => save.mutate()}
+        disabled={save.isPending}
+        className="mt-5 inline-flex items-center gap-2 bg-navy px-6 py-2.5 text-[0.7rem] tracking-luxury uppercase text-alabaster disabled:opacity-60"
+      >
+        {save.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save
+      </button>
     </section>
   );
 }
