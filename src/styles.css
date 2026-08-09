@@ -254,3 +254,21 @@
   color: var(--navy);
   font-weight: 600;
 }
+
+/* Continuous marquee for the home navigation strip */
+@keyframes home-nav-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.group\/marquee:hover [style*="home-nav-marquee"] {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="home-nav-marquee"] {
+    animation: none !important;
+  }
+}
