@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { X, UploadCloud, ArrowLeft, ArrowRight, RefreshCw, Plus, Trash2 } from "lucide-react";
+import { ProductBenefits, BENEFIT_ICONS } from "@/components/product/ProductBenefits";
 
 function slugify(s: string) {
   return s
@@ -856,6 +857,117 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
             className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
           >
             <Plus className="h-3.5 w-3.5" /> Add FAQ
+          </button>
+        </div>
+      </Section>
+
+      <Section title="Benefit badges">
+        <div className="md:col-span-2 space-y-4">
+          <p className="text-[0.65rem] text-navy/50">
+            Shown beside the price. If none are added, the defaults (Anti-Tarnish, Skin Safe
+            Jewellery, 18K Gold Tone Plated) are displayed.
+          </p>
+
+          <ProductBenefits
+            benefits={benefits
+              .filter((b) => b.is_active && b.title.trim())
+              .map((b, i) => ({ id: String(i), title: b.title, icon: b.icon }))}
+          />
+
+          {benefits.map((b, i) => (
+            <div key={i} className="grid gap-3 border border-border/60 p-4 md:grid-cols-[1.4fr_160px_auto]">
+              <input
+                value={b.title}
+                onChange={(e) =>
+                  setBenefits(benefits.map((r, idx) => (idx === i ? { ...r, title: e.target.value } : r)))
+                }
+                placeholder="Badge title"
+                className="w-full border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy"
+              />
+              <select
+                value={b.icon}
+                onChange={(e) =>
+                  setBenefits(benefits.map((r, idx) => (idx === i ? { ...r, icon: e.target.value } : r)))
+                }
+                className="border border-border/70 bg-card px-2 py-2 text-xs text-navy outline-none focus:border-navy"
+              >
+                {Object.keys(BENEFIT_ICONS).map((k) => (
+                  <option key={k} value={k}>
+                    {k}
+                  </option>
+                ))}
+              </select>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (i === 0) return;
+                    const next = [...benefits];
+                    [next[i - 1], next[i]] = [next[i], next[i - 1]];
+                    setBenefits(next);
+                  }}
+                  className="grid h-8 w-8 place-items-center border border-border text-navy disabled:opacity-30"
+                  disabled={i === 0}
+                  aria-label="Move up"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5 rotate-90" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (i === benefits.length - 1) return;
+                    const next = [...benefits];
+                    [next[i + 1], next[i]] = [next[i], next[i + 1]];
+                    setBenefits(next);
+                  }}
+                  className="grid h-8 w-8 place-items-center border border-border text-navy disabled:opacity-30"
+                  disabled={i === benefits.length - 1}
+                  aria-label="Move down"
+                >
+                  <ArrowRight className="h-3.5 w-3.5 rotate-90" />
+                </button>
+                <label className="flex items-center gap-2 text-[0.6rem] tracking-luxury uppercase text-navy/60">
+                  <input
+                    type="checkbox"
+                    checked={b.is_active}
+                    onChange={(e) =>
+                      setBenefits(
+                        benefits.map((r, idx) => (idx === i ? { ...r, is_active: e.target.checked } : r)),
+                      )
+                    }
+                  />
+                  Active
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setBenefits(benefits.filter((_, idx) => idx !== i))}
+                  className="text-rose"
+                  aria-label="Remove badge"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <input
+                value={b.description}
+                onChange={(e) =>
+                  setBenefits(
+                    benefits.map((r, idx) => (idx === i ? { ...r, description: e.target.value } : r)),
+                  )
+                }
+                placeholder="Short description (optional)"
+                className="w-full border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy md:col-span-3"
+              />
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() =>
+              setBenefits([...benefits, { title: "", icon: "sparkles", description: "", is_active: true }])
+            }
+            className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+          >
+            <Plus className="h-3.5 w-3.5" /> Add badge
           </button>
         </div>
       </Section>
