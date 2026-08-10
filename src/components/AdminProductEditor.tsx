@@ -189,6 +189,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [attrs, setAttrs] = useState<Attr[]>([]);
   const [badgeIds, setBadgeIds] = useState<string[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [benefits, setBenefits] = useState<BenefitRow[]>([]);
   const [urlDraft, setUrlDraft] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [isBestSeller, setIsBestSeller] = useState(false);
@@ -244,6 +245,19 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   useEffect(() => {
     if (existingFaqs) setFaqs(existingFaqs);
   }, [existingFaqs]);
+
+  useEffect(() => {
+    if (existingBenefits)
+      setBenefits(
+        existingBenefits.map((b) => ({
+          title: b.title,
+          icon: b.icon,
+          description: b.description ?? "",
+          is_active: b.is_active,
+        })),
+      );
+  }, [existingBenefits]);
+
 
   useEffect(() => {
     if (isNew && name && !slug) setSlug(slugify(name));
