@@ -27,7 +27,7 @@ const CHAPTERS = [
     body: (
       <div className="space-y-4">
         <div>
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Every journey begins with a subtle dream and a deep-rooted belief. For me, the story of PEUU Jewels was no different—it was born out of pure dedication and heartfelt emotion. That "unwavering belief" is far more than just words; it is the very foundation upon which we stand.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Every journey begins with a subtle dream and a deep-rooted belief. For me, the story of PEUU Jewels was no different—it was born out of pure dedication and heartfelt emotion. That "unwavering belief" is far more than just words; it is the very Founder upon which we stand.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
         </div>
         <div>
           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;We took our first step with a single conviction: that a piece of jewelry should never be a more accessory, but a quiet companion to a life. From day one, our vision has extended beyond crafting fine ornaments—we strive to become a meaningful part of the story you live every day.
@@ -59,7 +59,7 @@ const CHAPTERS = [
             The driving forces who steer and manage PEUU Jewels every single day. Together, they channel their passion, creativity, and hard work to turn a personal legacy into a living reality.
           </div>
           <div>
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Mrs. Archana Bhujbal & Mr. Ganesh Bhujbal — Our Foundation & Pillars of Strength&nbsp;The backbone of this entire journey. Without their selfless support, constant sacrifices, and unwavering belief, PEUU Jewels would never have taken root, nor reached the heights it stands at today.
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Mrs. Archana Bhujbal & Mr. Ganesh Bhujbal — Our Founder & Pillars of Strength&nbsp;The backbone of this entire journey. Without their selfless support, constant sacrifices, and unwavering belief, PEUU Jewels would never have taken root, nor reached the heights it stands at today.
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@ function MaisonPage() {
         <FloralMark className="pointer-events-none absolute left-4 top-0 h-40 w-40 text-coral/10" />
         <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Our Story</span>
         <h1 className="mt-6 font-serif text-5xl leading-tight text-navy sm:text-7xl">
-          Maison PEUU — A Legacy of Love, Crafted to Last
+          PEUU&nbsp; JEWELS — A Legacy of Love, Crafted to Last
         </h1>
         <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-navy/70">
           PEUU JEWELS was born from a family legacy of love and careful craft. We make everyday
