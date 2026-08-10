@@ -129,12 +129,20 @@ function AccountPage() {
 
         <div className="mt-16 grid gap-16 lg:grid-cols-2">
           <div>
-            <h2 className="font-serif text-2xl text-navy">Saved pieces</h2>
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 className="font-serif text-2xl text-navy">Wishlist</h2>
+              <Link
+                to="/wishlist"
+                className="line-draw text-[0.6rem] tracking-luxury uppercase text-navy"
+              >
+                View all
+              </Link>
+            </div>
             {wishlist.length === 0 ? (
               <p className="mt-4 text-sm text-navy/60">Your wishlist is waiting to be filled.</p>
             ) : (
               <ul className="mt-6 divide-y divide-border/60">
-                {wishlist.map((w) => {
+                {wishlist.slice(0, 4).map((w) => {
                   const p = w.product;
                   if (!p) return null;
                   return (
@@ -157,6 +165,7 @@ function AccountPage() {
               </ul>
             )}
           </div>
+
 
           <div>
             <h2 className="font-serif text-2xl text-navy">Order history</h2>
