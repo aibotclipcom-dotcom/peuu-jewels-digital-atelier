@@ -126,7 +126,7 @@ function Hero() {
         >
           Real Anti Tarnish
           <br />
-          18k Gold Plated Western Jewellery.
+          <span className="text-rose">18k Gold Plated Western Jewellery.</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
