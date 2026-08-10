@@ -448,7 +448,7 @@ function ProductDetail() {
             </button>
           </div>
 
-          <ProductInfoStripRow info={info} className="mt-8" />
+          <ProductInfoStripRow info={info} stock={product.stock} className="mt-8" />
 
           <div className="mt-4 space-y-2 text-[0.72rem] text-navy/65">
             <p className="flex items-center gap-2">
