@@ -262,12 +262,10 @@ function ProductDetail() {
   const videos = product.video_urls ?? [];
   const specEntries = Object.entries(
     (product.spec ?? {}) as Record<string, unknown>,
-  ).filter(([, v]) => v !== null && v !== "");
+  ).filter(([k, v]) => v !== null && v !== "" && !isReservedSpecKey(k));
 
-  const deliveryFrom = new Date(Date.now() + 3 * 864e5);
-  const deliveryTo = new Date(Date.now() + 7 * 864e5);
-  const fmtDate = (d: Date) =>
-    d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  const info = parseProductInfo(product.spec);
+
 
   const tabs: Array<{ key: TabKey; label: string; available: boolean }> = [
     { key: "details", label: "Details", available: true },
