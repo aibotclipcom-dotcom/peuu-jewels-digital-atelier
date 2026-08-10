@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { getSaleInfo, formatCountdown } from "@/lib/pricing";
 import { BadgeRow, type BadgeShape } from "@/components/product/BadgeRow";
 import { ProductBenefits, type ProductBenefit } from "@/components/product/ProductBenefits";
+import { ProductBenefitsGrid } from "@/components/product/ProductBenefitsGrid";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
@@ -457,6 +458,8 @@ function ProductDetail() {
               Complimentary insured delivery · Lifetime polishing
             </p>
           </div>
+
+          <ProductBenefitsGrid className="mt-8" />
 
           {/* Tabs */}
           <div className="mt-12 border-t border-border/60">
