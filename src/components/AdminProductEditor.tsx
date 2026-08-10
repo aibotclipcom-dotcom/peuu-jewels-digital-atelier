@@ -41,6 +41,7 @@ function fromLocalInput(v: string) {
 
 type Faq = { id?: string; question: string; answer: string };
 type Attr = { key: string; value: string };
+type BenefitRow = { title: string; icon: string; description: string; is_active: boolean };
 
 export function AdminProductEditor({ productId }: { productId?: string }) {
   const isNew = !productId;
