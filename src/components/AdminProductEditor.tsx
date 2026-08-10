@@ -196,6 +196,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [videos, setVideos] = useState<string[]>([]);
   const [videoDraft, setVideoDraft] = useState("");
   const [specRows, setSpecRows] = useState<Attr[]>([]);
+  const [info, setInfo] = useState<ProductInfoStrip>(DEFAULT_PRODUCT_INFO);
   const [attrs, setAttrs] = useState<Attr[]>([]);
   const [badgeIds, setBadgeIds] = useState<string[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
