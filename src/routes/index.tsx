@@ -20,7 +20,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "PEUU Jewels — A Cinematic Fine Jewelry Atelier" },
       {
         property: "og:description",
-        content: "A cinematic Collection experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
+        content:
+          "A cinematic Collection experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
       },
       { property: "og:image", content: "https://peuujewels.lovable.app/necklace.jpeg" },
       { property: "og:url", content: "https://peuujewels.lovable.app/" },
@@ -30,7 +31,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Landing,
 });
-
 
 interface Section {
   word: string;
@@ -126,7 +126,7 @@ function Hero() {
         >
           Real Anti Tarnish
           <br />
-          <span className="text-rose">18k Gold Plated Western Jewellery.</span>
+          <span style={{ color: "rgb(254, 122, 116)" }}>18k Gold Plated Western Jewellery.</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -134,8 +134,8 @@ function Hero() {
           transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 max-w-xl text-sm leading-relaxed text-navy/70 sm:text-base"
         >
-          Experience & Discover our Exclusive Collection of Real Anti Tarnish Jewellery. Designed with Passion,
-          Finished with Perfection, and Made to Celebrate You Every Day.
+          Experience & Discover our Exclusive Collection of Real Anti Tarnish Jewellery. Designed with Passion, Finished
+          with Perfection, and Made to Celebrate You Every Day.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -150,10 +150,7 @@ function Hero() {
             Explore the Collection
             <span className="inline-block h-px w-6 bg-alabaster transition-all group-hover:w-10" />
           </Link>
-          <Link
-            to="/maison"
-            className="line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
-          >
+          <Link to="/maison" className="line-draw text-[0.7rem] tracking-luxury uppercase text-navy">
             Our Story
           </Link>
         </motion.div>
@@ -188,10 +185,7 @@ function EditorialSection({ section, index }: { section: Section; index: number 
   const reverse = index % 2 === 1;
 
   return (
-    <section
-      ref={ref}
-      className="relative grid min-h-[100svh] w-full overflow-hidden md:grid-cols-2"
-    >
+    <section ref={ref} className="relative grid min-h-[100svh] w-full overflow-hidden md:grid-cols-2">
       {!reduce && (
         <motion.div
           aria-hidden
@@ -249,18 +243,11 @@ function EditorialSection({ section, index }: { section: Section; index: number 
               className="h-full w-full object-cover"
             />
           </div>
-          <div className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/55">
-            {section.eyebrow}
-          </div>
-          <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">
-            {section.title}
-          </h2>
+          <div className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/55">{section.eyebrow}</div>
+          <h2 className="mt-3 font-serif text-3xl leading-tight text-navy sm:text-4xl">{section.title}</h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy/70">{section.copy}</p>
           {section.cta && (
-            <Link
-              to={section.cta.to}
-              className="mt-8 line-draw text-[0.7rem] tracking-luxury uppercase text-navy"
-            >
+            <Link to={section.cta.to} className="mt-8 line-draw text-[0.7rem] tracking-luxury uppercase text-navy">
               {section.cta.label}
             </Link>
           )}
