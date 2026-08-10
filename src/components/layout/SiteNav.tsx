@@ -1,11 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ShoppingBag, User2, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingBag, User2, Menu, X, ChevronDown, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Logo } from "@/components/brand/Logo";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
+import { useWishlist } from "@/hooks/use-wishlist";
 import { supabase } from "@/integrations/supabase/client";
 
 const STATIC_NAV = [
@@ -28,6 +29,7 @@ export function SiteNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { count, setOpen } = useCart();
   const { user } = useAuth();
+  const { count: wishlistCount } = useWishlist();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
