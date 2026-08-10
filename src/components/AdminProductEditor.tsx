@@ -392,8 +392,9 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     setSaving(true);
     const spec: Record<string, string> = {};
     for (const row of specRows) {
-      if (row.key.trim()) spec[row.key.trim()] = row.value;
+      if (row.key.trim() && !isReservedSpecKey(row.key.trim())) spec[row.key.trim()] = row.value;
     }
+    spec[INFO_SPEC_KEY] = serializeProductInfo(info);
 
     const payload = {
       name: name.trim(),
