@@ -5,7 +5,15 @@
 export type ProductInfoStrip = {
   delivery: { enabled: boolean; text: string };
   sales: { enabled: boolean; quantity: number; period: string };
-  stock: { enabled: boolean; text: string };
+  stock: {
+    enabled: boolean;
+    text: string;
+    /** Auto-calculate in/out of stock from the product's stock count. */
+    auto: boolean;
+    /** Show the remaining quantity next to the status. */
+    showQty: boolean;
+    outText: string;
+  };
 };
 
 export const INFO_SPEC_KEY = "__info";
@@ -13,8 +21,33 @@ export const INFO_SPEC_KEY = "__info";
 export const DEFAULT_PRODUCT_INFO: ProductInfoStrip = {
   delivery: { enabled: true, text: "13 Aug – 17 Aug" },
   sales: { enabled: true, quantity: 1223, period: "7 days" },
-  stock: { enabled: true, text: "In stock - ready to ship" },
+  stock: {
+    enabled: true,
+    text: "In stock - ready to ship",
+    auto: true,
+    showQty: true,
+    outText: "Out of stock",
+  },
 };
+
+/** Resolves what the stock pill should show for a given stock count. */
+export function resolveStockStatus(
+  info: ProductInfoStrip,
+  stock: number | null | undefined,
+): { inStock: boolean; text: string } | null {
+  if (!info.stock.enabled) return null;
+  const qty = Number(stock ?? 0);
+  if (!info.stock.auto) {
+    return info.stock.text.trim() ? { inStock: true, text: info.stock.text } : null;
+  }
+  const inStock = qty > 0;
+  const base = inStock
+    ? info.stock.text.trim() || DEFAULT_PRODUCT_INFO.stock.text
+    : info.stock.outText.trim() || DEFAULT_PRODUCT_INFO.stock.outText;
+  const text = inStock && info.stock.showQty ? `${base} · ${qty} left` : base;
+  return { inStock, text };
+}
+
 
 export function isReservedSpecKey(key: string) {
   return key.startsWith("__");
@@ -50,7 +83,11 @@ export function parseProductInfo(spec: unknown): ProductInfoStrip {
     stock: {
       enabled: st.enabled !== false,
       text: String(st.text ?? DEFAULT_PRODUCT_INFO.stock.text),
+      auto: st.auto !== false,
+      showQty: st.showQty !== false,
+      outText: String(st.outText ?? DEFAULT_PRODUCT_INFO.stock.outText),
     },
+
   };
 }
 

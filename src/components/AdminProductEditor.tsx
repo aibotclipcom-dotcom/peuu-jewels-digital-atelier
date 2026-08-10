@@ -777,7 +777,41 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
             />
           </div>
 
-          <ProductInfoStripRow info={info} />
+          <div className="flex flex-wrap items-center gap-4 pl-1">
+            <label className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60">
+              <input
+                type="checkbox"
+                checked={info.stock.auto}
+                onChange={(e) =>
+                  setInfo({ ...info, stock: { ...info.stock, auto: e.target.checked } })
+                }
+              />
+              Auto in/out of stock
+            </label>
+            <label className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60">
+              <input
+                type="checkbox"
+                checked={info.stock.showQty}
+                disabled={!info.stock.auto}
+                onChange={(e) =>
+                  setInfo({ ...info, stock: { ...info.stock, showQty: e.target.checked } })
+                }
+              />
+              Show remaining quantity
+            </label>
+            <input
+              value={info.stock.outText}
+              disabled={!info.stock.auto}
+              onChange={(e) =>
+                setInfo({ ...info, stock: { ...info.stock, outText: e.target.value } })
+              }
+              placeholder="Out of stock"
+              className="flex-1 min-w-[160px] border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy disabled:opacity-40"
+            />
+          </div>
+
+          <ProductInfoStripRow info={info} stock={Number(stock) || 0} />
+
         </div>
       </Section>
 
