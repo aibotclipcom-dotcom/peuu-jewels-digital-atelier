@@ -11,6 +11,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { motion } from "framer-motion";
 import { getSaleInfo, formatCountdown } from "@/lib/pricing";
 import { BadgeRow, type BadgeShape } from "@/components/product/BadgeRow";
+import { ProductBenefits, type ProductBenefit } from "@/components/product/ProductBenefits";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
