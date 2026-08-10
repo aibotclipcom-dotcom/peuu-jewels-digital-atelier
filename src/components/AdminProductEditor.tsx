@@ -150,6 +150,20 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     },
   });
 
+  const { data: existingBenefits } = useQuery({
+    queryKey: ["admin-product-benefits", productId],
+    enabled: !isNew,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("product_benefits")
+        .select("title, icon, description, is_active")
+        .eq("product_id", productId!)
+        .order("sort_order");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [sku, setSku] = useState("");
