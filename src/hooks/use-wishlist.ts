@@ -47,6 +47,7 @@ export function useWishlist() {
   });
 
   return {
+    count: ids.size,
     isSaved: (id: string) => ids.has(id),
     toggle: (id: string) => toggle.mutate(id),
     pending: toggle.isPending,

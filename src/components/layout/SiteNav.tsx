@@ -114,13 +114,14 @@ export function SiteNav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Link
             to={user ? "/account" : "/auth"}
-            className="hidden items-center gap-2 rounded-full border border-navy/15 px-4 py-2 text-[0.65rem] tracking-luxury uppercase text-navy transition-all hover:border-navy/40 hover:bg-navy/5 sm:inline-flex"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-navy transition-colors hover:bg-navy/5"
+            aria-label="Wishlist"
           >
-            <User2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-            {user ? "Account" : "VIP LOGIN"}
+            <Heart className="h-[18px] w-[18px]" strokeWidth={1.4} />
+            <CountBadge value={wishlistCount} />
           </Link>
           <button
             type="button"
@@ -129,12 +130,15 @@ export function SiteNav() {
             aria-label="Open cart"
           >
             <ShoppingBag className="h-[18px] w-[18px]" strokeWidth={1.4} />
-            {count > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-navy px-1 text-[10px] font-medium text-alabaster">
-                {count}
-              </span>
-            )}
+            <CountBadge value={count} />
           </button>
+          <Link
+            to={user ? "/account" : "/auth"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-navy transition-colors hover:bg-navy/5"
+            aria-label={user ? "Account" : "Sign in"}
+          >
+            <User2 className="h-[18px] w-[18px]" strokeWidth={1.4} />
+          </Link>
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
