@@ -35,13 +35,9 @@ export function FirstOrderCouponModal() {
     }
     setLoading(true);
     try {
-      const { data: coupon } = await supabase
-        .from("coupons")
-        .select("id")
-        .eq("code", COUPON_CODE)
-        .eq("active", true)
-        .maybeSingle();
-      if (!coupon) throw new Error("Offer unavailable.");
+      const { data: rows } = await supabase.rpc("lookup_coupon", { _code: COUPON_CODE });
+      const coupon = Array.isArray(rows) ? rows[0] : null;
+      if (!coupon || !coupon.active) throw new Error("Offer unavailable.");
 
       const { data: existing } = await supabase
         .from("coupon_redemptions")

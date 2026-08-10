@@ -7,7 +7,7 @@ import {
 } from "@/lib/cart-math";
 
 /** Minimal shape of a Supabase client (browser or server) used for reads. */
-export type Db = { from: (t: string) => any };
+export type Db = { from: (t: string) => any; rpc: (fn: any, args?: any) => any };
 
 export interface CartLineInput {
   id: string;
@@ -112,13 +112,9 @@ export async function resolveCoupon(
   const normalized = (code ?? "").trim().toUpperCase();
   if (!normalized) return empty;
 
-  const { data: row } = await db
-    .from("coupons")
-    .select(
-      "id, code, percent_off, amount_off, discount_type, min_order_amount, usage_limit, used_count, single_use, first_order_only, active, expires_at",
-    )
-    .eq("code", normalized)
-    .maybeSingle();
+  // Coupons are not publicly listable; look up the exact submitted code only.
+  const { data: rows } = await db.rpc("lookup_coupon", { _code: normalized });
+  const row = Array.isArray(rows) ? rows[0] : rows;
 
   if (!row) return { ...empty, reason: "Invalid coupon code." };
   if (!row.active) return { ...empty, reason: "This coupon is no longer active." };

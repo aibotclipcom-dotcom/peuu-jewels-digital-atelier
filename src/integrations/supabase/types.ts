@@ -972,12 +972,30 @@ export type Database = {
     }
     Functions: {
       consume_product_stock: { Args: { _items: Json }; Returns: undefined }
+      coupon_is_claimable: { Args: { _coupon_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      lookup_coupon: {
+        Args: { _code: string }
+        Returns: {
+          active: boolean
+          amount_off: number
+          code: string
+          discount_type: string
+          expires_at: string
+          first_order_only: boolean
+          id: string
+          min_order_amount: number
+          percent_off: number
+          single_use: boolean
+          usage_limit: number
+          used_count: number
+        }[]
       }
     }
     Enums: {
