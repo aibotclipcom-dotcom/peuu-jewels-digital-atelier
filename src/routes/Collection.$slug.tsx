@@ -11,6 +11,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { motion } from "framer-motion";
 import { getSaleInfo, formatCountdown } from "@/lib/pricing";
 import { BadgeRow, type BadgeShape } from "@/components/product/BadgeRow";
+import { ProductBenefits, type ProductBenefit } from "@/components/product/ProductBenefits";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
@@ -152,6 +153,20 @@ function ProductDetail() {
       return ((data ?? []) as Array<{ badges: BadgeShape | null }>)
         .map((r) => r.badges)
         .filter(Boolean) as BadgeShape[];
+    },
+  });
+
+  const { data: benefits = [] } = useQuery({
+    queryKey: ["product-benefits", product.id],
+    queryFn: async (): Promise<ProductBenefit[]> => {
+      const { data, error } = await supabase
+        .from("product_benefits")
+        .select("id, title, icon, description")
+        .eq("product_id", product.id)
+        .eq("is_active", true)
+        .order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as ProductBenefit[];
     },
   });
 
@@ -371,6 +386,9 @@ function ProductDetail() {
             )}
           </div>
           <p className="mt-1 text-[0.65rem] text-navy/45">Inclusive of all taxes</p>
+
+          <ProductBenefits benefits={benefits} className="mt-5" />
+
 
           {remaining !== null && remaining > 0 && (
             <div className="mt-4 inline-flex w-fit items-center gap-2 border border-coral/40 bg-coral/5 px-3 py-2 text-[0.65rem] tracking-luxury uppercase text-coral">
