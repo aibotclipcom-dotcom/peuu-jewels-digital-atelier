@@ -372,6 +372,9 @@ function ProductDetail() {
           </div>
           <p className="mt-1 text-[0.65rem] text-navy/45">Inclusive of all taxes</p>
 
+          <ProductBenefits benefits={benefits} className="mt-5" />
+
+
           {remaining !== null && remaining > 0 && (
             <div className="mt-4 inline-flex w-fit items-center gap-2 border border-coral/40 bg-coral/5 px-3 py-2 text-[0.65rem] tracking-luxury uppercase text-coral">
               <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
