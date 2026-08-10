@@ -448,11 +448,9 @@ function ProductDetail() {
             </button>
           </div>
 
-          <div className="mt-8 space-y-2 text-[0.72rem] text-navy/65">
-            <p className="flex items-center gap-2">
-              <Truck className="h-4 w-4" strokeWidth={1.4} />
-              Estimated delivery {fmtDate(deliveryFrom)} – {fmtDate(deliveryTo)}
-            </p>
+          <ProductInfoStripRow info={info} className="mt-8" />
+
+          <div className="mt-4 space-y-2 text-[0.72rem] text-navy/65">
             <p className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" strokeWidth={1.4} />
               Complimentary insured delivery · Lifetime polishing
