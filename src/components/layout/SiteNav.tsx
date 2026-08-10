@@ -271,6 +271,14 @@ export function SiteNav() {
   );
 }
 
+function CountBadge({ value }: { value: number }) {
+  return (
+    <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-navy px-1 text-[10px] font-medium text-alabaster">
+      {value > 99 ? "99+" : value}
+    </span>
+  );
+}
+
 function Dot({ active }: { active: boolean }) {
   return (
     <span
