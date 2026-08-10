@@ -106,7 +106,6 @@ function MaisonPage() {
       </section>
 
       <section className="relative mx-auto max-w-4xl space-y-32 px-6 py-32 sm:px-10">
-        <div className="absolute left-[200px] top-32 bottom-32 hidden w-0.5 bg-red-500 md:block" />
         {CHAPTERS.map((c, i) => (
           <motion.article
             key={i}
