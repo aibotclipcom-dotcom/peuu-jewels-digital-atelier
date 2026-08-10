@@ -5,6 +5,15 @@ import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { X, UploadCloud, ArrowLeft, ArrowRight, RefreshCw, Plus, Trash2 } from "lucide-react";
 import { ProductBenefits, BENEFIT_ICONS } from "@/components/product/ProductBenefits";
+import { ProductInfoStripRow } from "@/components/product/ProductInfoStrip";
+import {
+  DEFAULT_PRODUCT_INFO,
+  INFO_SPEC_KEY,
+  isReservedSpecKey,
+  parseProductInfo,
+  serializeProductInfo,
+  type ProductInfoStrip,
+} from "@/lib/product-info";
 
 function slugify(s: string) {
   return s
@@ -188,6 +197,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [videos, setVideos] = useState<string[]>([]);
   const [videoDraft, setVideoDraft] = useState("");
   const [specRows, setSpecRows] = useState<Attr[]>([]);
+  const [info, setInfo] = useState<ProductInfoStrip>(DEFAULT_PRODUCT_INFO);
   const [attrs, setAttrs] = useState<Attr[]>([]);
   const [badgeIds, setBadgeIds] = useState<string[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
@@ -225,11 +235,14 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     setImages(existing.image_urls ?? []);
     setVideos(existing.video_urls ?? []);
     setSpecRows(
-      Object.entries((existing.spec ?? {}) as Record<string, unknown>).map(([key, value]) => ({
-        key,
-        value: String(value ?? ""),
-      })),
+      Object.entries((existing.spec ?? {}) as Record<string, unknown>)
+        .filter(([key]) => !isReservedSpecKey(key))
+        .map(([key, value]) => ({
+          key,
+          value: String(value ?? ""),
+        })),
     );
+    setInfo(parseProductInfo(existing.spec));
     setStatus(existing.status);
     setIsBestSeller(existing.is_best_seller ?? false);
     setBestSellerSort(String(existing.best_seller_sort ?? 0));
@@ -380,8 +393,9 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     setSaving(true);
     const spec: Record<string, string> = {};
     for (const row of specRows) {
-      if (row.key.trim()) spec[row.key.trim()] = row.value;
+      if (row.key.trim() && !isReservedSpecKey(row.key.trim())) spec[row.key.trim()] = row.value;
     }
+    spec[INFO_SPEC_KEY] = serializeProductInfo(info);
 
     const payload = {
       name: name.trim(),
@@ -688,6 +702,83 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
         />
         <TextareaField label="Care instructions" value={care} onChange={setCare} />
         <TextareaField label="Shipping information" value={shippingInfo} onChange={setShippingInfo} />
+      </Section>
+
+      <Section title="Product info strip">
+        <div className="md:col-span-2 space-y-4 text-sm">
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60">
+              <input
+                type="checkbox"
+                checked={info.delivery.enabled}
+                onChange={(e) =>
+                  setInfo({ ...info, delivery: { ...info.delivery, enabled: e.target.checked } })
+                }
+              />
+              Estimated delivery
+            </label>
+            <input
+              value={info.delivery.text}
+              onChange={(e) =>
+                setInfo({ ...info, delivery: { ...info.delivery, text: e.target.value } })
+              }
+              placeholder="13 Aug – 17 Aug"
+              className="flex-1 min-w-[180px] border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60">
+              <input
+                type="checkbox"
+                checked={info.sales.enabled}
+                onChange={(e) =>
+                  setInfo({ ...info, sales: { ...info.sales, enabled: e.target.checked } })
+                }
+              />
+              Recent sales
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={info.sales.quantity}
+              onChange={(e) =>
+                setInfo({ ...info, sales: { ...info.sales, quantity: Number(e.target.value) || 0 } })
+              }
+              placeholder="1223"
+              className="w-28 border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy"
+            />
+            <input
+              value={info.sales.period}
+              onChange={(e) =>
+                setInfo({ ...info, sales: { ...info.sales, period: e.target.value } })
+              }
+              placeholder="7 days"
+              className="flex-1 min-w-[140px] border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="inline-flex items-center gap-2 text-[0.62rem] tracking-luxury uppercase text-navy/60">
+              <input
+                type="checkbox"
+                checked={info.stock.enabled}
+                onChange={(e) =>
+                  setInfo({ ...info, stock: { ...info.stock, enabled: e.target.checked } })
+                }
+              />
+              Stock status
+            </label>
+            <input
+              value={info.stock.text}
+              onChange={(e) => setInfo({ ...info, stock: { ...info.stock, text: e.target.value } })}
+              placeholder="In stock - ready to ship"
+              className="flex-1 min-w-[180px] border-0 border-b border-border/70 bg-transparent pb-2 text-sm text-navy outline-none focus:border-navy"
+            />
+          </div>
+
+          <ProductInfoStripRow info={info} />
+        </div>
       </Section>
 
       <Section title="Specifications">

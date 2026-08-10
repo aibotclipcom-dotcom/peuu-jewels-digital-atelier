@@ -5,7 +5,9 @@ import { formatPrice } from "@/lib/format";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
-import { Heart, Truck, ShieldCheck, Sparkles } from "lucide-react";
+import { Heart, ShieldCheck, Sparkles } from "lucide-react";
+import { isReservedSpecKey, parseProductInfo } from "@/lib/product-info";
+import { ProductInfoStripRow } from "@/components/product/ProductInfoStrip";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { motion } from "framer-motion";
@@ -262,12 +264,10 @@ function ProductDetail() {
   const videos = product.video_urls ?? [];
   const specEntries = Object.entries(
     (product.spec ?? {}) as Record<string, unknown>,
-  ).filter(([, v]) => v !== null && v !== "");
+  ).filter(([k, v]) => v !== null && v !== "" && !isReservedSpecKey(k));
 
-  const deliveryFrom = new Date(Date.now() + 3 * 864e5);
-  const deliveryTo = new Date(Date.now() + 7 * 864e5);
-  const fmtDate = (d: Date) =>
-    d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  const info = parseProductInfo(product.spec);
+
 
   const tabs: Array<{ key: TabKey; label: string; available: boolean }> = [
     { key: "details", label: "Details", available: true },
@@ -448,11 +448,9 @@ function ProductDetail() {
             </button>
           </div>
 
-          <div className="mt-8 space-y-2 text-[0.72rem] text-navy/65">
-            <p className="flex items-center gap-2">
-              <Truck className="h-4 w-4" strokeWidth={1.4} />
-              Estimated delivery {fmtDate(deliveryFrom)} – {fmtDate(deliveryTo)}
-            </p>
+          <ProductInfoStripRow info={info} className="mt-8" />
+
+          <div className="mt-4 space-y-2 text-[0.72rem] text-navy/65">
             <p className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" strokeWidth={1.4} />
               Complimentary insured delivery · Lifetime polishing
