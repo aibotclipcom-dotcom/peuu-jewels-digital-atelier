@@ -83,7 +83,11 @@ export function parseProductInfo(spec: unknown): ProductInfoStrip {
     stock: {
       enabled: st.enabled !== false,
       text: String(st.text ?? DEFAULT_PRODUCT_INFO.stock.text),
+      auto: st.auto !== false,
+      showQty: st.showQty !== false,
+      outText: String(st.outText ?? DEFAULT_PRODUCT_INFO.stock.outText),
     },
+
   };
 }
 
