@@ -435,6 +435,7 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
         qc.invalidateQueries({ queryKey: ["admin-product-badges", productId] });
         qc.invalidateQueries({ queryKey: ["admin-product-attrs", productId] });
         qc.invalidateQueries({ queryKey: ["admin-product-faqs", productId] });
+        qc.invalidateQueries({ queryKey: ["admin-product-benefits", productId] });
       }
     } catch (e) {
       toast.error((e as Error).message);
