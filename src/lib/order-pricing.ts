@@ -7,7 +7,7 @@ import {
 } from "@/lib/cart-math";
 
 /** Minimal shape of a Supabase client (browser or server) used for reads. */
-export type Db = { from: (t: string) => any; rpc: (fn: string, args?: any) => any };
+export type Db = { from: (t: string) => any; rpc: (fn: any, args?: any) => any };
 
 export interface CartLineInput {
   id: string;
