@@ -156,6 +156,20 @@ function ProductDetail() {
     },
   });
 
+  const { data: benefits = [] } = useQuery({
+    queryKey: ["product-benefits", product.id],
+    queryFn: async (): Promise<ProductBenefit[]> => {
+      const { data, error } = await supabase
+        .from("product_benefits")
+        .select("id, title, icon, description")
+        .eq("product_id", product.id)
+        .eq("is_active", true)
+        .order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as ProductBenefit[];
+    },
+  });
+
   const { data: related = [] } = useQuery({
     queryKey: ["related", product.category_id, product.id],
     queryFn: async () => {
