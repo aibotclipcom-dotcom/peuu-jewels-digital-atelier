@@ -352,7 +352,24 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
         })),
       );
     }
+
+    // Benefit badges
+    await supabase.from("product_benefits").delete().eq("product_id", id);
+    const cleanBenefits = benefits.filter((b) => b.title.trim());
+    if (cleanBenefits.length > 0) {
+      await supabase.from("product_benefits").insert(
+        cleanBenefits.map((b, i) => ({
+          product_id: id,
+          title: b.title.trim(),
+          icon: b.icon,
+          description: b.description.trim() || null,
+          is_active: b.is_active,
+          sort_order: i,
+        })),
+      );
+    }
   }
+
 
   async function handleSave() {
     if (!name.trim() || !sku.trim()) {
