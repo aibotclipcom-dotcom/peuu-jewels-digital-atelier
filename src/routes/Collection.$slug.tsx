@@ -459,6 +459,8 @@ function ProductDetail() {
             </p>
           </div>
 
+          <ProductBenefitsGrid className="mt-8" />
+
           {/* Tabs */}
           <div className="mt-12 border-t border-border/60">
             <div className="flex flex-wrap gap-6 pt-5">
