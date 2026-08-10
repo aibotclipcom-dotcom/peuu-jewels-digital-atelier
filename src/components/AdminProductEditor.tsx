@@ -234,11 +234,14 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     setImages(existing.image_urls ?? []);
     setVideos(existing.video_urls ?? []);
     setSpecRows(
-      Object.entries((existing.spec ?? {}) as Record<string, unknown>).map(([key, value]) => ({
-        key,
-        value: String(value ?? ""),
-      })),
+      Object.entries((existing.spec ?? {}) as Record<string, unknown>)
+        .filter(([key]) => !isReservedSpecKey(key))
+        .map(([key, value]) => ({
+          key,
+          value: String(value ?? ""),
+        })),
     );
+    setInfo(parseProductInfo(existing.spec));
     setStatus(existing.status);
     setIsBestSeller(existing.is_best_seller ?? false);
     setBestSellerSort(String(existing.best_seller_sort ?? 0));
