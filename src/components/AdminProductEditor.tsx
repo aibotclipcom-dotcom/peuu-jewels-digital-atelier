@@ -5,6 +5,14 @@ import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { X, UploadCloud, ArrowLeft, ArrowRight, RefreshCw, Plus, Trash2 } from "lucide-react";
 import { ProductBenefits, BENEFIT_ICONS } from "@/components/product/ProductBenefits";
+import {
+  DEFAULT_PRODUCT_INFO,
+  INFO_SPEC_KEY,
+  isReservedSpecKey,
+  parseProductInfo,
+  serializeProductInfo,
+  type ProductInfoStrip,
+} from "@/lib/product-info";
 
 function slugify(s: string) {
   return s
