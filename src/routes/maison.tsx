@@ -86,13 +86,17 @@ function MaisonPage() {
     <main className="bg-alabaster pt-24 sm:pt-32">
       <section className="relative mx-auto max-w-5xl px-6 pb-24 pt-16 text-center sm:px-10">
         <FloralMark className="pointer-events-none absolute left-4 top-0 h-40 w-40 text-coral/10" />
-        <span className="text-[0.7rem] tracking-luxury uppercase text-rose"></span>
+        <span className="text-[0.7rem] tracking-luxury uppercase text-rose">Our Story</span>
         <h1 className="mt-6 font-serif text-5xl leading-tight text-navy sm:text-7xl">
-          <br />
+          Maison PEUU — A Legacy of Love, Crafted to Last
         </h1>
         <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-navy/70">
-          <br />
+          PEUU JEWELS was born from a family legacy of love and careful craft. We make everyday
+          luxury accessible: 18k gold-plated, anti-tarnish, waterproof and sweatproof pieces that
+          are 100% hypoallergenic — designed to keep their shine through the life you actually
+          live, at prices that feel fair.
         </p>
+
       </section>
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
