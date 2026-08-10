@@ -118,7 +118,8 @@ export function SiteNav() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           <Link
-            to={user ? "/account" : "/auth"}
+            to={user ? "/wishlist" : "/auth"}
+
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-navy transition-colors hover:bg-navy/5"
             aria-label="Wishlist"
           >
