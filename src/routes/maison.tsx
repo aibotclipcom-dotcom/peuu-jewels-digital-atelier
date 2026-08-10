@@ -105,7 +105,8 @@ function MaisonPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl space-y-32 px-6 py-32 sm:px-10">
+      <section className="relative mx-auto max-w-4xl space-y-32 px-6 py-32 sm:px-10">
+        <div className="absolute left-[200px] top-32 bottom-32 hidden w-0.5 bg-red-500 md:block" />
         {CHAPTERS.map((c, i) => (
           <motion.article
             key={i}
@@ -113,7 +114,7 @@ function MaisonPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className={`grid gap-10 md:grid-cols-[180px_1fr] ${i % 2 === 1 ? "md:ml-12" : ""}`}
+            className="grid gap-10 md:grid-cols-[180px_1fr]"
           >
             <div className="text-[0.7rem] tracking-luxury uppercase text-rose md:pt-3">
               {c.eyebrow}
