@@ -34,12 +34,17 @@ export interface HeroSettings {
   overlay_opacity: number;
 }
 
+export interface ForEveryYouSettings {
+  autoplay_delay_seconds: number;
+}
+
 export interface SiteSettings {
   announcement: AnnouncementSettings;
   home_nav: HomeNavSettings;
   shipping: ShippingSettings;
   cart: CartSettings;
   hero: HeroSettings;
+  for_every_you: ForEveryYouSettings;
 }
 
 /**
