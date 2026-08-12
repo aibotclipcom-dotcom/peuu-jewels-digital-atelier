@@ -34,12 +34,17 @@ export interface HeroSettings {
   overlay_opacity: number;
 }
 
+export interface ForEveryYouSettings {
+  autoplay_delay_seconds: number;
+}
+
 export interface SiteSettings {
   announcement: AnnouncementSettings;
   home_nav: HomeNavSettings;
   shipping: ShippingSettings;
   cart: CartSettings;
   hero: HeroSettings;
+  for_every_you: ForEveryYouSettings;
 }
 
 /**
@@ -79,6 +84,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     overlay_color: "#0A192F",
     overlay_opacity: 35,
   },
+  for_every_you: {
+    autoplay_delay_seconds: 5,
+  },
 };
 
 function num(v: unknown, fallback: number): number {
@@ -109,6 +117,7 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
   const c = map.get("cart") ?? {};
   const h = map.get("hero") ?? {};
   const n = map.get("home_nav") ?? {};
+  const f = map.get("for_every_you") ?? {};
   const d = DEFAULT_SETTINGS;
 
   return {
@@ -151,6 +160,12 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
       overlay_enabled: bool(h.overlay_enabled, d.hero.overlay_enabled),
       overlay_color: str(h.overlay_color, d.hero.overlay_color),
       overlay_opacity: Math.min(100, num(h.overlay_opacity, d.hero.overlay_opacity)),
+    },
+    for_every_you: {
+      autoplay_delay_seconds: Math.min(
+        60,
+        Math.max(2, num(f.autoplay_delay_seconds, d.for_every_you.autoplay_delay_seconds)),
+      ),
     },
   };
 }

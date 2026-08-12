@@ -7,6 +7,7 @@ import { CategoriesSection } from "@/components/home/CategoriesSection";
 import { BestSellersSection } from "@/components/home/BestSellersSection";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { HomeNavBar } from "@/components/home/HomeNavBar";
+import { ForEveryYouSection } from "@/components/home/ForEveryYouSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -92,6 +93,7 @@ function Landing() {
       {SECTIONS.map((section, i) => (
         <EditorialSection key={section.word} section={section} index={i} />
       ))}
+      <ForEveryYouSection />
       <ClosingChapter />
       <SiteFooter />
     </main>
