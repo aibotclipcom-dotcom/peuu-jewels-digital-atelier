@@ -132,7 +132,7 @@ export async function resolveCoupon(
   }
 
   if ((row.first_order_only || row.single_use) && email) {
-    const { data: red } = await db
+    const { data: red } = await supabaseAdmin
       .from("coupon_redemptions")
       .select("used_at")
       .eq("coupon_id", row.id)

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { claimWelcomeCoupon } from "@/lib/coupons.functions";
 import { toast } from "sonner";
 
 const STORAGE_KEY = "peuu_welcome_modal";
