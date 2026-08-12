@@ -12,6 +12,7 @@ export function FirstOrderCouponModal() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const claimCoupon = useServerFn(claimWelcomeCoupon);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -36,25 +37,13 @@ export function FirstOrderCouponModal() {
     }
     setLoading(true);
     try {
-      const { data: rows } = await supabase.rpc("lookup_coupon", { _code: COUPON_CODE });
-      const coupon = Array.isArray(rows) ? rows[0] : null;
-      if (!coupon || !coupon.active) throw new Error("Offer unavailable.");
-
-      const { data: existing } = await supabase
-        .from("coupon_redemptions")
-        .select("used_at")
-        .eq("coupon_id", coupon.id)
-        .eq("email", clean)
-        .maybeSingle();
-      if (existing?.used_at) {
+      const result = await claimCoupon({ data: { email: clean } });
+      if (result.alreadyUsed) {
         toast.info("This offer has already been used on this email.");
       } else {
-        await supabase
-          .from("coupon_redemptions")
-          .upsert({ coupon_id: coupon.id, email: clean }, { onConflict: "coupon_id,email" });
+        toast.success(`Code ${COUPON_CODE} applied to your first order.`);
       }
       window.localStorage.setItem(COUPON_STORAGE, COUPON_CODE);
-      toast.success(`Code ${COUPON_CODE} applied to your first order.`);
       dismiss();
     } catch (err) {
       toast.error((err as Error).message || "Could not claim offer.");
