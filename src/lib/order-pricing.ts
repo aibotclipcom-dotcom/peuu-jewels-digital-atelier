@@ -112,8 +112,10 @@ export async function resolveCoupon(
   const normalized = (code ?? "").trim().toUpperCase();
   if (!normalized) return empty;
 
-  // Coupons are not publicly listable; look up the exact submitted code only.
-  const { data: rows } = await db.rpc("lookup_coupon", { _code: normalized });
+  // Coupons are not publicly listable and the lookup function is not callable
+  // by anon/authenticated roles — resolve it with the trusted server client.
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: rows } = await supabaseAdmin.rpc("lookup_coupon", { _code: normalized });
   const row = Array.isArray(rows) ? rows[0] : rows;
 
   if (!row) return { ...empty, reason: "Invalid coupon code." };
@@ -130,7 +132,7 @@ export async function resolveCoupon(
   }
 
   if ((row.first_order_only || row.single_use) && email) {
-    const { data: red } = await db
+    const { data: red } = await supabaseAdmin
       .from("coupon_redemptions")
       .select("used_at")
       .eq("coupon_id", row.id)
