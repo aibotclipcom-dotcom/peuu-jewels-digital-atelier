@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/format";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
-import { useEffect, useState } from "react";
-import { Heart, ShieldCheck, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Heart, Play, ShieldCheck, Sparkles } from "lucide-react";
 import { isReservedSpecKey, parseProductInfo } from "@/lib/product-info";
 import { ProductInfoStripRow } from "@/components/product/ProductInfoStrip";
 import { toast } from "sonner";
@@ -228,6 +228,14 @@ function ProductDetail() {
     },
   });
 
+  const activeVideoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    const v = activeVideoRef.current;
+    return () => {
+      v?.pause();
+    };
+  }, [activeImage]);
+
   const [remaining, setRemaining] = useState<number | null>(null);
   useEffect(() => {
     if (!sale.endsAt) {
@@ -261,7 +269,12 @@ function ProductDetail() {
     product.image_urls?.length > 0
       ? product.image_urls
       : ["https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=1200&q=80"];
-  const videos = product.video_urls ?? [];
+  const videos: string[] = product.video_urls ?? [];
+  const media: Array<{ type: "image" | "video"; src: string }> = [
+    ...images.map((src: string) => ({ type: "image" as const, src })),
+    ...videos.map((src) => ({ type: "video" as const, src })),
+  ];
+  const activeMedia = media[activeImage] ?? media[0];
   const specEntries = Object.entries(
     (product.spec ?? {}) as Record<string, unknown>,
   ).filter(([k, v]) => v !== null && v !== "" && !isReservedSpecKey(k));
@@ -300,6 +313,7 @@ function ProductDetail() {
             transition={{ duration: 0.8 }}
             className="relative aspect-[4/5] w-full overflow-hidden bg-cashmere"
             onMouseMove={(e) => {
+              if (activeMedia?.type !== "image") return;
               const r = e.currentTarget.getBoundingClientRect();
               setZoom({
                 x: ((e.clientX - r.left) / r.width) * 100,
@@ -308,50 +322,62 @@ function ProductDetail() {
             }}
             onMouseLeave={() => setZoom(null)}
           >
-            <img
-              src={images[activeImage]}
-              alt={product.name}
-              className="h-full w-full object-cover transition-transform duration-300"
-              style={
-                zoom
-                  ? { transform: "scale(1.8)", transformOrigin: `${zoom.x}% ${zoom.y}%` }
-                  : undefined
-              }
-            />
+            {activeMedia?.type === "video" ? (
+              <video
+                key={activeMedia.src}
+                ref={activeVideoRef}
+                src={activeMedia.src}
+                controls
+                playsInline
+                className="h-full w-full bg-cashmere object-contain"
+              />
+            ) : (
+              <img
+                src={activeMedia?.src}
+                alt={product.name}
+                className="h-full w-full object-cover transition-transform duration-300"
+                style={
+                  zoom
+                    ? { transform: "scale(1.8)", transformOrigin: `${zoom.x}% ${zoom.y}%` }
+                    : undefined
+                }
+              />
+            )}
             <div className="absolute left-4 top-4">
               <BadgeRow badges={badges} />
             </div>
           </motion.div>
 
-          {(images.length > 1 || videos.length > 0) && (
+          {media.length > 1 && (
             <div className="mt-4 grid grid-cols-5 gap-3">
-              {images.map((src: string, i: number) => (
+              {media.map((m, i) => (
                 <button
-                  key={src + i}
+                  key={m.src + i}
                   type="button"
-                  aria-label={`View image ${i + 1} of ${product.name}`}
+                  aria-label={`View ${m.type} ${i + 1} of ${product.name}`}
                   aria-pressed={i === activeImage}
                   onClick={() => setActiveImage(i)}
-                  className={`aspect-square overflow-hidden border bg-cashmere ${
+                  className={`relative aspect-square overflow-hidden border bg-cashmere ${
                     i === activeImage ? "border-navy" : "border-transparent"
                   }`}
                 >
-                  <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                  {m.type === "video" ? (
+                    <>
+                      <video
+                        src={m.src}
+                        muted
+                        playsInline
+                        preload="metadata"
+                        className="h-full w-full object-cover"
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center bg-navy/25">
+                        <Play className="h-4 w-4 text-alabaster" strokeWidth={1.6} />
+                      </span>
+                    </>
+                  ) : (
+                    <img src={m.src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                  )}
                 </button>
-              ))}
-            </div>
-          )}
-
-          {videos.length > 0 && (
-            <div className="mt-4 space-y-4">
-              {videos.map((v: string) => (
-                <video
-                  key={v}
-                  src={v}
-                  controls
-                  playsInline
-                  className="w-full bg-cashmere"
-                />
               ))}
             </div>
           )}
