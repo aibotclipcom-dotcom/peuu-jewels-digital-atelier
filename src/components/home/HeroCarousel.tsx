@@ -65,7 +65,7 @@ export function HeroSlideMedia({
         loop
         playsInline
         preload={eager ? "auto" : "none"}
-        className="h-full w-full object-cover"
+        className="h-full max-w-full w-full object-cover object-center"
       />
     );
   }
@@ -81,7 +81,7 @@ export function HeroSlideMedia({
         loading={eager ? "eager" : "lazy"}
         decoding="async"
         fetchPriority={eager ? "high" : "low"}
-        className="h-full w-full object-cover"
+        className="h-full max-w-full w-full object-cover object-center"
       />
     </picture>
   );
