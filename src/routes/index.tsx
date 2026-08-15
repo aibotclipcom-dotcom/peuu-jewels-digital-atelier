@@ -263,81 +263,25 @@ function EditorialSection({ section, index }: { section: Section; index: number 
 function ClosingChapter() {
   const { closing_video: video } = useSiteSettings();
   const [videoFailed, setVideoFailed] = useState(false);
-  const showVideo = video.enabled && video.url.trim().length > 0 && !videoFailed;
+  const url = video.url.trim();
+  if (!video.enabled || url.length === 0 || videoFailed) return null;
 
   return (
-    <section className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster">
-      <motion.div
-        aria-hidden
-        initial={{ y: "0%" }}
-        whileInView={{ y: "-100%" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-none absolute inset-0 z-30 bg-alabaster"
+    <section className="relative w-full overflow-hidden bg-navy">
+      <video
+        src={url}
+        poster={video.poster || undefined}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        controls={false}
+        disablePictureInPicture
+        onError={() => setVideoFailed(true)}
+        className="block h-[56svh] w-full object-cover object-center sm:h-auto sm:aspect-[21/9] md:aspect-[2.4/1]"
       />
-      <FloralMark className="pointer-events-none absolute -left-10 top-10 h-72 w-72 text-alabaster/5" />
-      <FloralMark className="pointer-events-none absolute -right-10 bottom-10 h-80 w-80 rotate-180 text-alabaster/5" />
-
-      <motion.span
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 1.2 }}
-        className="text-[0.7rem] tracking-luxury uppercase text-gold-soft"
-      >
-        {"\n"}
-      </motion.span>
-      <motion.h2
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 1.4, delay: 0.15 }}
-        className="mt-6 max-w-3xl text-center font-serif text-4xl leading-tight sm:text-6xl"
-      >
-        Something <em className="italic text-gradient-gold">made for you</em>, alone.
-      </motion.h2>
-      <motion.p
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 1.4, delay: 0.4 }}
-        className="mt-6 max-w-lg text-center text-sm leading-relaxed text-alabaster/70"
-      >
-        Not just accessories, But a reflection of the real you.
-      </motion.p>
-      {showVideo && (
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 mt-14 w-full max-w-5xl overflow-hidden rounded-sm border border-gold-soft/25 shadow-2xl shadow-black/40"
-        >
-          <div className="relative aspect-video w-full bg-navy">
-            <video
-              src={video.url}
-              poster={video.poster || undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              controls={false}
-              disablePictureInPicture
-              onError={() => setVideoFailed(true)}
-              className="h-full w-full object-cover"
-            />
-            <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-alabaster/10" />
-          </div>
-        </motion.div>
-      )}
-      <Link
-        to="/concierge"
-        className="mt-12 inline-flex items-center gap-3 border border-gold-soft/60 px-9 py-4 text-[0.7rem] tracking-luxury uppercase text-gold-soft transition-all hover:bg-gold-soft hover:text-navy"
-      >
-        CONTACT US{"\n"}
-        <span className="inline-block h-px w-6 bg-current" />
-      </Link>
     </section>
   );
 }
+
