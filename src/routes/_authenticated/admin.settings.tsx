@@ -30,6 +30,7 @@ function AdminSettings() {
         { key: "announcement", value: next.announcement },
         { key: "shipping", value: next.shipping },
         { key: "cart", value: next.cart },
+        { key: "closing_video", value: next.closing_video },
       ];
       const { error } = await supabase
         .from("site_settings")
@@ -131,6 +132,64 @@ function AdminSettings() {
         />
       </Section>
 
+      <Section title='"Something made for you, alone." — video'>
+        <Toggle
+          label="Show the video in this section"
+          checked={form.closing_video.enabled}
+          onChange={(v) => set("closing_video", { enabled: v })}
+        />
+        <Text
+          label="Video URL (.mp4 / .webm)"
+          value={form.closing_video.url}
+          onChange={(v) => set("closing_video", { url: v })}
+          placeholder="https://example.com/showcase.mp4"
+        />
+        <Upload
+          label="…or upload a video (max 50MB)"
+          accept="video/*"
+          maxMb={50}
+          onUploaded={(url) => set("closing_video", { url })}
+        />
+        <Text
+          label="Poster image URL (optional)"
+          value={form.closing_video.poster}
+          onChange={(v) => set("closing_video", { poster: v })}
+          placeholder="https://example.com/poster.jpg"
+        />
+        <Upload
+          label="…or upload a poster image"
+          accept="image/*"
+          maxMb={8}
+          onUploaded={(url) => set("closing_video", { poster: url })}
+        />
+        {form.closing_video.url ? (
+          <div className="space-y-3">
+            <div className="overflow-hidden border border-border/60 bg-navy">
+              <video
+                key={form.closing_video.url}
+                src={form.closing_video.url}
+                poster={form.closing_video.poster || undefined}
+                muted
+                loop
+                autoPlay
+                playsInline
+                controls
+                className="aspect-video w-full object-cover"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => set("closing_video", { url: "", poster: "" })}
+              className="text-[0.6rem] tracking-luxury uppercase text-navy/55 underline"
+            >
+              Remove video
+            </button>
+          </div>
+        ) : (
+          <p className="text-xs text-navy/50">No video set — the section shows as before.</p>
+        )}
+      </Section>
+
       <button
         type="button"
         onClick={() => save.mutate(form)}
@@ -141,6 +200,74 @@ function AdminSettings() {
         Save settings
       </button>
     </div>
+  );
+}
+
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/(^-|-$)+/g, "");
+}
+
+function Upload({
+  label,
+  accept,
+  maxMb,
+  onUploaded,
+}: {
+  label: string;
+  accept: string;
+  maxMb: number;
+  onUploaded: (url: string) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  const handle = async (file: File) => {
+    const kind = accept.split("/")[0];
+    if (!file.type.startsWith(kind + "/")) {
+      toast.error(`Please choose a ${kind} file`);
+      return;
+    }
+    if (file.size > maxMb * 1024 * 1024) {
+      toast.error(`File is too large (max ${maxMb}MB)`);
+      return;
+    }
+    setBusy(true);
+    try {
+      const path = `home/${Date.now()}-${slugify(file.name) || "asset"}`;
+      const { error } = await supabase.storage
+        .from("peuu-assets")
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (error) throw error;
+      const { data, error: signErr } = await supabase.storage
+        .from("peuu-assets")
+        .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+      if (signErr) throw signErr;
+      onUploaded(data.signedUrl);
+      toast.success("Uploaded — remember to save settings");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <label className="block">
+      <span className="text-[0.6rem] tracking-luxury uppercase text-navy/55">{label}</span>
+      <div className="mt-1 flex items-center gap-3">
+        <input
+          type="file"
+          accept={accept}
+          disabled={busy}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            e.target.value = "";
+            if (f) void handle(f);
+          }}
+          className="flex-1 text-xs text-navy/70 file:mr-3 file:border file:border-border/60 file:bg-alabaster file:px-3 file:py-2 file:text-[0.6rem] file:uppercase file:tracking-luxury"
+        />
+        {busy && <Loader2 className="h-4 w-4 animate-spin text-navy/60" />}
+      </div>
+    </label>
   );
 }
 
