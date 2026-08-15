@@ -145,7 +145,7 @@ export function HeroCarousel() {
         if (Math.abs(dx) > 45) go(index + (dx < 0 ? 1 : -1));
       }}
     >
-      <div className="relative h-[62svh] min-h-[360px] w-full sm:h-[74svh] lg:h-[86svh]">
+      <div className="relative aspect-[4/5] max-h-[70svh] min-h-[320px] w-full max-w-full sm:aspect-[16/9] sm:max-h-[80svh] lg:aspect-auto lg:h-[86svh]">
         {slides.map((slide, i) => {
           const active = i === index;
           return (

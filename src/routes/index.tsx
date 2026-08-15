@@ -279,7 +279,7 @@ function ClosingChapter() {
         controls={false}
         disablePictureInPicture
         onError={() => setVideoFailed(true)}
-        className="block h-[56svh] w-full object-cover object-center sm:h-auto sm:aspect-[21/9] md:aspect-[2.4/1]"
+        className="block aspect-[4/3] h-auto w-full max-w-full object-cover object-center sm:aspect-[21/9] md:aspect-[2.4/1]"
       />
     </section>
   );
