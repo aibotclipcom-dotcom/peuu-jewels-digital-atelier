@@ -94,6 +94,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   for_every_you: {
     autoplay_delay_seconds: 5,
   },
+  closing_video: {
+    enabled: false,
+    url: "",
+    poster: "",
+  },
 };
 
 function num(v: unknown, fallback: number): number {
@@ -125,6 +130,7 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
   const h = map.get("hero") ?? {};
   const n = map.get("home_nav") ?? {};
   const f = map.get("for_every_you") ?? {};
+  const cv = map.get("closing_video") ?? {};
   const d = DEFAULT_SETTINGS;
 
   return {
@@ -173,6 +179,11 @@ export function parseSettings(rows: SettingsRow[] | null | undefined): SiteSetti
         60,
         Math.max(2, num(f.autoplay_delay_seconds, d.for_every_you.autoplay_delay_seconds)),
       ),
+    },
+    closing_video: {
+      enabled: bool(cv.enabled, d.closing_video.enabled),
+      url: typeof cv.url === "string" ? cv.url : "",
+      poster: typeof cv.poster === "string" ? cv.poster : "",
     },
   };
 }
