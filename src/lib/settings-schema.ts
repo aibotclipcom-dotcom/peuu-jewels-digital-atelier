@@ -38,6 +38,12 @@ export interface ForEveryYouSettings {
   autoplay_delay_seconds: number;
 }
 
+export interface ClosingVideoSettings {
+  enabled: boolean;
+  url: string;
+  poster: string;
+}
+
 export interface SiteSettings {
   announcement: AnnouncementSettings;
   home_nav: HomeNavSettings;
@@ -45,6 +51,7 @@ export interface SiteSettings {
   cart: CartSettings;
   hero: HeroSettings;
   for_every_you: ForEveryYouSettings;
+  closing_video: ClosingVideoSettings;
 }
 
 /**
