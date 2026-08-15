@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FloralMark } from "@/components/brand/Logo";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CategoriesSection } from "@/components/home/CategoriesSection";
@@ -8,6 +8,7 @@ import { BestSellersSection } from "@/components/home/BestSellersSection";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { HomeNavBar } from "@/components/home/HomeNavBar";
 import { ForEveryYouSection } from "@/components/home/ForEveryYouSection";
+import { useSiteSettings } from "@/lib/settings";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -260,6 +261,10 @@ function EditorialSection({ section, index }: { section: Section; index: number 
 }
 
 function ClosingChapter() {
+  const { closing_video: video } = useSiteSettings();
+  const [videoFailed, setVideoFailed] = useState(false);
+  const showVideo = video.enabled && video.url.trim().length > 0 && !videoFailed;
+
   return (
     <section className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden bg-navy px-6 py-32 text-alabaster">
       <motion.div
@@ -300,6 +305,32 @@ function ClosingChapter() {
       >
         Not just accessories, But a reflection of the real you.
       </motion.p>
+      {showVideo && (
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 mt-14 w-full max-w-5xl overflow-hidden rounded-sm border border-gold-soft/25 shadow-2xl shadow-black/40"
+        >
+          <div className="relative aspect-video w-full bg-navy">
+            <video
+              src={video.url}
+              poster={video.poster || undefined}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              controls={false}
+              disablePictureInPicture
+              onError={() => setVideoFailed(true)}
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-alabaster/10" />
+          </div>
+        </motion.div>
+      )}
       <Link
         to="/concierge"
         className="mt-12 inline-flex items-center gap-3 border border-gold-soft/60 px-9 py-4 text-[0.7rem] tracking-luxury uppercase text-gold-soft transition-all hover:bg-gold-soft hover:text-navy"
