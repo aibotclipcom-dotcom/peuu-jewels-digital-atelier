@@ -87,6 +87,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "PEUU Jewels is an independent atelier of fine jewelry — sculpted by hand, finished with care, made to be worn for a lifetime.",
       },
       { name: "author", content: "PEUU Jewels" },
+      {
+        name: "google-site-verification",
+        content: "4AAYJqkL8fTO6y2xt2vmyKY8CM24Tvd5p9pLx1Ay2bY",
+      },
       { property: "og:site_name", content: "PEUU Jewels" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
