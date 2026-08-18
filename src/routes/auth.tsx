@@ -177,7 +177,7 @@ function AuthPage() {
           ) : (
             <>
               <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
-                {mode === "signin" ? "VIP Access" : "Join the Maison"}
+                {mode === "signin" ? "\u00A0" : "Join the Maison"}
               </div>
               <h1 className="mt-3 font-serif text-4xl leading-tight text-navy">
                 {mode === "signin" ? "Welcome back." : "Begin your atelier."}
