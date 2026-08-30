@@ -5,6 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Copy } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { duplicateProduct } from "@/lib/admin-products.functions";
+
 
 export const Route = createFileRoute("/_authenticated/admin/products/")({
   component: AdminProductsIndex,
