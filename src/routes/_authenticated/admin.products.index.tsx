@@ -162,6 +162,37 @@ function AdminProductsIndex() {
           </tbody>
         </table>
       </div>
+
+      {dupTarget && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-navy/50 p-4">
+          <div className="w-full max-w-md border border-border bg-alabaster p-8">
+            <h2 className="font-serif text-2xl text-navy">Duplicate Piece?</h2>
+            <p className="mt-3 text-sm text-navy/65">
+              Create a new piece with all details, images and videos copied from “{dupTarget.name}”.
+              The copy is saved as a draft.
+            </p>
+            <div className="mt-8 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDupTarget(null)}
+                disabled={duplicating}
+                className="border border-border px-5 py-3 text-[0.6rem] tracking-luxury uppercase text-navy/70 disabled:opacity-40"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDuplicate}
+                disabled={duplicating}
+                className="bg-navy px-5 py-3 text-[0.6rem] tracking-luxury uppercase text-alabaster disabled:opacity-40"
+              >
+                {duplicating ? "Duplicating…" : "Duplicate Piece"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+
   );
 }
