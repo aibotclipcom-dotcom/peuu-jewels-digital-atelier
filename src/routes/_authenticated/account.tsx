@@ -15,7 +15,13 @@ import { deleteMyAccount } from "@/lib/account.functions";
 
 
 export const Route = createFileRoute("/_authenticated/account")({
-  head: () => ({ meta: [{ title: "Your Account — PEUU Jewels" }] }),
+  head: () => ({
+    meta: [
+      { title: "Your Account — PEUU Jewels" },
+      { name: "description", content: "Manage your PEUU Jewels orders, addresses, wishlist and account details." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: AccountPage,
 });
 
