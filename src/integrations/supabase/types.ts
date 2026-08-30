@@ -1006,6 +1006,7 @@ export type Database = {
     Functions: {
       consume_product_stock: { Args: { _items: Json }; Returns: undefined }
       coupon_is_claimable: { Args: { _coupon_id: string }; Returns: boolean }
+      duplicate_product: { Args: { _id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
