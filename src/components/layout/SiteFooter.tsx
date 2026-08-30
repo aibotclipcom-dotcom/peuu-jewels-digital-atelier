@@ -18,7 +18,7 @@ export function SiteFooter() {
           <ul className="mt-5 space-y-3 text-sm text-navy/80">
             <li><Link to="/Collection" className="line-draw">Collection</Link></li>
             <li><Link to="/maison" className="line-draw">Our Story</Link></li>
-            <li><Link to="/bespoke" className="line-draw"></Link></li>
+            <li><Link to="/bespoke" className="line-draw">Bespoke</Link></li>
             <li><Link to="/concierge" className="line-draw">Contact Us</Link></li>
           </ul>
         </div>

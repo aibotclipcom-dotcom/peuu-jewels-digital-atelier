@@ -85,12 +85,12 @@ export const Route = createFileRoute("/bespoke")({
           "Step by step through a bespoke commission at PEUU Jewels — consultation, sketch, stone selection and hand finishing.",
       },
       { property: "og:type", content: "article" },
-      { property: "og:url", content: "https://peuujewels.lovable.app/bespoke" },
-      { property: "og:image", content: "https://peuujewels.lovable.app/ring.jpeg" },
+      { property: "og:url", content: "https://peuujewels.in/bespoke" },
+      { property: "og:image", content: "https://peuujewels.in/ring.jpeg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://peuujewels.lovable.app/ring.jpeg" },
+      { name: "twitter:image", content: "https://peuujewels.in/ring.jpeg" },
     ],
-    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/bespoke" }],
+    links: [{ rel: "canonical", href: "https://peuujewels.in/bespoke" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -100,7 +100,7 @@ export const Route = createFileRoute("/bespoke")({
           name: "The PEUU Jewels bespoke jewelry design process",
           description:
             "The five stages of a custom jewelry commission at PEUU Jewels, from consultation to hand-finished delivery.",
-          url: "https://peuujewels.lovable.app/bespoke",
+          url: "https://peuujewels.in/bespoke",
           step: STEPS.map((s, i) => ({
             "@type": "HowToStep",
             position: i + 1,
@@ -131,13 +131,13 @@ export const Route = createFileRoute("/bespoke")({
               "@type": "ListItem",
               position: 1,
               name: "Home",
-              item: "https://peuujewels.lovable.app/",
+              item: "https://peuujewels.in/",
             },
             {
               "@type": "ListItem",
               position: 2,
               name: "Bespoke",
-              item: "https://peuujewels.lovable.app/bespoke",
+              item: "https://peuujewels.in/bespoke",
             },
           ],
         }),

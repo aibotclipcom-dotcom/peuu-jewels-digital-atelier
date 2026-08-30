@@ -18,7 +18,7 @@ import { ProductBenefitsGrid } from "@/components/product/ProductBenefitsGrid";
 import { ProductReviews, Stars } from "@/components/product/ProductReviews";
 import { ProductFaqs } from "@/components/product/ProductFaqs";
 
-const SITE = "https://peuujewels.lovable.app";
+const SITE = "https://peuujewels.in";
 
 export const Route = createFileRoute("/Collection/$slug")({
   loader: async ({ params }) => {
