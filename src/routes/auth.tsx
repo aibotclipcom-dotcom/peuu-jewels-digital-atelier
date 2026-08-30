@@ -66,7 +66,23 @@ function AuthPage() {
     }
     setBusy(true);
     try {
-      if (mode === "signup") {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        });
+        if (error) {
+          const m = error.message.toLowerCase();
+          if (m.includes("rate") || m.includes("too many")) {
+            throw new Error("Too many attempts. Please try again in a few minutes.");
+          }
+          if (m.includes("invalid") && m.includes("email")) {
+            throw new Error("Please enter a valid email address.");
+          }
+          throw new Error("Could not send the reset link. Please try again.");
+        }
+        // Generic response — never reveal whether the account exists.
+        setResetSent(email.trim());
+      } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
