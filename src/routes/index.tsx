@@ -48,7 +48,7 @@ const SECTIONS: Section[] = [
   {
     word: "NECKLACES",
     eyebrow: "Chapter One",
-    title: "\u00a0Layer Neakpeace.",
+    title: "\u00a0Layer Neckpiece.",
     copy: "Anti Tarnish\u00a0chains in 18k gold \u2014 engineered to drape, sculpted to last.",
     image: "/necklace.jpeg",
     tone: "rose",
