@@ -97,6 +97,9 @@ function ConciergePage() {
             <div>
               <div className="text-[0.6rem] tracking-luxury uppercase text-navy/50">Atelier</div>
               <div className="mt-1 text-navy">Maison PEUU · By appointment only</div>
+              <div className="mt-1 text-navy/70">
+                H No 17, Akoli Badnera Road, Amravati, Maharashtra 444607, India
+              </div>
             </div>
             <div>
               <div className="text-[0.6rem] tracking-luxury uppercase text-navy/50">Concierge</div>
