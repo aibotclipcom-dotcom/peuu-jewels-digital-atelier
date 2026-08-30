@@ -32,23 +32,38 @@ export const Route = createFileRoute("/Collection/$slug")({
     if (error) throw error;
     if (!data) throw notFound();
 
-    const [{ data: productFaqs }, { data: globalFaqs }] = await Promise.all([
+    const [{ data: productFaqs }, { data: globalFaqs }, { data: reviewRows }] = await Promise.all([
       supabase
         .from("product_faqs")
         .select("question, answer")
         .eq("product_id", data.id)
         .order("sort_order"),
       supabase.from("global_faqs").select("question, answer").order("sort_order"),
+      supabase
+        .from("product_reviews")
+        .select("rating")
+        .eq("product_id", data.id)
+        .eq("approved", true),
     ]);
+
+    const ratings = (reviewRows ?? []).map((r) => Number(r.rating)).filter((n) => n > 0);
+    const reviewCount = ratings.length;
+    const ratingValue =
+      reviewCount > 0
+        ? Math.round((ratings.reduce((s, n) => s + n, 0) / reviewCount) * 10) / 10
+        : null;
 
     return {
       ...data,
+      reviewCount,
+      ratingValue,
       faqs: [...(productFaqs ?? []), ...(globalFaqs ?? [])] as Array<{
         question: string;
         answer: string;
       }>,
     };
   },
+
   head: ({ params, loaderData }) => {
     const p = loaderData;
     if (!p) {
