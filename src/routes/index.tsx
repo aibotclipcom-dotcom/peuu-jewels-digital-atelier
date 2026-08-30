@@ -48,7 +48,7 @@ const SECTIONS: Section[] = [
   {
     word: "NECKLACES",
     eyebrow: "Chapter One",
-    title: "\u00a0Layer Neakpeace.",
+    title: "\u00a0Layer Neckpiece.",
     copy: "Anti Tarnish\u00a0chains in 18k gold \u2014 engineered to drape, sculpted to last.",
     image: "/necklace.jpeg",
     tone: "rose",
@@ -75,7 +75,7 @@ const SECTIONS: Section[] = [
   {
     word: "EARRINGS",
     eyebrow: "CHAPTER FOUR",
-    title: "Earring, Hoops & Studs.",
+    title: "Earrings, Hoops & Studs.",
     copy: "\u00a0Hoops and stud designed to be worn together.",
     image: "/earrings.jpeg",
     tone: "ivory",
@@ -119,7 +119,7 @@ function Hero() {
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="text-[0.7rem] tracking-luxury uppercase text-rose"
         >
-          PEUU JEWELS - YOURS HAPPINESS OUR PRIORITY
+          PEUU JEWELS - YOUR HAPPINESS OUR PRIORITY
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 32 }}
