@@ -16,9 +16,9 @@ export const Route = createFileRoute("/terms-of-service")({
         content: "The legally binding agreement for shopping with PEUU Jewels.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://peuujewels.lovable.app/terms-of-service" },
+      { property: "og:url", content: "https://peuujewels.in/terms-of-service" },
     ],
-    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/terms-of-service" }],
+    links: [{ rel: "canonical", href: "https://peuujewels.in/terms-of-service" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/terms-of-service")({
           "@context": "https://schema.org",
           "@type": "JewelryStore",
           name: "PEUU Jewels",
-          url: "https://peuujewels.lovable.app",
+          url: "https://peuujewels.in",
           email: "peuujewels@gmail.com",
           telephone: "+91 7058588767",
           address: {

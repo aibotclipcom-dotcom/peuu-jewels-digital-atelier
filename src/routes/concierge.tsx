@@ -31,7 +31,7 @@ export const Route = createFileRoute("/concierge")({
           "@context": "https://schema.org",
           "@type": "JewelryStore",
           name: "PEUU Jewels",
-          url: "https://peuujewels.lovable.app",
+          url: "https://peuujewels.in",
           email: "peuujewels@gmail.com",
           telephone: "+91 7058588767",
           address: {

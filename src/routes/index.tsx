@@ -25,11 +25,11 @@ export const Route = createFileRoute("/")({
         content:
           "A cinematic Collection experience: layered necklaces, brilliant solitaires, sculpted cuffs and pavé hoops.",
       },
-      { property: "og:image", content: "https://peuujewels.lovable.app/necklace.jpeg" },
-      { property: "og:url", content: "https://peuujewels.lovable.app/" },
-      { property: "twitter:image", content: "https://peuujewels.lovable.app/necklace.jpeg" },
+      { property: "og:image", content: "https://peuujewels.in/necklace.jpeg" },
+      { property: "og:url", content: "https://peuujewels.in/" },
+      { property: "twitter:image", content: "https://peuujewels.in/necklace.jpeg" },
     ],
-    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://peuujewels.in/" }],
   }),
   component: Landing,
 });

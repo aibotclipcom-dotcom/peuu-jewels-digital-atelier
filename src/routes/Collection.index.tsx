@@ -40,10 +40,10 @@ export const Route = createFileRoute("/Collection/")({
         content: "An editorial selection of fine jewelry from PEUU Jewels.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://peuujewels.lovable.app/Collection" },
+      { property: "og:url", content: "https://peuujewels.in/Collection" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/Collection" }],
+    links: [{ rel: "canonical", href: "https://peuujewels.in/Collection" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -53,11 +53,11 @@ export const Route = createFileRoute("/Collection/")({
           name: "The Collection — PEUU Jewels",
           description:
             "Browse the PEUU Jewels collection — handcrafted necklaces, rings, bracelets and earrings.",
-          url: "https://peuujewels.lovable.app/Collection",
+          url: "https://peuujewels.in/Collection",
           isPartOf: {
             "@type": "WebSite",
             name: "PEUU Jewels",
-            url: "https://peuujewels.lovable.app",
+            url: "https://peuujewels.in",
           },
         }),
       },
