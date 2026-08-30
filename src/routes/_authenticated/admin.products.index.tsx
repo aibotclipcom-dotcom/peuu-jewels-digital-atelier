@@ -27,20 +27,24 @@ function AdminProductsIndex() {
     },
   });
 
+  const runDuplicate = useServerFn(duplicateProduct);
+
   async function handleDuplicate() {
     if (!dupTarget) return;
     setDuplicating(true);
-    const { data, error } = await supabase.rpc("duplicate_product", { _id: dupTarget.id });
-    setDuplicating(false);
-    if (error) {
-      toast.error(error.message);
-      return;
+    try {
+      const res = await runDuplicate({ data: { id: dupTarget.id } });
+      setDupTarget(null);
+      toast.success("Piece duplicated successfully.");
+      await qc.invalidateQueries({ queryKey: ["admin-products"] });
+      if (res?.id) navigate({ to: "/admin/products/$id", params: { id: res.id } });
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setDuplicating(false);
     }
-    setDupTarget(null);
-    toast.success("Piece duplicated successfully.");
-    await qc.invalidateQueries({ queryKey: ["admin-products"] });
-    if (data) navigate({ to: "/admin/products/$id", params: { id: data as string } });
   }
+
 
   async function handleDelete(id: string) {
     if (!confirm("Remove this piece from the inventory?")) return;
