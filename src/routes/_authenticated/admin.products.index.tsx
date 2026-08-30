@@ -1,9 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Copy } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/products/")({
   component: AdminProductsIndex,
@@ -11,6 +12,9 @@ export const Route = createFileRoute("/_authenticated/admin/products/")({
 
 function AdminProductsIndex() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [dupTarget, setDupTarget] = useState<{ id: string; name: string } | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
@@ -22,6 +26,21 @@ function AdminProductsIndex() {
       return data ?? [];
     },
   });
+
+  async function handleDuplicate() {
+    if (!dupTarget) return;
+    setDuplicating(true);
+    const { data, error } = await supabase.rpc("duplicate_product", { _id: dupTarget.id });
+    setDuplicating(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setDupTarget(null);
+    toast.success("Piece duplicated successfully.");
+    await qc.invalidateQueries({ queryKey: ["admin-products"] });
+    if (data) navigate({ to: "/admin/products/$id", params: { id: data as string } });
+  }
 
   async function handleDelete(id: string) {
     if (!confirm("Remove this piece from the inventory?")) return;
@@ -44,6 +63,7 @@ function AdminProductsIndex() {
     toast.success(next === "published" ? "Now published." : "Moved to drafts.");
     qc.invalidateQueries({ queryKey: ["admin-products"] });
   }
+
 
   return (
     <div>
