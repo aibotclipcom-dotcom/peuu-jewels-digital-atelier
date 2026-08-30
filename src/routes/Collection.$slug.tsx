@@ -121,7 +121,9 @@ export const Route = createFileRoute("/Collection/$slug")({
                 p.status === "published" && (p.stock ?? 0) > 0
                   ? "https://schema.org/InStock"
                   : "https://schema.org/OutOfStock",
+              url,
             },
+
             ...(p.reviewCount && p.ratingValue
               ? {
                   aggregateRating: {
