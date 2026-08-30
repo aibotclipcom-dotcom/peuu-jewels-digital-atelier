@@ -300,7 +300,17 @@ function AuthPage() {
                       Minimum 6 characters.
                     </p>
                   )}
+                  {mode === "signin" && (
+                    <button
+                      type="button"
+                      onClick={() => setMode("forgot")}
+                      className="mt-3 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+                    >
+                      Forgot Password?
+                    </button>
+                  )}
                 </div>
+
 
                 <button
                   type="submit"
