@@ -319,6 +319,46 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
     }
   }
 
+  async function handleVideoUpload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    const list = Array.from(files);
+    const MAX = 100 * 1024 * 1024;
+    const allowed = ["video/mp4", "video/webm", "video/quicktime", "video/ogg"];
+    for (const f of list) {
+      if (!allowed.includes(f.type)) {
+        toast.error(`${f.name}: unsupported format. Use MP4, WEBM, MOV or OGG.`);
+        if (videoFileRef.current) videoFileRef.current.value = "";
+        return;
+      }
+      if (f.size > MAX) {
+        toast.error(`${f.name}: file is larger than 100MB.`);
+        if (videoFileRef.current) videoFileRef.current.value = "";
+        return;
+      }
+    }
+    setVideoUploading(true);
+    try {
+      const uploaded: string[] = [];
+      for (const file of list) uploaded.push(await uploadOne(file, "product-videos"));
+      setVideos((prev) => [...prev, ...uploaded]);
+      toast.success(`${uploaded.length} video${uploaded.length === 1 ? "" : "s"} uploaded.`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setVideoUploading(false);
+      if (videoFileRef.current) videoFileRef.current.value = "";
+    }
+  }
+
+  function moveVideo(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= videos.length) return;
+    const next = videos.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    setVideos(next);
+  }
+
+
   function move(i: number, dir: -1 | 1) {
     const j = i + dir;
     if (j < 0 || j >= images.length) return;
