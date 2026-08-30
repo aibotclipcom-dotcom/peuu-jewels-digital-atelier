@@ -195,6 +195,59 @@ function AuthPage() {
                 ← Back to sign in
               </button>
             </div>
+          ) : resetSent ? (
+            <div>
+              <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
+                Check your inbox
+              </div>
+              <h1 className="mt-3 font-serif text-4xl leading-tight text-navy">
+                Reset link sent.
+              </h1>
+              <p className="mt-6 text-sm leading-relaxed text-navy/65">
+                If an account exists for{" "}
+                <span className="text-navy">{resetSent}</span>, a password reset link is
+                on its way. The link expires shortly, so do use it soon.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setResetSent(null);
+                  setMode("signin");
+                }}
+                className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+              >
+                ← Back to Sign In
+              </button>
+            </div>
+          ) : mode === "forgot" ? (
+            <div>
+              <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
+                Recovery
+              </div>
+              <h1 className="mt-3 font-serif text-4xl leading-tight text-navy">
+                Reset your password
+              </h1>
+              <p className="mt-6 text-sm leading-relaxed text-navy/65">
+                Enter your email address and we'll send you a password reset link.
+              </p>
+              <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-6">
+                <Field label="Email" type="email" value={email} onChange={setEmail} />
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="mt-4 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:opacity-60"
+                >
+                  {busy ? "Please wait…" : "Send Reset Link"}
+                </button>
+              </form>
+              <button
+                type="button"
+                onClick={() => setMode("signin")}
+                className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+              >
+                ← Back to Sign In
+              </button>
+            </div>
           ) : (
             <>
               <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
