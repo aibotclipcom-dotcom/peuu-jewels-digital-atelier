@@ -20,10 +20,10 @@ export const Route = createFileRoute("/concierge")({
       { property: "og:title", content: "Concierge — PEUU Jewels" },
       { property: "og:description", content: "Reach out to the PEUU Jewels concierge — bespoke and personal." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://peuujewels.lovable.app/concierge" },
+      { property: "og:url", content: "https://peuujewels.in/concierge" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://peuujewels.lovable.app/concierge" }],
+    links: [{ rel: "canonical", href: "https://peuujewels.in/concierge" }],
     scripts: [
       {
         type: "application/ld+json",
