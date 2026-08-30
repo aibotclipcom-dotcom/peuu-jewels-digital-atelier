@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Logo, FloralMark } from "@/components/brand/Logo";
 import { z } from "zod";
 
-const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
+const searchSchema = z.object({
+  mode: z.enum(["signin", "signup", "forgot"]).optional(),
+});
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -21,7 +23,10 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const { mode: initialMode } = useSearch({ from: "/auth" });
-  const [mode, setMode] = useState<"signin" | "signup">(initialMode ?? "signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(
+    initialMode ?? "signin",
+  );
+  const [resetSent, setResetSent] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -61,7 +66,23 @@ function AuthPage() {
     }
     setBusy(true);
     try {
-      if (mode === "signup") {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        });
+        if (error) {
+          const m = error.message.toLowerCase();
+          if (m.includes("rate") || m.includes("too many")) {
+            throw new Error("Too many attempts. Please try again in a few minutes.");
+          }
+          if (m.includes("invalid") && m.includes("email")) {
+            throw new Error("Please enter a valid email address.");
+          }
+          throw new Error("Could not send the reset link. Please try again.");
+        }
+        // Generic response — never reveal whether the account exists.
+        setResetSent(email.trim());
+      } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -174,6 +195,59 @@ function AuthPage() {
                 ← Back to sign in
               </button>
             </div>
+          ) : resetSent ? (
+            <div>
+              <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
+                Check your inbox
+              </div>
+              <h1 className="mt-3 font-serif text-4xl leading-tight text-navy">
+                Reset link sent.
+              </h1>
+              <p className="mt-6 text-sm leading-relaxed text-navy/65">
+                If an account exists for{" "}
+                <span className="text-navy">{resetSent}</span>, a password reset link is
+                on its way. The link expires shortly, so do use it soon.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setResetSent(null);
+                  setMode("signin");
+                }}
+                className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+              >
+                ← Back to Sign In
+              </button>
+            </div>
+          ) : mode === "forgot" ? (
+            <div>
+              <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
+                Recovery
+              </div>
+              <h1 className="mt-3 font-serif text-4xl leading-tight text-navy">
+                Reset your password
+              </h1>
+              <p className="mt-6 text-sm leading-relaxed text-navy/65">
+                Enter your email address and we'll send you a password reset link.
+              </p>
+              <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-6">
+                <Field label="Email" type="email" value={email} onChange={setEmail} />
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="mt-4 w-full bg-navy py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:opacity-60"
+                >
+                  {busy ? "Please wait…" : "Send Reset Link"}
+                </button>
+              </form>
+              <button
+                type="button"
+                onClick={() => setMode("signin")}
+                className="mt-8 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+              >
+                ← Back to Sign In
+              </button>
+            </div>
           ) : (
             <>
               <div className="text-[0.7rem] tracking-luxury uppercase text-rose">
@@ -226,7 +300,17 @@ function AuthPage() {
                       Minimum 6 characters.
                     </p>
                   )}
+                  {mode === "signin" && (
+                    <button
+                      type="button"
+                      onClick={() => setMode("forgot")}
+                      className="mt-3 text-[0.65rem] tracking-luxury uppercase text-navy/60 hover:text-navy"
+                    >
+                      Forgot Password?
+                    </button>
+                  )}
                 </div>
+
 
                 <button
                   type="submit"
