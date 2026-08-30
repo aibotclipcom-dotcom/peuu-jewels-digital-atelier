@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Logo, FloralMark } from "@/components/brand/Logo";
 import { z } from "zod";
 
-const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
+const searchSchema = z.object({
+  mode: z.enum(["signin", "signup", "forgot"]).optional(),
+});
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
