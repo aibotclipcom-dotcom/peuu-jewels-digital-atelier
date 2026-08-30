@@ -1,9 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Copy } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/products/")({
   component: AdminProductsIndex,
@@ -11,6 +12,9 @@ export const Route = createFileRoute("/_authenticated/admin/products/")({
 
 function AdminProductsIndex() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [dupTarget, setDupTarget] = useState<{ id: string; name: string } | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
@@ -22,6 +26,21 @@ function AdminProductsIndex() {
       return data ?? [];
     },
   });
+
+  async function handleDuplicate() {
+    if (!dupTarget) return;
+    setDuplicating(true);
+    const { data, error } = await supabase.rpc("duplicate_product", { _id: dupTarget.id });
+    setDuplicating(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setDupTarget(null);
+    toast.success("Piece duplicated successfully.");
+    await qc.invalidateQueries({ queryKey: ["admin-products"] });
+    if (data) navigate({ to: "/admin/products/$id", params: { id: data as string } });
+  }
 
   async function handleDelete(id: string) {
     if (!confirm("Remove this piece from the inventory?")) return;
@@ -44,6 +63,7 @@ function AdminProductsIndex() {
     toast.success(next === "published" ? "Now published." : "Moved to drafts.");
     qc.invalidateQueries({ queryKey: ["admin-products"] });
   }
+
 
   return (
     <div>
@@ -118,6 +138,16 @@ function AdminProductsIndex() {
                       </Link>
                       <button
                         type="button"
+                        onClick={() => setDupTarget({ id: p.id, name: p.name })}
+                        className="grid h-8 w-8 place-items-center border border-border text-navy hover:bg-cashmere"
+                        aria-label="Duplicate"
+                        title="Duplicate"
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+
+                        type="button"
                         onClick={() => handleDelete(p.id)}
                         className="grid h-8 w-8 place-items-center border border-border text-destructive hover:bg-destructive/10"
                         aria-label="Delete"
@@ -132,6 +162,37 @@ function AdminProductsIndex() {
           </tbody>
         </table>
       </div>
+
+      {dupTarget && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-navy/50 p-4">
+          <div className="w-full max-w-md border border-border bg-alabaster p-8">
+            <h2 className="font-serif text-2xl text-navy">Duplicate Piece?</h2>
+            <p className="mt-3 text-sm text-navy/65">
+              Create a new piece with all details, images and videos copied from “{dupTarget.name}”.
+              The copy is saved as a draft.
+            </p>
+            <div className="mt-8 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDupTarget(null)}
+                disabled={duplicating}
+                className="border border-border px-5 py-3 text-[0.6rem] tracking-luxury uppercase text-navy/70 disabled:opacity-40"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDuplicate}
+                disabled={duplicating}
+                className="bg-navy px-5 py-3 text-[0.6rem] tracking-luxury uppercase text-alabaster disabled:opacity-40"
+              >
+                {duplicating ? "Duplicating…" : "Duplicate Piece"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+
   );
 }

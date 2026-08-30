@@ -208,9 +208,12 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
   const [bestSellerSort, setBestSellerSort] = useState("0");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [replacingIdx, setReplacingIdx] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const replaceRef = useRef<HTMLInputElement>(null);
+  const videoFileRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     if (!existing) return;
@@ -315,6 +318,46 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
       if (replaceRef.current) replaceRef.current.value = "";
     }
   }
+
+  async function handleVideoUpload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    const list = Array.from(files);
+    const MAX = 100 * 1024 * 1024;
+    const allowed = ["video/mp4", "video/webm", "video/quicktime", "video/ogg"];
+    for (const f of list) {
+      if (!allowed.includes(f.type)) {
+        toast.error(`${f.name}: unsupported format. Use MP4, WEBM, MOV or OGG.`);
+        if (videoFileRef.current) videoFileRef.current.value = "";
+        return;
+      }
+      if (f.size > MAX) {
+        toast.error(`${f.name}: file is larger than 100MB.`);
+        if (videoFileRef.current) videoFileRef.current.value = "";
+        return;
+      }
+    }
+    setVideoUploading(true);
+    try {
+      const uploaded: string[] = [];
+      for (const file of list) uploaded.push(await uploadOne(file, "product-videos"));
+      setVideos((prev) => [...prev, ...uploaded]);
+      toast.success(`${uploaded.length} video${uploaded.length === 1 ? "" : "s"} uploaded.`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setVideoUploading(false);
+      if (videoFileRef.current) videoFileRef.current.value = "";
+    }
+  }
+
+  function moveVideo(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= videos.length) return;
+    const next = videos.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    setVideos(next);
+  }
+
 
   function move(i: number, dir: -1 | 1) {
     const j = i + dir;
@@ -654,13 +697,39 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
 
           <div className="mt-6">
             <div className="text-[0.6rem] tracking-luxury uppercase text-navy/55">Videos</div>
-            <ul className="mt-2 space-y-2">
-              {videos.map((v) => (
-                <li key={v} className="flex items-center gap-3 text-xs text-navy/70">
-                  <span className="truncate">{v}</span>
+            <ul className="mt-2 space-y-3">
+              {videos.map((v, i) => (
+                <li key={`${v}-${i}`} className="flex items-center gap-3">
+                  <video
+                    src={v}
+                    muted
+                    playsInline
+                    controls
+                    preload="metadata"
+                    className="h-20 w-32 shrink-0 bg-cashmere object-cover"
+                  />
+                  <span className="min-w-0 flex-1 truncate text-xs text-navy/70">{v}</span>
                   <button
                     type="button"
-                    onClick={() => setVideos(videos.filter((x) => x !== v))}
+                    onClick={() => moveVideo(i, -1)}
+                    disabled={i === 0}
+                    className="grid h-7 w-7 place-items-center border border-border text-navy disabled:opacity-30"
+                    aria-label="Move video up"
+                  >
+                    <ArrowLeft className="h-3 w-3" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveVideo(i, 1)}
+                    disabled={i === videos.length - 1}
+                    className="grid h-7 w-7 place-items-center border border-border text-navy disabled:opacity-30"
+                    aria-label="Move video down"
+                  >
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVideos(videos.filter((_, idx) => idx !== i))}
                     aria-label="Remove video"
                   >
                     <Trash2 className="h-3.5 w-3.5 text-rose" />
@@ -668,6 +737,26 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-3 flex flex-wrap items-end gap-3">
+              <label className="inline-flex cursor-pointer items-center gap-2 border border-navy px-4 py-2 text-[0.6rem] tracking-luxury uppercase text-navy hover:bg-cashmere/60">
+                <UploadCloud className="h-4 w-4" strokeWidth={1.4} />
+                {videoUploading ? "Uploading video…" : "Upload video"}
+                <input
+                  ref={videoFileRef}
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime,video/ogg"
+                  multiple
+                  className="hidden"
+                  disabled={videoUploading}
+                  onChange={(e) => handleVideoUpload(e.target.files)}
+                />
+              </label>
+              <span className="text-[0.6rem] uppercase tracking-luxury text-navy/40">
+                MP4 · WEBM · MOV · max 100MB
+              </span>
+            </div>
+
             <div className="mt-3 flex items-end gap-3">
               <input
                 type="text"
@@ -686,10 +775,11 @@ export function AdminProductEditor({ productId }: { productId?: string }) {
                 }}
                 className="border border-navy px-4 py-2 text-[0.6rem] tracking-luxury uppercase text-navy"
               >
-                Add video
+                Add video URL
               </button>
             </div>
           </div>
+
         </div>
       </Section>
 
