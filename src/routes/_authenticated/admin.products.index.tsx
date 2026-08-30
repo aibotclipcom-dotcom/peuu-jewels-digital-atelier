@@ -138,6 +138,16 @@ function AdminProductsIndex() {
                       </Link>
                       <button
                         type="button"
+                        onClick={() => setDupTarget({ id: p.id, name: p.name })}
+                        className="grid h-8 w-8 place-items-center border border-border text-navy hover:bg-cashmere"
+                        aria-label="Duplicate"
+                        title="Duplicate"
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+
+                        type="button"
                         onClick={() => handleDelete(p.id)}
                         className="grid h-8 w-8 place-items-center border border-border text-destructive hover:bg-destructive/10"
                         aria-label="Delete"
