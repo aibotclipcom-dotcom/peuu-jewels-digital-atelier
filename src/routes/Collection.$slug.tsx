@@ -121,10 +121,38 @@ export const Route = createFileRoute("/Collection/$slug")({
                 p.status === "published" && (p.stock ?? 0) > 0
                   ? "https://schema.org/InStock"
                   : "https://schema.org/OutOfStock",
-              url,
             },
+            ...(p.reviewCount && p.ratingValue
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: p.ratingValue,
+                    reviewCount: p.reviewCount,
+                    bestRating: 5,
+                    worstRating: 1,
+                  },
+                }
+              : {}),
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: SITE },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "The Collection",
+                item: `${SITE}/Collection`,
+              },
+              { "@type": "ListItem", position: 3, name: p.name, item: url },
+            ],
+          }),
+        },
+
         ...(p.faqs && p.faqs.length > 0
           ? [
               {
