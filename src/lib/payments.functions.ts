@@ -177,10 +177,14 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     }
 
     const { supabase, userId } = context;
+    // Paid orders are written with the trusted server client: payment has been
+    // verified above/below, and database rules block shoppers from writing
+    // confirmed totals or payment references themselves.
+    const { supabaseAdmin: orderDb } = await import("@/integrations/supabase/client.server");
     const email = (context.claims?.email as string | undefined)?.toLowerCase();
 
     // Idempotency — a replayed payment id must never create a second order.
-    const { data: existing } = await supabase
+    const { data: existing } = await orderDb
       .from("orders")
       .select("id")
       .eq("razorpay_payment_id", data.razorpay_payment_id)
@@ -219,7 +223,7 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       }
     }
 
-    const { data: order, error } = await supabase
+    const { data: order, error } = await orderDb
       .from("orders")
       .insert({
         user_id: userId,
@@ -243,7 +247,7 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     if (error) {
       const code = (error as { code?: string }).code;
       if (code === "23505") {
-        const { data: dup } = await supabase
+        const { data: dup } = await orderDb
           .from("orders")
           .select("id")
           .eq("razorpay_payment_id", data.razorpay_payment_id)
@@ -253,7 +257,7 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       throw new Error(error.message);
     }
 
-    const { error: itemsErr } = await supabase.from("order_items").insert(
+    const { error: itemsErr } = await orderDb.from("order_items").insert(
       lines.map((i) => ({
         order_id: order.id,
         product_id: i.id,
