@@ -190,6 +190,35 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
     const quote = await buildQuote(supabase, data.items, data.couponCode, email);
     const { totals, coupon, lines } = quote;
 
+    // Confirm with Razorpay that this payment was captured for this order and
+    // that the amount paid matches the server-side quote for the cart.
+    {
+      const keyId = process.env["RAZORPAY_KEY_ID"];
+      if (!keyId) throw new Error("Razorpay is not configured");
+      const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+      const payRes = await fetch(
+        `https://api.razorpay.com/v1/payments/${encodeURIComponent(data.razorpay_payment_id)}`,
+        { headers: { Authorization: `Basic ${auth}` } },
+      );
+      if (!payRes.ok) throw new Error("Could not verify payment");
+      const payment = (await payRes.json()) as {
+        order_id?: string;
+        amount?: number;
+        currency?: string;
+        status?: string;
+      };
+      const expectedPaise = Math.round(totals.grandTotal * 100);
+      if (
+        payment.order_id !== data.razorpay_order_id ||
+        payment.currency !== "INR" ||
+        !["captured", "authorized"].includes(payment.status ?? "") ||
+        Number(payment.amount) !== expectedPaise
+      ) {
+        console.error("Payment/cart mismatch for payment", data.razorpay_payment_id);
+        throw new Error("Payment does not match your order. Please contact support.");
+      }
+    }
+
     const { data: order, error } = await supabase
       .from("orders")
       .insert({
