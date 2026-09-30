@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "PeuuAssets public prefix read" ON storage.objects;
