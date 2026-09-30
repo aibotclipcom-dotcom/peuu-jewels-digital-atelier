@@ -412,13 +412,12 @@ function CollectionPage() {
               </>
             ) : (
               <>
-                A curated <em className="italic text-coral/90">selection</em>.
+                Peuu Jewels
               </>
             )}
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-navy/70">
-            Every piece in the Maison is hand-finished and inspected by our master jeweler before
-            it leaves the atelier.
+            YOUR HAPPINESS OUR PRIORITY
           </p>
         </div>
 
