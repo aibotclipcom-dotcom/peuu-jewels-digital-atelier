@@ -233,7 +233,9 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         shipping_total: totals.shipping,
         tax_total: totals.tax,
         coupon_code: coupon.coupon?.code ?? null,
-        status: "confirmed",
+        // Confirmed only by the signature-verified Razorpay webhook
+        // (src/routes/api/public/razorpay-webhook.ts).
+        status: "pending",
         payment_method: "razorpay",
         razorpay_order_id: data.razorpay_order_id,
         razorpay_payment_id: data.razorpay_payment_id,

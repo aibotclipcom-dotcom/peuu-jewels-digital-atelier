@@ -188,7 +188,7 @@ function CheckoutPage() {
             clear();
             if (typeof window !== "undefined") window.localStorage.removeItem("peuu_coupon_code");
             toast.success("Payment received.", {
-              description: "Your order is confirmed — thank you.",
+              description: "Payment received — your order will be confirmed shortly. Thank you.",
             });
             navigate({ to: "/account" });
           } catch (e) {
