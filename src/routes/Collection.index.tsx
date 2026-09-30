@@ -119,7 +119,7 @@ function serializeAttrs(map: Record<string, string[]>): string | undefined {
 
 function CollectionPage() {
   const search = Route.useSearch();
-  const navigate = useNavigate({ from: "/Collection" });
+  const navigate = useNavigate({ from: "/Collection/" });
   const [panelOpen, setPanelOpen] = useState(false);
 
   const activeAttrs = parseAttrs(search.attrs);
