@@ -2,6 +2,7 @@
   // ...
   "vars": {
     "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_A7gPNG8W-029ZgpxYwqDYg_mKeV_XmC",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3enZpbmt4dmN0ZGxkeGt1eGRzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mjc5MTcxMCwiZXhwIjoyMDk4MzY3NzEwfQ.-2C1AdlYl1HQ9NERlPDZVYtw45MtMXyc6ooR3bK1X4Q",
     "SUPABASE_URL": "https://kwzvinkxvctdldxkuxds.supabase.co"
   },
   // ...
