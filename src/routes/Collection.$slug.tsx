@@ -503,7 +503,7 @@ function ProductDetail() {
               }
               className="inline-flex items-center gap-3 bg-navy px-10 py-4 text-[0.7rem] tracking-luxury uppercase text-alabaster transition-all hover:bg-navy-soft disabled:opacity-40"
             >
-              {(product.stock ?? 0) <= 0 ? "Sold out" : "Add to Selection"}
+              {(product.stock ?? 0) <= 0 ? "Sold out" : "Add to Cart"}
               <span className="inline-block h-px w-6 bg-alabaster" />
             </button>
             <button

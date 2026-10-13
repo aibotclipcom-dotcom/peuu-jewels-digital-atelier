@@ -620,7 +620,7 @@ function ProductCard({
           }}
           className="absolute inset-x-4 bottom-4 translate-y-2 bg-navy py-3 text-[0.6rem] tracking-luxury uppercase text-alabaster opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"
         >
-          Add to Selection
+          Add to Cart
         </button>
       </Link>
 

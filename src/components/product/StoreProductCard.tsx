@@ -117,7 +117,7 @@ export function StoreProductCard({ product, badges = [], rating, priority }: Pro
           onClick={() => add(cartItem)}
           className="absolute inset-x-4 bottom-4 translate-y-2 bg-navy py-3 text-[0.6rem] tracking-luxury uppercase text-alabaster opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {soldOut ? "Sold out" : "Add to Selection"}
+          {soldOut ? "Sold out" : "Add to Cart"}
         </button>
       </div>
 
@@ -180,7 +180,7 @@ export function StoreProductCard({ product, badges = [], rating, priority }: Pro
                   }}
                   className="w-full bg-navy py-3.5 text-[0.65rem] tracking-luxury uppercase text-alabaster transition-colors hover:bg-navy-soft disabled:opacity-50"
                 >
-                  {soldOut ? "Sold out" : "Add to Selection"}
+                  {soldOut ? "Sold out" : "Add to Cart"}
                 </button>
                 <Link
                   to="/Collection/$slug"
