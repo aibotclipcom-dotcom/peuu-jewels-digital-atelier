@@ -164,7 +164,7 @@ function Hero() {
           transition={{ duration: 1, delay: 1.4 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[0.55rem] tracking-luxury uppercase text-navy/40"
         >
-          Scroll
+          {"\n"}
         </motion.div>
       </div>
     </section>
