@@ -192,7 +192,7 @@ function CollectionPage() {
   });
 
   const { data: productBadges = [] } = useQuery({
-    queryKey: ["product-badges-all"],
+    queryKey: ["product-badges-all", "rows"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("product_badges")
